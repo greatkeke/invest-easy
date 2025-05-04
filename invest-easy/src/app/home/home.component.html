@@ -1,0 +1,18 @@
+<h1>首页</h1>
+<div *ngIf="showPromotions" class="promotion-carousel">
+  <div class="carousel-container">
+    <ng-container *ngFor="let promo of promotions; let i = index">
+      <mat-card *ngIf="promo.visible" class="promo-card">
+        <button mat-icon-button class="close-btn" (click)="closePromotion(i)">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-card-header>
+          <mat-card-title>{{promo.title}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          {{promo.description}}
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+  </div>
+</div>

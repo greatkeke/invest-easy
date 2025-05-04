@@ -1,0 +1,26 @@
+.promotion-carousel {
+  margin: 20px 0;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.carousel-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding: 10px 0;
+}
+
+.promo-card {
+  position: relative;
+  min-width: 300px;
+  background-color: #e4313170;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 1;
+}
