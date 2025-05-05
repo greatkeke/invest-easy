@@ -26,3 +26,41 @@
   right: 5px;
   z-index: 1;
 }
+
+
+.news-section {
+  margin: 2rem 0;
+
+  h2 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .news-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+  .news-card {
+    margin-bottom: 1rem;
+
+    mat-card-header {
+      margin-bottom: 0.5rem;
+    }
+
+    mat-card-subtitle {
+      color: #666;
+    }
+
+    a {
+      color: #1976d2;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+}
