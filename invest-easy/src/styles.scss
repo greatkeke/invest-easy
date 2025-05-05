@@ -1,5 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Color theme variables */
+:root {
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --card-bg: #f5f5f5;
+  --promo-card-bg: #e4313170;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #121212;
+    --text-color: #f5f5f5;
+    --card-bg: #1e1e1e;
+    --promo-card-bg: #e43131b0;
+  }
+}
+
 /* Mobile-first responsive styles */
 html {
   box-sizing: border-box;
@@ -17,6 +34,8 @@ body {
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 /* Responsive typography */
