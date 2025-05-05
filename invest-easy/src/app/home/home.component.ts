@@ -15,18 +15,18 @@ export class HomeComponent {
   showPromotions = true;
   promotions = [
     {
-      title: '新用户优惠',
-      description: '注册即送100元投资券',
+      title: 'Welcome Bonus',
+      description: 'Receive ¥100 investment credit upon signup',
       visible: true
     },
     {
-      title: '限时特惠',
-      description: '部分基金手续费5折',
+      title: 'Special Promotion',
+      description: '50% discount on selected fund fees',
       visible: true
     },
     {
-      title: '推荐有礼',
-      description: '邀请好友各得50元',
+      title: 'Referral Reward',
+      description: 'Both you and your friend get ¥50',
       visible: true
     }
   ];

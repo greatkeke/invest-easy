@@ -15,9 +15,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 export class AppComponent {
   title = 'invest-easy';
   navLinks = [
-    { path: '/home', label: '首页', icon: 'home' },
-    { path: '/market', label: '行情', icon: 'trending_up' },
-    { path: '/news', label: '消息', icon: 'message' },
-    { path: '/trade', label: '交易', icon: 'paid' }
+    { path: '/home', label: 'Home', icon: 'home' },
+    { path: '/market', label: 'Market', icon: 'trending_up' },
+    { path: '/news', label: 'News', icon: 'message' },
+    { path: '/trade', label: 'Trade', icon: 'paid' }
   ];
 }
