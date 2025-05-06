@@ -4,7 +4,7 @@
 
 .loading {
   text-align: center;
-  padding: 20px;
+  padding: 24px;
   color: #666;
 }
 
@@ -21,22 +21,37 @@
   &:hover {
     transform: translateY(-2px);
   }
+}
 
-  .price {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 8px;
+.price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.change {
+  font-size: 1rem;
+
+  &.positive {
+    color: #f44336;
   }
 
-  .change {
-    font-size: 16px;
-
-    &.positive {
-      color: #4caf50;
-    }
-
-    &.negative {
-      color: #f44336;
-    }
+  &.negative {
+    color: #4caf50;
   }
+}
+
+.volume {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 8px;
+}
+
+.mat-tab-group {
+  margin-top: 16px;
+}
+
+.mat-tab-label {
+  font-size: 1rem;
+  font-weight: 500;
 }
