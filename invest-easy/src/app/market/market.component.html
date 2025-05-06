@@ -1,1 +1,24 @@
 <h1 i18n>Market</h1>
+
+<div class="market-container">
+  @if (loading) {
+    <div class="loading">Loading market data...</div>
+  } @else {
+    <div class="cards-container">
+      @for (index of indices; track index.symbol) {
+        <mat-card class="market-card">
+          <mat-card-header>
+            <mat-card-title>{{index.name}}</mat-card-title>
+            <mat-card-subtitle>{{index.symbol}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="price">{{index.price | number:'1.2-2'}}</div>
+            <div class="change" [class.positive]="index.change > 0" [class.negative]="index.change < 0">
+              {{index.change > 0 ? '+' : ''}}{{index.change | number:'1.2-2'}} ({{index.percent}}%)
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>
