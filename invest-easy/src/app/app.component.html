@@ -1,14 +1,20 @@
-<app-user-panel></app-user-panel>
+<div class="app-container">
 
-<router-outlet></router-outlet>
+  <app-user-panel class="app-header-nav"></app-user-panel>
 
-<div class="bottom-nav">
-  <a
-    *ngFor="let link of navLinks"
-    [routerLink]="link.path"
-    routerLinkActive="active"
-  >
-    <mat-icon>{{link.icon}}</mat-icon>
-    <span>{{link.label}}</span>
-  </a>
+  <div class="app-content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <div class="app-bottom-nav">
+    <a
+      *ngFor="let link of navLinks"
+      [routerLink]="link.path"
+      routerLinkActive="active"
+    >
+      <mat-icon>{{link.icon}}</mat-icon>
+      <span>{{link.label}}</span>
+    </a>
+  </div>
+
 </div>
