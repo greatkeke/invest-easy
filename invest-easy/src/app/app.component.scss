@@ -37,8 +37,3 @@
   }
 }
 
-/* Add padding to main content to prevent hiding behind nav */
-router-outlet {
-  display: block;
-  padding-bottom: 56px;
-}
