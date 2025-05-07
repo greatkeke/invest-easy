@@ -2,8 +2,13 @@
   z-index: 1;
 }
 
+.sidenav-container.mat-drawer-container-has-open {
+  height: 100vh;
+  background-color: transparent;
+}
+
 .sidenav {
-  width: 200px;
+  width: 12rem;
 }
 
 .sidenav .mat-toolbar {
@@ -13,5 +18,4 @@
 .mat-toolbar.mat-primary {
   position: sticky;
   top: 0;
-  z-index: 1;
 }
