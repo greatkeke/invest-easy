@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NewsService } from '../news/news.service';
+import { MarketTemperatureService } from './market-temperature.service';
 
 @Component({
   selector: 'app-home',
@@ -34,13 +35,22 @@ export class HomeComponent implements OnInit {
   ];
 
   marketNews: any[] = [];
+  marketTemperature: any = null;
 
-  constructor(private newsService: NewsService) {}
+  constructor(
+    private newsService: NewsService,
+    private marketTempService: MarketTemperatureService
+  ) {}
 
   ngOnInit() {
     this.newsService.getMarketNews().subscribe({
       next: (data) => this.marketNews = data.articles || [],
       error: (err) => console.error('Failed to load news:', err)
+    });
+
+    this.marketTempService.getMarketTemperature().subscribe({
+      next: (data) => this.marketTemperature = data,
+      error: (err) => console.error('Failed to load market temperature:', err)
     });
   }
 

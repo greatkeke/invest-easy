@@ -28,6 +28,57 @@
 }
 
 
+.temperature-section {
+  margin: 20px 0;
+  
+  h2 {
+    margin-bottom: 1rem;
+    color: var(--text-color);
+  }
+
+  .temperature-card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 16px;
+
+    mat-card-title {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    mat-card-subtitle {
+      color: var(--text-secondary);
+    }
+
+    .trend-indicator {
+      display: inline-flex;
+      align-items: center;
+      margin: 10px 0;
+      padding: 5px 10px;
+      border-radius: 4px;
+
+      &.up {
+        color: #4caf50;
+        background-color: rgba(76, 175, 80, 0.1);
+      }
+
+      &.down {
+        color: #f44336;
+        background-color: rgba(244, 67, 54, 0.1);
+      }
+
+      mat-icon {
+        margin-right: 5px;
+      }
+    }
+
+    .update-time {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+  }
+}
+
 .news-section {
   // margin: 2rem 0;
 
