@@ -20,16 +20,6 @@ export class HomeComponent implements OnInit {
       title: 'Welcome Bonus',
       description: 'Receive ¥100 investment credit upon signup',
       visible: true
-    },
-    {
-      title: 'Special Promotion',
-      description: '50% discount on selected fund fees',
-      visible: true
-    },
-    {
-      title: 'Referral Reward',
-      description: 'Both you and your friend get ¥50',
-      visible: true
     }
   ];
 

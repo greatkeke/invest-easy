@@ -1,36 +1,36 @@
 .promotion-carousel {
-  margin: 20px 0;
-  padding: 20px;
+  margin: 1rem 0;
+  padding: 1rem;
   background: var(--card-bg);
   border-radius: 4px;
   color: var(--text-color);
-}
 
-.carousel-container {
-  display: flex;
-  overflow-x: auto;
-  gap: 15px;
-  padding: 10px 0;
-}
+  .carousel-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
 
-.promo-card {
-  position: relative;
-  min-width: 300px;
-  background-color: var(--promo-card-bg);
-  color: var(--text-color);
-}
+    .promo-card {
+      position: relative;
+      min-width: 10rem;
+      background-color: var(--promo-card-bg);
+      color: var(--text-color);
 
-.close-btn {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  // z-index: 0;
+      .close-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 0;
+      }
+    }
+  }
 }
 
 
 
 .news-section {
-  // margin: 2rem 0;
+  margin: 2rem 0;
 
   h2 {
     margin-bottom: 1rem;
