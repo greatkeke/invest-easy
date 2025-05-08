@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { NewsService } from '../news/news.service';
 
 @Component({
@@ -35,7 +36,8 @@ export class HomeComponent implements OnInit {
   marketNews: any[] = [];
 
   constructor(
-    private newsService: NewsService
+    private newsService: NewsService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -48,5 +50,9 @@ export class HomeComponent implements OnInit {
 
   closePromotion(index: number) {
     this.promotions[index].visible = false;
+  }
+
+  navigateTo(route: string) {
+    this.router.navigate([route]);
   }
 }

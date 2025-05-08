@@ -18,6 +18,25 @@
   </div>
 </div>
 
+<div class="quicksteps-section">
+  <h2 i18n>QuickSteps</h2>
+  <div class="quicksteps-grid">
+    <mat-card class="quicksteps-card" (click)="navigateTo('estatements')">
+      <i class="material-icons">receipt</i>
+      <span i18n>View eStatements & eAdvices</span>
+    </mat-card>
+    
+    <mat-card class="quicksteps-card" (click)="navigateTo('local-transfer')">
+      <i class="material-icons">payments</i>
+      <span i18n>Transfer to local payees / FPS</span>
+    </mat-card>
+    
+    <mat-card class="quicksteps-card" (click)="navigateTo('hsbc-transfer')">
+      <i class="material-icons">currency_exchange</i>
+      <span i18n>Transfer to my local HSBC accounts</span>
+    </mat-card>
+  </div>
+</div>
 
 <div class="news-section" *ngIf="marketNews.length > 0">
   <h2 i18n>Market News</h2>
