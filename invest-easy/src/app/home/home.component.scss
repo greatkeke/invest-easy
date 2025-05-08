@@ -14,6 +14,17 @@
   }
 }
 
+@keyframes scale-down {
+  from { transform:scaleY(1); }
+  to { transform:scaleY(0.5); }
+}
+
+.scale-down {
+  animation: scale-down linear;
+  animation-timeline: scroll();
+}
+
+
 .user-panel-dialog {
   .mat-mdc-dialog-container {
     border-radius: 16px 16px 0 0 !important;
