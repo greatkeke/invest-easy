@@ -1,5 +1,13 @@
 <div class="home-header">
   <h1>HSBC</h1>
+  <div class="header-icons">
+    <button mat-icon-button (click)="goToNotifications()">
+      <mat-icon>notifications</mat-icon>
+    </button>
+    <button mat-icon-button (click)="toggleUserPanel()">
+      <mat-icon>people</mat-icon>
+    </button>
+  </div>
 </div>
 
 <div *ngIf="showPromotions" class="promotion-carousel">
