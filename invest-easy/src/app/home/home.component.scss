@@ -3,6 +3,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
+  background-image: url(../../../public/images.jpg);
+  background-position: center;/* Centers the image */
+  background-size: cover;/* Ensures full coverage */
+  background-repeat: no-repeat;/* Prevents repetition */
 
   .header-icons {
     display: flex;
@@ -15,12 +19,19 @@
 }
 
 @keyframes scale-down {
-  from { transform:scaleY(1); }
-  to { transform:scaleY(0.5); }
+  from {
+    background-size: 100%;
+    transform: scaleY(1);
+  }
+
+  to {
+    background-size: 10%;
+    transform: scaleY(0);
+  }
 }
 
 .scale-down {
-  animation: scale-down linear;
+  animation: scale-down cubic-bezier(.01,1.13,.29,.16);
   animation-timeline: scroll();
 }
 
