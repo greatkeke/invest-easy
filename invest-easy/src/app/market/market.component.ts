@@ -3,24 +3,34 @@ import { MarketService } from './market.service';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MarketTemperatureService } from './market-temperature.service';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @Component({
   selector: 'app-market',
   standalone: true,
   templateUrl: './market.component.html',
   styleUrls: ['./market.component.scss'],
-  imports: [CommonModule, MatCardModule, MatTabsModule]
+  imports: [CommonModule, MatCardModule, MatTabsModule, MatIconModule]
 })
 export class MarketComponent implements OnInit {
   indices: any[] = [];
   watchlist: any[] = [];
+  marketTemperature: any = null;
   loading = true;
 
-  constructor(private marketService: MarketService) {}
+  constructor(private marketService: MarketService,
+    private marketTempService: MarketTemperatureService) {}
 
   ngOnInit(): void {
     this.loadMarketData();
     this.loadWatchlist();
+
+    this.marketTempService.getMarketTemperature().subscribe({
+      next: (data) => this.marketTemperature = data,
+      error: (err) => console.error('Failed to load market temperature:', err)
+    });
   }
 
   loadMarketData(): void {

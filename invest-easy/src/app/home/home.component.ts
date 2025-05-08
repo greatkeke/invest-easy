@@ -3,14 +3,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { NewsService } from '../news/news.service';
-import { MarketTemperatureService } from './market-temperature.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, MatIconModule, CommonModule, HttpClientModule],
+  imports: [MatButtonModule, MatCardModule, MatIconModule, CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -35,11 +33,9 @@ export class HomeComponent implements OnInit {
   ];
 
   marketNews: any[] = [];
-  marketTemperature: any = null;
 
   constructor(
-    private newsService: NewsService,
-    private marketTempService: MarketTemperatureService
+    private newsService: NewsService
   ) {}
 
   ngOnInit() {
@@ -48,10 +44,6 @@ export class HomeComponent implements OnInit {
       error: (err) => console.error('Failed to load news:', err)
     });
 
-    this.marketTempService.getMarketTemperature().subscribe({
-      next: (data) => this.marketTemperature = data,
-      error: (err) => console.error('Failed to load market temperature:', err)
-    });
   }
 
   closePromotion(index: number) {
