@@ -1,5 +1,36 @@
 <h1 i18n>Market</h1>
 
+<div class="search-section">
+  <div class="search-input-container">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label i18n>Search Market</mat-label>
+      <input matInput 
+             [(ngModel)]="searchQuery" 
+             (input)="onSearch()"
+             placeholder="Search stocks or indices...">
+    </mat-form-field>
+    <button mat-icon-button 
+            *ngIf="searchResults.length > 0"
+            (click)="clearSearch()"
+            class="cancel-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-list class="search-results" *ngIf="searchResults.length > 0">
+    <mat-list-item *ngFor="let result of searchResults" 
+                  (click)="navigateToResult(result.symbol)"
+                  class="result-item">
+      <div mat-line>{{result.name}} ({{result.symbol}})</div>
+      <div mat-line class="result-details">
+        <span class="price">{{result.price | number:'1.2-2'}}</span>
+        <span class="change" [class.positive]="result.change > 0" [class.negative]="result.change < 0">
+          {{result.change > 0 ? '+' : ''}}{{result.change | number:'1.2-2'}} ({{result.percent}}%)
+        </span>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>
 
 <div class="temperature-section" *ngIf="marketTemperature">
   <h5 i18n>Market Temperature</h5>

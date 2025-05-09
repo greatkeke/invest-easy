@@ -5,6 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MarketTemperatureService } from './market-temperature.service';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatListModule } from '@angular/material/list';
 
 
 @Component({
@@ -12,13 +15,15 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   templateUrl: './market.component.html',
   styleUrls: ['./market.component.scss'],
-  imports: [CommonModule, MatCardModule, MatTabsModule, MatIconModule]
+  imports: [CommonModule, MatCardModule, MatTabsModule, MatIconModule, MatInputModule, FormsModule, MatListModule]
 })
 export class MarketComponent implements OnInit {
   indices: any[] = [];
   watchlist: any[] = [];
   marketTemperature: any = null;
   loading = true;
+  searchQuery = '';
+  searchResults: any[] = [];
 
   constructor(private marketService: MarketService,
     private marketTempService: MarketTemperatureService) {}
@@ -61,6 +66,35 @@ export class MarketComponent implements OnInit {
       { symbol: '000858', name: '五粮液', price: 152.80, change: -1.20, percent: '-0.78', volume: '12.8万手' },
       { symbol: '601318', name: '中国平安', price: 48.90, change: 0.32, percent: '0.66', volume: '28.5万手' }
     ];
+  }
+
+  onSearch(): void {
+    if (!this.searchQuery.trim()) {
+      this.searchResults = [];
+      return;
+    }
+    
+    const query = this.searchQuery.toLowerCase();
+    this.searchResults = [
+      ...this.indices.filter(item => 
+        item.name.toLowerCase().includes(query) || 
+        item.symbol.toLowerCase().includes(query)
+      ),
+      ...this.watchlist.filter(item => 
+        item.name.toLowerCase().includes(query) || 
+        item.symbol.toLowerCase().includes(query)
+      )
+    ];
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.searchResults = [];
+  }
+
+  navigateToResult(symbol: string): void {
+    // TODO: Implement navigation to stock detail page
+    console.log('Navigating to:', symbol);
   }
 
   private getMarketName(symbol: string): string {
