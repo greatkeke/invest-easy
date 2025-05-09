@@ -4,7 +4,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { NewsService } from '../news/news.service';
 import { HeaderComponent } from '../header/header.component';
 
 @Component({
@@ -24,19 +23,12 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  marketNews: any[] = [];
-
   constructor(
-    private newsService: NewsService,
     private router: Router
   ) {}
 
   ngOnInit() {
-    this.newsService.getMarketNews().subscribe({
-      next: (data) => this.marketNews = data.articles || [],
-      error: (err) => console.error('Failed to load news:', err)
-    });
-
+   
   }
 
   closePromotion(index: number) {

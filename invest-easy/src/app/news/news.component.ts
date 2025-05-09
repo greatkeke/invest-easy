@@ -1,8 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NewsService } from './news.service';
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  template: `<h1 i18n>News</h1>`
+  imports: [CommonModule],
+  templateUrl: './news.component.html',
+  styleUrls: ['./news.component.scss']
 })
-export class NewsComponent {}
+export class NewsComponent implements OnInit {
+  marketNews: any[] = [];
+
+  constructor(private newsService: NewsService) {}
+
+  ngOnInit() {
+    this.newsService.getMarketNews().subscribe({
+      next: (data) => this.marketNews = data.articles || [],
+      error: (err) => console.error('Failed to load news:', err)
+    });
+  }
+}
