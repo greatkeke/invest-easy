@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
+import { HeaderComponent } from '../header/header.component';
 
 
 @Component({
@@ -15,7 +16,9 @@ import { MatListModule } from '@angular/material/list';
   standalone: true,
   templateUrl: './market.component.html',
   styleUrls: ['./market.component.scss'],
-  imports: [CommonModule, MatCardModule, MatTabsModule, MatIconModule, MatInputModule, FormsModule, MatListModule]
+  imports: [CommonModule, MatCardModule, MatTabsModule, MatIconModule, MatInputModule, FormsModule, MatListModule,
+    HeaderComponent
+  ]
 })
 export class MarketComponent implements OnInit {
   indices: any[] = [];
