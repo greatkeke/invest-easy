@@ -126,3 +126,71 @@
     }
   }
 }
+
+.explore-section {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--card-bg);
+  border-radius: 4px;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+  }
+
+  .explore-items {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+
+    .explore-item {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      padding: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      background: var(--card-bg);
+      box-shadow: none;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .material-icons {
+        margin-right: 1rem;
+        color: var(--primary-color);
+      }
+
+      span {
+        flex-grow: 1;
+      }
+
+      .arrow-icon {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  .deposit-protection {
+    display: flex;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+    background-color: rgba(255, 0, 0, 0.1);
+    border-radius: 4px;
+
+    .warning-icon {
+      color: #ff0000;
+      margin-right: 0.75rem;
+    }
+
+    span {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+  }
+}
