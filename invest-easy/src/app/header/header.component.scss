@@ -1,0 +1,43 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-image: url(../../../public/images.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  .header-icons {
+    display: flex;
+    gap: 0.5rem;
+
+    button {
+      color: var(--text-color);
+    }
+  }
+}
+
+@keyframes scale-down {
+  from {
+    background-size: 100%;
+    transform: scaleY(1);
+  }
+
+  to {
+    background-size: 10%;
+    transform: scaleY(0.5);
+  }
+}
+
+.scale-down {
+  animation: scale-down cubic-bezier(.01,1.13,.29,.16);
+  animation-timeline: scroll();
+}
+
+.user-panel-dialog {
+  .mat-mdc-dialog-container {
+    border-radius: 16px 16px 0 0 !important;
+    max-height: 80vh;
+  }
+}

@@ -2,16 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NewsService } from '../news/news.service';
-import { UserPanelComponent } from '../user-panel/user-panel.component';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, MatIconModule, CommonModule],
+  imports: [MatButtonModule, MatCardModule, MatIconModule, CommonModule, HeaderComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -29,23 +28,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private newsService: NewsService,
-    private router: Router,
-    private dialog: MatDialog
+    private router: Router
   ) {}
-
-  goToNotifications() {
-    // Temporary implementation until notifications page is created
-    alert('Notifications page is coming soon!');
-    // this.router.navigate(['/notifications']);
-  }
-
-  toggleUserPanel() {
-    this.dialog.open(UserPanelComponent, {
-      position: { bottom: '0' },
-      width: '100%',
-      panelClass: 'user-panel-dialog'
-    });
-  }
 
   ngOnInit() {
     this.newsService.getMarketNews().subscribe({
