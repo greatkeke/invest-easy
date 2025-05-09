@@ -148,7 +148,7 @@
       flex-direction: row;
       flex-wrap: nowrap;
       align-items: center;
-      padding: 1rem;
+      padding: 0.5rem;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
       background: var(--card-bg);
@@ -160,7 +160,7 @@
       }
 
       .material-icons {
-        margin-right: 1rem;
+        margin-right: .1rem;
         color: var(--primary-color);
       }
 
