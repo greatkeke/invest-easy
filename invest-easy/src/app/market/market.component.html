@@ -2,7 +2,7 @@
 
 
 <div class="temperature-section" *ngIf="marketTemperature">
-  <h2 i18n>Market Temperature</h2>
+  <h5 i18n>Market Temperature</h5>
   <mat-card class="temperature-card">
     <mat-card-header>
       <mat-card-title>
@@ -26,6 +26,7 @@
 </div>
 
 <div class="market-container">
+  <h5 i18n>Market Trend</h5>
   @if (loading) {
     <div class="loading">Loading market data...</div>
   } @else {
