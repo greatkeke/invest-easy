@@ -23,12 +23,19 @@ export class HomeComponent implements OnInit {
     }
   ];
 
+  showBalance = true;
+  account = { id: '1234567890', balance: 5000.00, currency: 'HKD' };
+
+  toggleBalanceVisibility() {
+    this.showBalance = !this.showBalance;
+  }
+
   constructor(
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
-   
+
   }
 
   closePromotion(index: number) {

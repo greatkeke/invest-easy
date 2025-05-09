@@ -18,6 +18,7 @@
   </div>
 </div>
 
+
 <div class="quicksteps-section">
   <h2 i18n>QuickSteps</h2>
   <div class="quicksteps-grid">
@@ -34,6 +35,30 @@
     <mat-card class="quicksteps-card" (click)="navigateTo('hsbc-transfer')">
       <i class="material-icons">currency_exchange</i>
       <span i18n>Transfer to my local HSBC accounts</span>
+    </mat-card>
+  </div>
+</div>
+
+<div class="accounts-section">
+  <div class="accounts-header">
+    <h2 i18n>Your Account</h2>
+    <button mat-icon-button (click)="toggleBalanceVisibility()" class="balance-toggle">
+      <mat-icon>{{showBalance ? 'visibility' : 'visibility_off'}}</mat-icon>
+    </button>
+  </div>
+  <div class="accounts-grid">
+    <mat-card class="account-card">
+      <mat-card-header>
+        <mat-card-title>Account #{{account.id}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="balance" *ngIf="showBalance">
+          {{account.balance | currency:account.currency}}
+        </div>
+        <div class="balance-hidden" *ngIf="!showBalance">
+          ••••••
+        </div>
+      </mat-card-content>
     </mat-card>
   </div>
 </div>

@@ -27,7 +27,6 @@
   }
 }
 
-
 .quicksteps-section {
   margin: 1rem 0;
   padding: 1rem;
@@ -72,6 +71,57 @@
         margin: 0;
         text-align: center;
         font-size: small;
+      }
+    }
+  }
+}
+
+.accounts-section {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--card-bg);
+  border-radius: 4px;
+
+  .accounts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    .balance-toggle {
+      color: var(--text-color);
+    }
+  }
+
+  .accounts-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    .account-card {
+      background: var(--card-bg);
+      transition: transform 0.2s, box-shadow 0.2s;
+      
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .balance {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+
+      .balance-hidden {
+        font-size: 1.5rem;
+        font-weight: bold;
+        letter-spacing: 2px;
       }
     }
   }
