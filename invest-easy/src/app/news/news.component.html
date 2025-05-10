@@ -1,9 +1,15 @@
 <app-header title="News"></app-header>
 
 <div class="news-section">
-  <ul class="news-list">
-    <li *ngFor="let news of marketNews">
-      {{news.title}}
-    </li>
-  </ul>
+  <div class="news-list">
+    <div *ngFor="let article of marketNews" class="news-card">
+      <div class="news-header">
+        <span class="news-source">{{article.source.name}}</span>
+        <span class="news-date">{{article.publishedAt | date:'mediumDate'}}</span>
+      </div>
+      <h3 class="news-title">{{article.title}}</h3>
+      <p class="news-description">{{article.description}}</p>
+      <a [href]="article.url" target="_blank" class="read-more">Read more</a>
+    </div>
+  </div>
 </div>
