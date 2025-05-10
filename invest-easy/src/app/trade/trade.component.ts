@@ -11,11 +11,21 @@ import { HeaderComponent } from '../header/header.component';
 })
 export class TradeComponent {
   showMetrics = true;
-  totalAssets = 125000;
-  todayPL = 2450;
-  marketValue = 118000;
-  positionPL = 7500;
-  maxWithdrawable = 85000;
+  totalAssets = 365013.73; // Will be formatted as $125K
+  todayPL = 2450; // Will be formatted as $2.45K 
+  marketValue = 118000; // Will be formatted as $118K
+  positionPL = 7500; // Will be formatted as $7.5K
+  maxWithdrawable = 85000; // Will be formatted as $85K
+
+  formatCurrency(value: number): string {
+    if (value >= 1000000) {
+      return `$${(value/1000000).toFixed(1)}M`;
+    }
+    if (value >= 1000) {
+      return `$${(value/1000).toFixed(1)}K`;
+    }
+    return `$${value}`;
+  }
 
   toggleMetrics() {
     this.showMetrics = !this.showMetrics;

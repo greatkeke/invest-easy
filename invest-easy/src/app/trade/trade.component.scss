@@ -82,7 +82,12 @@
       }
 
       .value {
-        font-weight: normal;
+        font-size: 18px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
 
         &.positive {
           color: #4caf50;

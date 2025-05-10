@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   ];
 
   showBalance = true;
-  account = { id: '1234567890', balance: 5000.00, currency: 'HKD' };
+  account = { id: '190108', balance: 365013.73, currency: 'HKD' };
 
   toggleBalanceVisibility() {
     this.showBalance = !this.showBalance;

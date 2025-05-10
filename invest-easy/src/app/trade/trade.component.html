@@ -18,13 +18,13 @@
       <div class="metric-row">
         <div class="metric">
           <span class="label">Total Assets</span>
-          <span class="value" *ngIf="showMetrics">{{ totalAssets | currency }}</span>
+          <span class="value" *ngIf="showMetrics">{{ formatCurrency(totalAssets) }}</span>
           <span class="value" *ngIf="!showMetrics">••••••</span>
         </div>
         <div class="metric">
           <span class="label">Today's P/L</span>
           <span class="value"  *ngIf="showMetrics" [class.positive]="todayPL > 0" [class.negative]="todayPL < 0">
-            {{ todayPL | currency }}
+            {{ formatCurrency(todayPL) }}
           </span>
           <span class="value" *ngIf="!showMetrics">••••••</span>
         </div>
@@ -32,19 +32,19 @@
       <div class="metric-row">
         <div class="metric">
           <span class="label">Market Value</span>
-          <span class="value"  *ngIf="showMetrics">{{ marketValue | currency }}</span>
+          <span class="value"  *ngIf="showMetrics">{{ formatCurrency(marketValue) }}</span>
           <span class="value" *ngIf="!showMetrics">••••••</span>
         </div>
         <div class="metric">
           <span class="label">Position P/L</span>
           <span class="value" *ngIf="showMetrics" [class.positive]="positionPL > 0" [class.negative]="positionPL < 0">
-            {{ positionPL | currency }}
+            {{ formatCurrency(positionPL) }}
           </span>
           <span class="value" *ngIf="!showMetrics">••••••</span>
         </div>
         <div class="metric">
           <span class="label">Max Withdrawable</span>
-          <span class="value" *ngIf="showMetrics">{{ maxWithdrawable | currency }}</span>
+          <span class="value" *ngIf="showMetrics">{{ formatCurrency(maxWithdrawable) }}</span>
           <span class="value" *ngIf="!showMetrics">••••••</span>
         </div>
       </div>
