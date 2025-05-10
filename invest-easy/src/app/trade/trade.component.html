@@ -1,0 +1,83 @@
+<app-header title="Trade"></app-header>
+
+<div class="trade-container">
+  <div class="trade-actions">
+    <button class="trade-action">Buy</button>
+    <button class="trade-action">Sell</button>
+    <button class="trade-action">Transfer</button>
+  </div>
+
+  <div class="dashboard asset-dashboard">
+    <div class="dashboard-header">
+      <h3>Asset Overview</h3>
+      <button class="toggle-metrics" (click)="toggleMetrics()">
+        <i class="material-icons">{{ showMetrics ? 'visibility_off' : 'visibility' }}</i>
+      </button>
+    </div>
+    <div class="metrics">
+      <div class="metric-row">
+        <div class="metric">
+          <span class="label">Total Assets</span>
+          <span class="value" *ngIf="showMetrics">{{ totalAssets | currency }}</span>
+          <span class="value" *ngIf="!showMetrics">••••••</span>
+        </div>
+        <div class="metric">
+          <span class="label">Today's P/L</span>
+          <span class="value"  *ngIf="showMetrics" [class.positive]="todayPL > 0" [class.negative]="todayPL < 0">
+            {{ todayPL | currency }}
+          </span>
+          <span class="value" *ngIf="!showMetrics">••••••</span>
+        </div>
+      </div>
+      <div class="metric-row">
+        <div class="metric">
+          <span class="label">Market Value</span>
+          <span class="value"  *ngIf="showMetrics">{{ marketValue | currency }}</span>
+          <span class="value" *ngIf="!showMetrics">••••••</span>
+        </div>
+        <div class="metric">
+          <span class="label">Position P/L</span>
+          <span class="value" *ngIf="showMetrics" [class.positive]="positionPL > 0" [class.negative]="positionPL < 0">
+            {{ positionPL | currency }}
+          </span>
+          <span class="value" *ngIf="!showMetrics">••••••</span>
+        </div>
+        <div class="metric">
+          <span class="label">Max Withdrawable</span>
+          <span class="value" *ngIf="showMetrics">{{ maxWithdrawable | currency }}</span>
+          <span class="value" *ngIf="!showMetrics">••••••</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard positions-dashboard">
+    <h3>Positions</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>MV/Qty</th>
+          <th>Price/Cost</th>
+          <th>Today's P/L</th>
+          <th>P/L</th>
+          <th>% Portfolio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let position of positions">
+          <td>{{ position.symbol }}</td>
+          <td>{{ position.marketValue | currency }} / {{ position.quantity }}</td>
+          <td>{{ position.price | currency }} / {{ position.cost | currency }}</td>
+          <td [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">
+            {{ position.todayPL | currency }}
+          </td>
+          <td [class.positive]="position.pl > 0" [class.negative]="position.pl < 0">
+            {{ position.pl | currency }}
+          </td>
+          <td>{{ position.portfolioPercent | percent }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
