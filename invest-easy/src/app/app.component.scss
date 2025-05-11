@@ -28,11 +28,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 4rem;
-  background: var(--background-color);
+  height: 3rem;
   display: flex;
   justify-content: space-around;
-  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
   z-index: 1;
 
   a {
@@ -41,7 +39,6 @@
     align-items: center;
     justify-content: center;
     padding: 8px;
-    color: var(--text-color);
     text-decoration: none;
     font-size: 12px;
     width: 25%;
@@ -50,7 +47,7 @@
 
     i.pi {
       margin-bottom: 4px;
-      font-size: 24px;
+      font-size: 1rem;
     }
 
     &.active {

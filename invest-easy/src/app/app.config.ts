@@ -12,14 +12,15 @@ import Aura from '@primeng/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(withEventReplay()), provideHttpClient(), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          }),
-        provideAnimationsAsync(),
-        providePrimeNG({
-            theme: {
-                preset: Aura
-            }
-        })
-]
+    enabled: !isDevMode(),
+    registrationStrategy: 'registerWhenStable:30000'
+  }),
+  provideAnimationsAsync(),
+  providePrimeNG({
+    theme: {
+      preset: Aura
+    },
+    ripple: true,
+  })
+  ]
 };
