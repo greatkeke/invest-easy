@@ -1,11 +1,11 @@
 <div class="header scale-down">
   <h1 class="header-title">{{title}}</h1>
   <div class="header-icons">
-    <button mat-icon-button (click)="goToNotifications()">
-      <mat-icon>notifications</mat-icon>
-    </button>
-    <button mat-icon-button (click)="toggleUserPanel()">
-      <mat-icon>people</mat-icon>
-    </button>
+    <button pButton icon="pi pi-bell" (click)="goToNotifications()" class="p-button-rounded p-button-text"></button>
+    <button pButton icon="pi pi-user" (click)="toggleUserPanel()" class="p-button-rounded p-button-text"></button>
   </div>
+
+  <p-dialog [(visible)]="displayUserPanel" [style]="{width: '100vw', bottom: '0'}" [baseZIndex]="10000" [modal]="true">
+    <app-user-panel></app-user-panel>
+  </p-dialog>
 </div>

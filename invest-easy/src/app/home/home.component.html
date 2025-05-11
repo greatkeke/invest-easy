@@ -3,137 +3,132 @@
 <div *ngIf="showPromotions" class="promotion-carousel">
   <div class="carousel-container">
     <ng-container *ngFor="let promo of promotions; let i = index">
-      <mat-card *ngIf="promo.visible" class="promo-card">
-        <button mat-icon-button class="close-btn" (click)="closePromotion(i)">
-          <mat-icon>close</mat-icon>
-        </button>
-        <mat-card-header>
-          <mat-card-title>{{promo.title}}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
+      <p-card *ngIf="promo.visible" class="promo-card">
+        <button pButton icon="pi pi-times" class="p-button-rounded p-button-text close-btn" (click)="closePromotion(i)"></button>
+        <div class="card-header">
+          <h3>{{promo.title}}</h3>
+        </div>
+        <div class="card-content">
           {{promo.description}}
-        </mat-card-content>
-      </mat-card>
+        </div>
+      </p-card>
     </ng-container>
   </div>
 </div>
 
-
 <div class="quicksteps-section">
   <h5 i18n>QuickSteps</h5>
   <div class="quicksteps-grid">
-    <mat-card class="quicksteps-card" (click)="navigateTo('estatements')">
-      <i class="material-icons">receipt</i>
+    <p-card class="quicksteps-card" (click)="navigateTo('estatements')">
+      <i class="pi pi-file"></i>
       <span i18n>View eStatements & eAdvices</span>
-    </mat-card>
+    </p-card>
     
-    <mat-card class="quicksteps-card" (click)="navigateTo('local-transfer')">
-      <i class="material-icons">payments</i>
+    <p-card class="quicksteps-card" (click)="navigateTo('local-transfer')">
+      <i class="pi pi-money-bill"></i>
       <span i18n>Transfer to local payees / FPS</span>
-    </mat-card>
+    </p-card>
     
-    <mat-card class="quicksteps-card" (click)="navigateTo('hsbc-transfer')">
-      <i class="material-icons">currency_exchange</i>
+    <p-card class="quicksteps-card" (click)="navigateTo('hsbc-transfer')">
+      <i class="pi pi-exchange"></i>
       <span i18n>Transfer to my local HSBC accounts</span>
-    </mat-card>
+    </p-card>
   </div>
 </div>
 
 <div class="accounts-section">
   <div class="accounts-header">
     <h5 i18n>Your Account</h5>
-    <button mat-icon-button (click)="toggleBalanceVisibility()" class="balance-toggle">
-      <mat-icon>{{showBalance ? 'visibility' : 'visibility_off'}}</mat-icon>
-    </button>
+    <button pButton icon="{{showBalance ? 'pi pi-eye' : 'pi pi-eye-slash'}}" class="p-button-rounded p-button-text balance-toggle" (click)="toggleBalanceVisibility()"></button>
   </div>
   <div class="accounts-grid">
-    <mat-card class="account-card">
-      <mat-card-header>
-        <mat-card-title>Account #{{account.id}}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
+    <p-card class="account-card">
+      <div class="card-header">
+        <h3>Account #{{account.id}}</h3>
+      </div>
+      <div class="card-content">
         <div class="balance" *ngIf="showBalance">
           {{account.balance | currency:account.currency}}
         </div>
         <div class="balance-hidden" *ngIf="!showBalance">
           ••••••
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </p-card>
   </div>
 </div>
 
 <div class="explore-section">
   <h5 i18n>Explore products and services</h5>
   <div class="explore-items">
-    <mat-card class="explore-item">
-      <i class="material-icons">account_balance</i>
+    <p-card class="explore-item">
+      <i class="pi pi-building"></i>
       <span i18n>Account opening / upgrade</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">credit_card</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-credit-card"></i>
       <span i18n>Debit cards</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">health_and_safety</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-heart"></i>
       <span i18n>Well+</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">shield</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-shield"></i>
       <span i18n>Insurance</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">savings</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-wallet"></i>
       <span i18n>Time Deposits</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">payment</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-id-card"></i>
       <span i18n>Credit cards & instalment plans</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">monetization_on</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-dollar"></i>
       <span i18n>Loans</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">account_balance_wallet</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-briefcase"></i>
       <span i18n>MPF</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">smartphone</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-mobile"></i>
       <span i18n>Mobile Cash Withdrawal</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">currency_exchange</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-globe"></i>
       <span i18n>Foreign exchange rates</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">trending_up</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-chart-line"></i>
       <span i18n>Deposit rates</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">eco</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-leaf"></i>
       <span i18n>ESG Hub</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
-    <mat-card class="explore-item">
-      <i class="material-icons">emoji_events</i>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
+    <p-card class="explore-item">
+      <i class="pi pi-star"></i>
       <span i18n>Your Quests</span>
-      <mat-icon class="arrow-icon">chevron_right</mat-icon>
-    </mat-card>
+      <i class="pi pi-chevron-right arrow-icon"></i>
+    </p-card>
   </div>
   <div class="deposit-protection">
-    <i class="material-icons warning-icon">assured_workload</i>
+    <i class="pi pi-lock warning-icon"></i>
     <span i18n>DEPOSIT PROTECTION SCHEME MEMBER</span>
   </div>
 </div>

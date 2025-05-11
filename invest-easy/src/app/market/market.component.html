@@ -2,58 +2,61 @@
 
 <div class="search-section">
   <div class="search-input-container">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label i18n>Search Market</mat-label>
-      <input matInput 
+    <span class="p-input-icon-left full-width">
+      <i class="pi pi-search"></i>
+      <input pInputText 
              [(ngModel)]="searchQuery" 
              (input)="onSearch()"
-             placeholder="Search stocks or indices...">
-    </mat-form-field>
-    <button mat-icon-button 
-            *ngIf="searchResults.length > 0"
-            (click)="clearSearch()"
-            class="cancel-button">
-      <mat-icon>close</mat-icon>
-    </button>
+             placeholder="Search stocks or indices..."
+             i18n-placeholder>
+    </span>
+    <p-button *ngIf="searchResults.length > 0"
+              icon="pi pi-times"
+              (click)="clearSearch()"
+              styleClass="p-button-rounded p-button-text cancel-button">
+    </p-button>
   </div>
 
-  <mat-list class="search-results" *ngIf="searchResults.length > 0">
-    <mat-list-item *ngFor="let result of searchResults" 
-                  (click)="navigateToResult(result.symbol)"
-                  class="result-item">
-      <div mat-line>{{result.name}} ({{result.symbol}})</div>
-      <div mat-line class="result-details">
-        <span class="price">{{result.price | number:'1.2-2'}}</span>
-        <span class="change" [class.positive]="result.change > 0" [class.negative]="result.change < 0">
-          {{result.change > 0 ? '+' : ''}}{{result.change | number:'1.2-2'}} ({{result.percent}}%)
-        </span>
+  <p-listbox [options]="searchResults" 
+             *ngIf="searchResults.length > 0"
+             class="search-results"
+             (onClick)="navigateToResult($event.option.symbol)"
+             [listStyle]="{'max-height':'250px'}">
+    <ng-template let-result pTemplate="item">
+      <div class="result-item">
+        <div>{{result.name}} ({{result.symbol}})</div>
+        <div class="result-details">
+          <span class="price">{{result.price | number:'1.2-2'}}</span>
+          <span class="change" [class.positive]="result.change > 0" [class.negative]="result.change < 0">
+            {{result.change > 0 ? '+' : ''}}{{result.change | number:'1.2-2'}} ({{result.percent}}%)
+          </span>
+        </div>
       </div>
-    </mat-list-item>
-  </mat-list>
+    </ng-template>
+  </p-listbox>
 </div>
 
 <div class="temperature-section" *ngIf="marketTemperature">
   <h5 i18n>Market Temperature</h5>
-  <mat-card class="temperature-card">
-    <mat-card-header>
-      <mat-card-title>
-        {{marketTemperature.temperature}}°C
-      </mat-card-title>
-      <mat-card-subtitle>
-        {{marketTemperature.description}}
-      </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
+  <p-card class="temperature-card">
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <div class="card-title">{{marketTemperature.temperature}}°C</div>
+        <div class="card-subtitle">{{marketTemperature.description}}</div>
+      </div>
+    </ng-template>
+    <div class="card-content">
       <div class="trend-indicator" [class.up]="marketTemperature.trend === 'up'" 
            [class.down]="marketTemperature.trend === 'down'">
-        <mat-icon>{{marketTemperature.trend === 'up' ? 'trending_up' : 
-                   marketTemperature.trend === 'down' ? 'trending_down' : 'trending_flat'}}</mat-icon>
+        <i class="pi" [class.pi-arrow-up]="marketTemperature.trend === 'up'" 
+           [class.pi-arrow-down]="marketTemperature.trend === 'down'"
+           [class.pi-minus]="marketTemperature.trend !== 'up' && marketTemperature.trend !== 'down'"></i>
       </div>
       <div class="update-time" i18n>
         LastUpdatedTime: {{marketTemperature.updatedAt | date:'yyyy-MM-dd HH:mm'}}
       </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </p-card>
 </div>
 
 <div class="market-container">
@@ -61,44 +64,48 @@
   @if (loading) {
     <div class="loading">Loading market data...</div>
   } @else {
-    <mat-tab-group>
-      <mat-tab label="Market Index">
+    <p-tabView>
+      <p-tabPanel header="Market Index">
         <div class="cards-container">
           @for (index of indices; track index.symbol) {
-            <mat-card class="market-card">
-              <mat-card-header>
-                <mat-card-title>{{index.name}}</mat-card-title>
-                <mat-card-subtitle>{{index.symbol}}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
+            <p-card class="market-card">
+              <ng-template pTemplate="header">
+                <div class="card-header">
+                  <div class="card-title">{{index.name}}</div>
+                  <div class="card-subtitle">{{index.symbol}}</div>
+                </div>
+              </ng-template>
+              <div class="card-content">
                 <div class="price">{{index.price | number:'1.2-2'}}</div>
                 <div class="change" [class.positive]="index.change > 0" [class.negative]="index.change < 0">
                   {{index.change > 0 ? '+' : ''}}{{index.change | number:'1.2-2'}} ({{index.percent}}%)
                 </div>
-              </mat-card-content>
-            </mat-card>
+              </div>
+            </p-card>
           }
         </div>
-      </mat-tab>
-      <mat-tab label="WathchList">
+      </p-tabPanel>
+      <p-tabPanel header="WatchList">
         <div class="cards-container">
           @for (stock of watchlist; track stock.symbol) {
-            <mat-card class="market-card">
-              <mat-card-header>
-                <mat-card-title>{{stock.name}}</mat-card-title>
-                <mat-card-subtitle>{{stock.symbol}}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
+            <p-card class="market-card">
+              <ng-template pTemplate="header">
+                <div class="card-header">
+                  <div class="card-title">{{stock.name}}</div>
+                  <div class="card-subtitle">{{stock.symbol}}</div>
+                </div>
+              </ng-template>
+              <div class="card-content">
                 <div class="price">{{stock.price | number:'1.2-2'}}</div>
                 <div class="change" [class.positive]="stock.change > 0" [class.negative]="stock.change < 0">
                   {{stock.change > 0 ? '+' : ''}}{{stock.change | number:'1.2-2'}} ({{stock.percent}}%)
                 </div>
                 <div class="volume">volume: {{stock.volume}}</div>
-              </mat-card-content>
-            </mat-card>
+              </div>
+            </p-card>
           }
         </div>
-      </mat-tab>
-    </mat-tab-group>
+      </p-tabPanel>
+    </p-tabView>
   }
 </div>

@@ -1,15 +1,9 @@
 <div class="user-panel">
-  <mat-toolbar color="primary">
-    <span>UserName</span>
-  </mat-toolbar>
-  <mat-nav-list>
-    <a mat-list-item href="#"><span i18n>Preference</span></a>
-    <a mat-list-item href="#"><span i18n>eStatements</span></a>
-    <a mat-list-item href="#"><span i18n>Security</span></a>
-    <a mat-list-item href="#"><span i18n>Reports</span></a>
-    <a mat-list-item href="#"><span i18n>Action</span></a>
-    <a mat-list-item href="#"><span i18n>Performance</span></a>
-    <a mat-list-item href="#"><span i18n>About</span></a>
-    <a mat-list-item href="#"><span i18n>Rating</span></a>
-  </mat-nav-list>
+  <p-panel header="UserName" [toggleable]="false">
+    <p-listbox [options]="menuItems" [listStyle]="{'height':'100%'}" [style]="{'width':'100%', 'border':'none'}">
+      <ng-template let-item pTemplate="item">
+        <span i18n>{{item.label}}</span>
+      </ng-template>
+    </p-listbox>
+  </p-panel>
 </div>

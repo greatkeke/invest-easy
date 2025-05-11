@@ -1,23 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { MarketService } from './market.service';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MarketTemperatureService } from './market-temperature.service';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { MatListModule } from '@angular/material/list';
+import { MarketTemperatureService } from './market-temperature.service';
 import { HeaderComponent } from '../header/header.component';
-
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { ListboxModule } from 'primeng/listbox';
+import { CardModule } from 'primeng/card';
+import { TabViewModule } from 'primeng/tabview';
 
 @Component({
   selector: 'app-market',
   standalone: true,
   templateUrl: './market.component.html',
   styleUrls: ['./market.component.scss'],
-  imports: [CommonModule, MatCardModule, MatTabsModule, MatIconModule, MatInputModule, FormsModule, MatListModule,
-    HeaderComponent
+  imports: [
+    CommonModule,
+    FormsModule,
+    HeaderComponent,
+    InputTextModule,
+    ButtonModule,
+    ListboxModule,
+    CardModule,
+    TabViewModule
   ]
 })
 export class MarketComponent implements OnInit {

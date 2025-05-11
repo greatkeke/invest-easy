@@ -69,12 +69,12 @@
     box-shadow: none;
     padding: 1rem;
 
-    mat-card-title {
+    .card-title {
       font-size: 1rem;
       font-weight: bold;
     }
 
-    mat-card-subtitle {
+    .card-subtitle {
       color: var(--text-secondary);
     }
 
@@ -95,7 +95,7 @@
         background-color: rgba(244, 67, 54, 0.1);
       }
 
-      mat-icon {
+      i.pi {
         margin-right: 5px;
       }
     }
@@ -129,12 +129,12 @@
     background: var(--card-bg);
     box-shadow: none;
 
-    mat-card-title {
+    .card-title {
       font-size: 1rem;
       font-weight: normal;
     }
 
-    mat-card-subtitle {
+    .card-subtitle {
       font-size: 0.8rem;
       color: var(--text-secondary);
     }
@@ -168,11 +168,11 @@
     margin-top: 8px;
   }
 
-  .mat-tab-group {
+  .p-tabview {
     margin-top: 1rem;
   }
 
-  .mat-tab-label {
+  .p-tabview-nav-link {
     font-size: 1rem;
     font-weight: normal;
   }
