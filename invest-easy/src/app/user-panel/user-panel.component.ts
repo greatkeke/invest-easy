@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,9 +23,9 @@ export class UserPanelComponent {
     { label: 'Activity log' }
   ];
 
+  @Output() panelClosed = new EventEmitter<void>();
+
   closePanel() {
-    // Implementation to close the panel would go here
-    // This could be handled by a parent component or service
-    console.log('Close panel clicked');
+    this.panelClosed.emit();
   }
 }

@@ -8,7 +8,7 @@
   <p-drawer header="Bottom Drawer" #drawerRef [(visible)]="displayUserPanel" position="full"
     [style]="{background: 'transparent' }">
     <ng-template #headless>
-      <app-user-panel></app-user-panel>
+      <app-user-panel (panelClosed)="displayUserPanel=false"></app-user-panel>
     </ng-template>
   </p-drawer>
 
