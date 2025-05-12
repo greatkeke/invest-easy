@@ -1,9 +1,9 @@
-<div class="user-panel">
-  <p-panel header="UserName" [toggleable]="false">
-    <p-listbox [options]="menuItems" [listStyle]="{'max-height':'100%'}" [style]="{'width':'100%', 'border':'none'}">
-      <ng-template let-item pTemplate="item">
-        <span i18n>{{item.label}}</span>
-      </ng-template>
-    </p-listbox>
-  </p-panel>
+<div class="user-panel fixed top-0 mt-3 w-screen max-h-[80vh] bg-white shadow-lg">
+  <div class="h-8 w-full cursor-pointer" (click)="closePanel()"></div>
+  <div class="px-4 py-2 font-bold">UserName</div>
+  <ul class="overflow-y-auto">
+    <li *ngFor="let item of menuItems" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+      <span i18n>{{item.label}}</span>
+    </li>
+  </ul>
 </div>

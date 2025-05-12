@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { PanelModule } from 'primeng/panel';
-import { ListboxModule } from 'primeng/listbox';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,9 +7,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './user-panel.component.scss',
   standalone: true,
   imports: [
-    ButtonModule,
-    PanelModule,
-    ListboxModule,
     CommonModule
   ]
 })
@@ -27,4 +21,10 @@ export class UserPanelComponent {
     { label: 'About' },
     { label: 'Rating' }
   ];
+
+  closePanel() {
+    // Implementation to close the panel would go here
+    // This could be handled by a parent component or service
+    console.log('Close panel clicked');
+  }
 }
