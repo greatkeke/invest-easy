@@ -5,7 +5,21 @@
     <button pButton icon="pi pi-user" (click)="toggleUserPanel()" class="p-button-rounded p-button-text"></button>
   </div>
 
-  <p-dialog [(visible)]="displayUserPanel" [style]="{width: '100vw', bottom: '0'}" [baseZIndex]="10000" [modal]="true">
+
+
+  <!-- <p-dialog [(visible)]="displayUserPanel" [style]="{width: '100vw', bottom: '0'}" [baseZIndex]="10000" [modal]="true">
     <app-user-panel></app-user-panel>
-  </p-dialog>
+  </p-dialog> -->
+
+  <!-- <p-drawer [(visible)]="displayUserPanel" header="Drawer">
+    <app-user-panel></app-user-panel>
+  </p-drawer> -->
+
+  <p-drawer #drawerRef [(visible)]="displayUserPanel">
+    <ng-template #headless>
+      <app-user-panel></app-user-panel>
+    </ng-template>
+</p-drawer>
+
+
 </div>

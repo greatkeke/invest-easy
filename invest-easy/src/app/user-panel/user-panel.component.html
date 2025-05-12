@@ -1,6 +1,6 @@
 <div class="user-panel">
   <p-panel header="UserName" [toggleable]="false">
-    <p-listbox [options]="menuItems" [listStyle]="{'height':'100%'}" [style]="{'width':'100%', 'border':'none'}">
+    <p-listbox [options]="menuItems" [listStyle]="{'max-height':'100%'}" [style]="{'width':'100%', 'border':'none'}">
       <ng-template let-item pTemplate="item">
         <span i18n>{{item.label}}</span>
       </ng-template>

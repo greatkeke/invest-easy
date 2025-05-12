@@ -21,12 +21,10 @@
 @keyframes scale-down {
   from {
     background-size: 100%;
-    transform: scaleY(1);
   }
 
   to {
     background-size: 10%;
-    transform: scaleY(0.5);
   }
 }
 
@@ -35,9 +33,9 @@
   animation-timeline: scroll();
 }
 
-.user-panel-dialog {
-  .p-dialog {
-    border-radius: 16px 16px 0 0 !important;
-    max-height: 80vh;
-  }
-}
+// .user-panel-dialog {
+//   .p-dialog {
+//     border-radius: 16px 16px 0 0 !important;
+//     max-height: 80vh;
+//   }
+// }

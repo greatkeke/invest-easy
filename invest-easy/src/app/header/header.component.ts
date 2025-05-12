@@ -1,14 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserPanelComponent } from '../user-panel/user-panel.component';
+import { DrawerModule } from 'primeng/drawer';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ButtonModule, DialogModule, CommonModule,UserPanelComponent],
+  imports: [ButtonModule, CommonModule, UserPanelComponent, DrawerModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
@@ -18,7 +18,7 @@ export class HeaderComponent {
 
   constructor(
     private router: Router,
-  ) {}
+  ) { }
 
   goToNotifications() {
     // Temporary implementation until notifications page is created
