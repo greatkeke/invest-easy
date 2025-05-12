@@ -12,14 +12,15 @@ import { CommonModule } from '@angular/common';
 })
 export class UserPanelComponent {
   menuItems = [
-    { label: 'Preference' },
-    { label: 'eStatements' },
+    { label: 'General' },
     { label: 'Security' },
-    { label: 'Reports' },
-    { label: 'Action' },
-    { label: 'Performance' },
-    { label: 'About' },
-    { label: 'Rating' }
+    { label: 'Pay and transfer' },
+    { label: 'Contact details' },
+    { label: 'Communication preferences' },
+    { label: 'App permissions' },
+    { label: 'Investment' },
+    { label: 'Open Banking consent' },
+    { label: 'Activity log' }
   ];
 
   closePanel() {

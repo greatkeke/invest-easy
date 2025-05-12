@@ -5,8 +5,8 @@
     <button pButton icon="pi pi-user" (click)="toggleUserPanel()" class="p-button-rounded p-button-text"></button>
   </div>
 
-  <p-drawer header="Bottom Drawer" #drawerRef [(visible)]="displayUserPanel" position="bottom"
-    [style]="{height: '100vh' }">
+  <p-drawer header="Bottom Drawer" #drawerRef [(visible)]="displayUserPanel" position="full"
+    [style]="{background: 'transparent' }">
     <ng-template #headless>
       <app-user-panel></app-user-panel>
     </ng-template>
