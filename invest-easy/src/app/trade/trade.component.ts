@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-trade',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent,ButtonModule],
   templateUrl: './trade.component.html',
   styleUrls: ['./trade.component.scss']
 })
