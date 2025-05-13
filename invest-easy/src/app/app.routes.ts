@@ -5,13 +5,20 @@ import { NewsComponent } from './news/news.component';
 import { TradeComponent } from './trade/trade.component';
 import { AssetDetailComponent } from './asset-detail/asset-detail.component';
 import { TradeStocksComponent } from './trade/trade-stocks.component';
+import { LayoutComponent } from './layout/layout.component';
 
 export const routes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: 'market', component: MarketComponent },
-  { path: 'news', component: NewsComponent },
-  { path: 'trade', component: TradeComponent },
+  { 
+    path: '',
+    component: LayoutComponent,
+    children: [
+      { path: 'home', component: HomeComponent },
+      { path: 'market', component: MarketComponent },
+      { path: 'news', component: NewsComponent },
+      { path: 'trade', component: TradeComponent },
+      { path: '', redirectTo: '/home', pathMatch: 'full' }
+    ]
+  },
   { path: 'trade-stocks', component: TradeStocksComponent },
-  { path: 'asset-detail', component: AssetDetailComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' }
+  { path: 'asset-detail', component: AssetDetailComponent }
 ];
