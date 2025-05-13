@@ -1,7 +1,7 @@
 <app-header title="Trade"></app-header>
 
 <div class="trade-container">
-  
+
   <div class="trade-actions">
     <p-button label="Buy" icon="pi pi-shopping-cart"></p-button>
     <p-button label="Sell" icon="pi pi-dollar"></p-button>
@@ -13,7 +13,7 @@
     <div class="dashboard-header">
       <h3>Asset Overview</h3>
       <button class="toggle-metrics" (click)="toggleMetrics()">
-        <i class="material-icons">{{ showMetrics ? 'visibility_off' : 'visibility' }}</i>
+        <i class="pi" [class]="showMetrics ? 'pi-eye' : 'pi-eye-slash'"></i>
       </button>
     </div>
     <div class="metrics">
