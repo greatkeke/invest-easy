@@ -7,11 +7,14 @@
   <div class="p-4 space-y-4">
     <!-- Price Card -->
     <div class="bg-white rounded-lg shadow p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold">$161.00</h2>
-        <span class="text-lg font-bold text-green-500">+1.00 (+0.63%)</span>
+      <div class="flex flex-col justify-between items-start mb-4">
+        <h2 class="text-md font-bold">Intel</h2>
+        <div class="flex w-full justify-between">
+          <span class="text-md ">$161.00</span>
+          <span class="text-md text-green-500">+1.00 (+0.63%)</span>
+        </div>
       </div>
-      <div class="h-64">
+      <div class="min-h-10">
         <p-chart type="line" [data]="chartData" [options]="{
           responsive: true,
           maintainAspectRatio: false,
@@ -22,53 +25,53 @@
 
     <!-- Trading Info Card -->
     <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-lg font-medium text-gray-900 mb-4">Trading Information</h2>
-      <div class="grid grid-cols-2 gap-4">
+      <h2 class="text-sm text-gray-900 mb-4">Trading Information</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div *ngFor="let info of tradingInfo" class="flex justify-between">
-          <span class="text-gray-700">{{info.label}}</span>
-          <span class="font-medium">{{info.value}}</span>
+          <span class="text-xs text-gray-700">{{info.label}}</span>
+          <span class="text-xs">{{info.value}}</span>
         </div>
       </div>
     </div>
 
     <!-- Order Form -->
     <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-lg font-medium text-gray-900 mb-4">Order Details</h2>
+      <h2 class="text-sm text-gray-900 mb-4">Order Details</h2>
       <form class="space-y-4">
         <div>
-          <label class="block text-gray-700 mb-2">Order type</label>
-          <p-dropdown [options]="orderTypes" [(ngModel)]="orderForm.type" optionLabel="label" 
-            [showClear]="false" placeholder="Select order type"></p-dropdown>
+          <label class="block text-xs text-gray-700 mb-2">Order type</label>
+          <p-select [options]="orderTypes" [(ngModel)]="orderForm.type" name="type" optionLabel="label" 
+            [showClear]="false" placeholder="Select order type" size="small"></p-select>
         </div>
 
         <div>
-          <label class="block text-gray-700 mb-2">Price</label>
-          <p-inputNumber [(ngModel)]="orderForm.price" mode="currency" currency="USD" 
-            [min]="0" [max]="10000" [step]="0.01" [showButtons]="true"></p-inputNumber>
+          <label class="block text-xs text-gray-700 mb-2">Price</label>
+          <p-inputNumber [(ngModel)]="orderForm.price" name="price" mode="currency" currency="USD" 
+            [min]="0" [max]="10000" [step]="0.01" [showButtons]="true" size="small"></p-inputNumber>
         </div>
 
         <div>
-          <label class="block text-gray-700 mb-2">Quantity</label>
-          <p-inputNumber [(ngModel)]="orderForm.quantity" [min]="1" [max]="10000" 
+          <label class="block text-xs text-gray-700 mb-2">Quantity</label>
+          <p-inputNumber [(ngModel)]="orderForm.quantity" name="quantity" [min]="1" [max]="10000" 
             [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" 
-            decrementButtonIcon="pi pi-minus"></p-inputNumber>
+            decrementButtonIcon="pi pi-minus" size="small"></p-inputNumber>
         </div>
 
         <div>
-          <label class="block text-gray-700 mb-2">Good until</label>
-          <p-calendar [(ngModel)]="orderForm.goodUntil" [showIcon]="true" 
-            dateFormat="yy-mm-dd"></p-calendar>
+          <label class="block text-xs text-gray-700 mb-2">Good until</label>
+          <p-datepicker [(ngModel)]="orderForm.goodUntil" name="goodUntil" [showIcon]="true" 
+            dateFormat="yy-mm-dd" [minDate]="today" size="small"></p-datepicker>
         </div>
 
         <div>
-          <label class="block text-gray-700 mb-2">Pay from</label>
-          <p-dropdown [options]="accounts" [(ngModel)]="orderForm.payFrom" optionLabel="label" 
-            [showClear]="false" placeholder="Select account"></p-dropdown>
+          <label class="block text-xs text-gray-700 mb-2">Pay from</label>
+          <p-select [options]="accounts" [(ngModel)]="orderForm.payFrom" name="payFrom" optionLabel="label" 
+            [showClear]="false" placeholder="Select account" size="small"></p-select>
         </div>
 
         <div>
-          <label class="block text-gray-700 mb-2">Account buying power</label>
-          <span class="text-lg font-bold">$25,000.00</span>
+          <label class="block text-xs text-gray-700 mb-2">Account buying power</label>
+          <span class="text-sm font-bold">$25,000.00</span>
         </div>
       </form>
     </div>
@@ -76,10 +79,10 @@
     <!-- Order Summary -->
     <div class="bg-white rounded-lg shadow p-6">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-medium text-gray-900">Estimated total</h2>
-        <span class="text-xl font-bold">${{estimatedTotal | number:'1.2-2'}}</span>
+        <h2 class="text-sm font-medium text-gray-900">Estimated total</h2>
+        <span class="text-sm font-bold">${{estimatedTotal | number:'1.2-2'}}</span>
       </div>
-      <p-button label="Preview order" styleClass="w-full" [raised]="true"></p-button>
+      <p-button label="Preview order" styleClass="w-full" [raised]="true" size="small"></p-button>
     </div>
   </div>
 </div>

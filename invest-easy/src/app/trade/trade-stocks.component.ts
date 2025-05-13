@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { ChartModule } from 'primeng/chart';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -16,9 +16,9 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     ButtonModule,
     ChartModule,
-    DropdownModule,
+    SelectModule,
     InputNumberModule,
-    CalendarModule,
+    DatePickerModule,
     FormsModule,
     TopNavigationComponent
   ],
@@ -26,6 +26,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./trade-stocks.component.scss']
 })
 export class TradeStocksComponent {
+  today = new Date();
+  
   constructor(private router: Router) {}
 
   // Chart data
