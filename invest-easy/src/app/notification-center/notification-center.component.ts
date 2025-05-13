@@ -13,8 +13,22 @@ import { ButtonModule } from 'primeng/button';
 export class NotificationCenterComponent {
   visible = false;
   notifications = [
-    { id: 1, title: 'Market Update', content: 'New market data available', read: false, date: new Date() },
-    { id: 2, title: 'Account Alert', content: 'Your portfolio has been updated', read: true, date: new Date() },
+    { 
+      id: 1, 
+      title: 'Market Update', 
+      content: 'New market data available. <a href="/market" class="text-blue-500 hover:underline">View market</a> \n A new flexable market added! \n Plex is move on the screen shot.', 
+      read: false, 
+      date: new Date(),
+      expanded: false
+    },
+    { 
+      id: 2, 
+      title: 'Account Alert', 
+      content: 'Your portfolio has been updated. <a href="/portfolio" class="text-blue-500 hover:underline">Check now</a>', 
+      read: true, 
+      date: new Date(),
+      expanded: false
+    },
     // Add more sample notifications
   ];
 
@@ -22,8 +36,21 @@ export class NotificationCenterComponent {
     this.visible = true;
   }
 
-  onNotificationClick(notification: any) {
+  markAsRead(notification: any) {
     notification.read = true;
-    // Show notification detail - implement as needed
+  }
+
+  toggleExpand(notification: any) {
+    notification.expanded = !notification.expanded;
+  }
+
+  onNotificationClick(notification: any) {
+    this.markAsRead(notification);
+    this.toggleExpand(notification);
+  }
+
+  handleLinkClick(event: Event) {
+    event.stopPropagation();
+    // Link handling will be done by Angular router
   }
 }

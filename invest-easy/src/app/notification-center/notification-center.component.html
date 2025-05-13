@@ -21,13 +21,20 @@
     <div *ngFor="let notification of notifications" 
          class="p-4 border-b cursor-pointer hover:bg-gray-100"
          [class.bg-blue-50]="!notification.read"
-         (click)="onNotificationClick(notification)">
+         (click)="markAsRead(notification)">
       <div class="flex items-start">
         <div *ngIf="!notification.read" class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-2"></div>
-        <div>
+        <div class="w-full">
           <div class="font-semibold">{{ notification.title }}</div>
-          <div class="text-gray-600">{{ notification.content }}</div>
+          <div class="text-gray-600 max-h-12 overflow-hidden transition-all duration-300 ease-in-out" 
+               [class.max-h-full]="notification.expanded"
+               [innerHTML]="notification.content">
+          </div>
           <div class="text-xs text-gray-400 mt-1">{{ notification.date | date:'short' }}</div>
+          <div class="text-xs text-blue-500 mt-1 cursor-pointer" 
+               (click)="toggleExpand(notification);">
+            {{ notification.expanded ? 'Show less' : 'Show more' }}
+          </div>
         </div>
       </div>
     </div>
