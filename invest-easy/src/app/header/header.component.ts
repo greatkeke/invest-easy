@@ -1,18 +1,20 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserPanelComponent } from '../user-panel/user-panel.component';
 import { DrawerModule } from 'primeng/drawer';
+import { NotificationCenterComponent } from '../notification-center/notification-center.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ButtonModule, CommonModule, UserPanelComponent, DrawerModule],
+  imports: [ButtonModule, CommonModule, UserPanelComponent, DrawerModule, NotificationCenterComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
+  @ViewChild(NotificationCenterComponent) notificationCenter!: NotificationCenterComponent;
   @Input() title = 'HSBC'; // Default value
   displayUserPanel = false;
 
@@ -21,9 +23,8 @@ export class HeaderComponent {
   ) { }
 
   goToNotifications() {
-    // Temporary implementation until notifications page is created
-    alert('Notifications page is coming soon!');
-    // this.router.navigate(['/notifications']);
+    // Show notification dialog
+    this.notificationCenter.showDialog();
   }
 
   toggleUserPanel() {
