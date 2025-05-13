@@ -33,7 +33,7 @@
   background: var(--card-bg);
   border-radius: 4px;
 
-  h2 {
+  h5 {
     margin-bottom: 1.5rem;
     color: var(--text-color);
   }
@@ -42,7 +42,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    align-items: start;
+    align-items: center;
     justify-items: center;
 
     .quicksteps-card {
