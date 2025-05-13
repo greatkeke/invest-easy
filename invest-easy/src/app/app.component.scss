@@ -9,7 +9,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding-bottom: 3rem; /* matches footer height */
+  padding-bottom: 4rem; /* matches footer height */
   overflow-y: auto;
 }
 
@@ -18,7 +18,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 3rem;
+  height: 4rem;
   display: flex;
   justify-content: space-around;
   z-index: 1;
