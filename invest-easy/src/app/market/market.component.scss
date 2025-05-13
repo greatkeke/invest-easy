@@ -114,7 +114,7 @@
 
 
 .market-container {
-  padding: 1rem;
+  padding: 0 1rem;
 
   h5 {
     margin-bottom: 1rem;
@@ -130,27 +130,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1rem;
-    margin-top: 1rem;
-  }
-
-  .market-card {
-    transition: transform 0.2s;
-    background: var(--card-bg);
-    box-shadow: none;
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: normal;
-    }
-
-    .card-subtitle {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-    }
-
-    &:hover {
-      transform: translateY(-2px);
-    }
   }
 
   .price {

@@ -60,14 +60,10 @@
     <p-tabPanel header="Market Index">
       <div class="cards-container">
         @for (index of indices; track index.symbol) {
-        <p-card class="market-card">
-          <ng-template pTemplate="header">
-            <div class="card-header">
-              <div class="card-title">{{index.name}}</div>
-              <div class="card-subtitle">{{index.symbol}}</div>
-            </div>
-          </ng-template>
-          <div class="card-content">
+        <p-card styleClass="p-2">
+          <ng-template #title>{{index.name}}</ng-template>
+          <ng-template #subtitle>{{index.symbol}}</ng-template>
+          <div>
             <div class="price">{{index.price | number:'1.2-2'}}</div>
             <div class="change" [class.positive]="index.change > 0" [class.negative]="index.change < 0">
               {{index.change > 0 ? '+' : ''}}{{index.change | number:'1.2-2'}} ({{index.percent}}%)
@@ -80,13 +76,9 @@
     <p-tabPanel header="Watch List">
       <div class="cards-container">
         @for (stock of watchlist; track stock.symbol) {
-        <p-card class="market-card">
-          <ng-template pTemplate="header">
-            <div class="card-header">
-              <div class="card-title">{{stock.name}}</div>
-              <div class="card-subtitle">{{stock.symbol}}</div>
-            </div>
-          </ng-template>
+        <p-card styleClass="p-2">
+          <ng-template #title>{{stock.name}}</ng-template>
+          <ng-template #subtitle>{{stock.symbol}}</ng-template>
           <div class="card-content">
             <div class="price">{{stock.price | number:'1.2-2'}}</div>
             <div class="change" [class.positive]="stock.change > 0" [class.negative]="stock.change < 0">
