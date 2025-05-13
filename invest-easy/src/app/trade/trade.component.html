@@ -9,9 +9,10 @@
     <p-button label="Exchange" icon="pi pi-bitcoin"></p-button>
   </div>
 
-  <div class="dashboard asset-dashboard">
+  <div class="dashboard asset-dashboard shadow-md hover:shadow-lg">
     <div class="dashboard-header">
-      <h3>Asset Overview</h3>
+      <h3 class="">Asset Overview <i class="pi pi-chevron-right arrow-icon text-primary-300"></i></h3>
+      
       <button class="toggle-metrics" (click)="toggleMetrics()">
         <i class="pi" [class]="showMetrics ? 'pi-eye' : 'pi-eye-slash'"></i>
       </button>
@@ -53,8 +54,8 @@
     </div>
   </div>
 
-  <div class="dashboard positions-dashboard">
-    <h3>Positions</h3>
+  <div class="dashboard positions-dashboard shadow-lg">
+    <h3 class="">Positions</h3>
     <table>
       <thead>
         <tr>

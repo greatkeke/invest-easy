@@ -14,10 +14,9 @@
 .dashboard {
   border-radius: 8px;
   margin-bottom: 1.5rem;
-
+  padding: 0.25rem 0.5rem;
   h3 {
     margin-top: 0;
-    margin-bottom: 1rem;
   }
 }
 
@@ -26,7 +25,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
 
     .toggle-metrics {
       background: none;
@@ -50,6 +48,7 @@
     .metric-row {
       display: flex;
       gap: 1rem;
+      overflow-x: hidden;
 
       .metric {
         flex: 1;
@@ -57,7 +56,6 @@
     }
 
     .metric {
-      padding: 1rem;
       background: var(--card-bg);
       border-radius: 6px;
 
