@@ -17,6 +17,10 @@ export class TradeComponent {
   navigateToAssetDetail() {
     this.router.navigate(['/asset-detail']);
   }
+
+  navigateToTradeStocks() {
+    this.router.navigate(['/trade-stocks']);
+  }
   showMetrics = true;
   totalAssets = 365013.73; // Will be formatted as $125K
   todayPL = 2450; // Will be formatted as $2.45K 

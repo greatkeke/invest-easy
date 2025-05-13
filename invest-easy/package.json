@@ -25,6 +25,7 @@
     "@angular/ssr": "^19.2.10",
     "@primeng/themes": "^19.1.2",
     "@tailwindcss/postcss": "^4.1.6",
+    "chart.js": "^4.4.9",
     "express": "^4.18.2",
     "postcss": "^8.5.3",
     "primeicons": "^7.0.0",
