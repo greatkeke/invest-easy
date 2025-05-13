@@ -29,15 +29,15 @@
 </div>
 
 <div class="temperature-section" *ngIf="marketTemperature">
-  <h5 i18n>Market Temperature</h5>
   <p-card class="temperature-card">
     <ng-template pTemplate="header">
       <div class="card-header">
-        <div class="card-title">{{marketTemperature.temperature}}°C</div>
-        <div class="card-subtitle">{{marketTemperature.description}}</div>
+        <h5 i18n>Market Temperature</h5>
       </div>
     </ng-template>
     <div class="card-content">
+      <div class="card-title">{{marketTemperature.temperature}}°C</div>
+      <div class="card-subtitle">{{marketTemperature.description}}</div>
       <div class="trend-indicator" [class.up]="marketTemperature.trend === 'up'"
         [class.down]="marketTemperature.trend === 'down'">
         <i class="pi" [class.pi-arrow-up]="marketTemperature.trend === 'up'"
@@ -77,7 +77,7 @@
         }
       </div>
     </p-tabPanel>
-    <p-tabPanel header="WatchList">
+    <p-tabPanel header="Watch List">
       <div class="cards-container">
         @for (stock of watchlist; track stock.symbol) {
         <p-card class="market-card">
