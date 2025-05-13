@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
@@ -18,7 +19,8 @@ import { FormsModule } from '@angular/forms';
     DropdownModule,
     InputNumberModule,
     CalendarModule,
-    FormsModule
+    FormsModule,
+    TopNavigationComponent
   ],
   templateUrl: './trade-stocks.component.html',
   styleUrls: ['./trade-stocks.component.scss']

@@ -1,0 +1,5 @@
+<div class="bg-white shadow-sm p-2 flex items-center justify-between">
+  <p-button icon="pi pi-arrow-left" [text]="true" (onClick)="goBack()"></p-button>
+  <h1 class="text-md font-medium text-gray-900">{{title}}</h1>
+  <p-button icon="pi pi-refresh" [text]="true" [loading]="isLoading" (onClick)="refreshData()"></p-button>
+</div>

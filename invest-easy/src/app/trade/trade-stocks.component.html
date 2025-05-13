@@ -1,10 +1,8 @@
 <div class="min-h-screen bg-gray-100">
-  <!-- Top Navigation -->
-  <div class="bg-white shadow-sm p-4 flex items-center justify-between">
-    <p-button icon="pi pi-arrow-left" [text]="true" (onClick)="goBack()"></p-button>
-    <h1 class="text-lg font-medium text-gray-900">Trade stocks</h1>
-    <p-button icon="pi pi-refresh" [text]="true" (onClick)="refreshData()"></p-button>
-  </div>
+  <app-top-navigation 
+    title="Trade stocks"
+    (refresh)="refreshData()">
+  </app-top-navigation>
 
   <div class="p-4 space-y-4">
     <!-- Price Card -->
