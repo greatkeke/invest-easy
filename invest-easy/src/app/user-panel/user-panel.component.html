@@ -6,8 +6,68 @@
   </div>
   <div class="px-4 py-2 font-bold">UserName</div>
   <ul class="overflow-y-auto">
-    <li *ngFor="let item of menuItems" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-      <span i18n>{{item.label}}</span>
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-home mr-2"></i>
+        <span i18n>General</span>
+      </div>
+      <i class="pi pi-chevron-right"></i>
+    </li>
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-lock mr-2"></i>
+        <span i18n>Security</span>
+      </div>
+      <i class="pi pi-chevron-right"></i>
+    </li>
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-money-bill mr-2"></i>
+        <span i18n>Pay and transfer</span>
+      </div>
+      <i class="pi pi-chevron-right"></i>
+    </li>
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-user mr-2"></i>
+        <span i18n>Contact details</span>
+      </div>
+      <i class="pi pi-chevron-right"></i>
+    </li>
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-envelope mr-2"></i>
+        <span i18n>Communication preferences</span>
+      </div>
+      <i class="pi pi-chevron-right"></i>
+    </li>
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-mobile mr-2"></i>
+        <span i18n>App permissions</span>
+      </div>
+      <i class="pi pi-chevron-right"></i>
+    </li>
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-chart-line mr-2"></i>
+        <span i18n>Investment</span>
+      </div>
+      <i class="pi pi-chevron-right"></i>
+    </li>
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-shield mr-2"></i>
+        <span i18n>Open Banking consent</span>
+      </div>
+      <i class="pi pi-chevron-right"></i>
+    </li>
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-history mr-2"></i>
+        <span i18n>Activity log</span>
+      </div>
+      <i class="pi pi-chevron-right"></i>
     </li>
   </ul>
   <div class="flex justify-center items-center">
