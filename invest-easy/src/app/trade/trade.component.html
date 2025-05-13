@@ -11,7 +11,7 @@
 
   <div class="dashboard asset-dashboard shadow-md hover:shadow-lg">
     <div class="dashboard-header">
-      <h3 class="">Asset Overview <i class="pi pi-chevron-right arrow-icon text-primary-300"></i></h3>
+      <h3 class="cursor-pointer" (click)="navigateToAssetDetail()">Asset Overview <i class="pi pi-chevron-right arrow-icon text-primary-300"></i></h3>
       
       <button class="toggle-metrics" (click)="toggleMetrics()">
         <i class="pi" [class]="showMetrics ? 'pi-eye' : 'pi-eye-slash'"></i>

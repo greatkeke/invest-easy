@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { ButtonModule } from 'primeng/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-trade',
@@ -11,6 +12,11 @@ import { ButtonModule } from 'primeng/button';
   styleUrls: ['./trade.component.scss']
 })
 export class TradeComponent {
+  constructor(private router: Router) {}
+
+  navigateToAssetDetail() {
+    this.router.navigate(['/asset-detail']);
+  }
   showMetrics = true;
   totalAssets = 365013.73; // Will be formatted as $125K
   todayPL = 2450; // Will be formatted as $2.45K 
