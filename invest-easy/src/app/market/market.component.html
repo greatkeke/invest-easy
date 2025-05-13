@@ -2,26 +2,18 @@
 
 <div class="search-section">
   <div class="search-input-container">
-    <span class="p-input-icon-left full-width">
-      <i class="pi pi-search"></i>
-      <input pInputText 
-             [(ngModel)]="searchQuery" 
-             (input)="onSearch()"
-             placeholder="Search stocks or indices..."
-             i18n-placeholder>
-    </span>
-    <p-button *ngIf="searchResults.length > 0"
-              icon="pi pi-times"
-              (click)="clearSearch()"
-              styleClass="p-button-rounded p-button-text cancel-button">
+    <p-iconfield class="full-width">
+      <p-inputicon styleClass="pi pi-search" />
+      <input type="text" class="w-full" pInputText [(ngModel)]="searchQuery" (input)="onSearch()"
+        placeholder="Search stocks or indices..." i18n-placeholder />
+    </p-iconfield>
+    <p-button *ngIf="searchResults.length > 0" icon="pi pi-times" (click)="clearSearch()" variant="outlined"
+      severity="secondary">
     </p-button>
   </div>
 
-  <p-listbox [options]="searchResults" 
-             *ngIf="searchResults.length > 0"
-             class="search-results"
-             (onClick)="navigateToResult($event.option.symbol)"
-             [listStyle]="{'max-height':'250px'}">
+  <p-listbox [options]="searchResults" *ngIf="searchResults.length > 0" class="search-results"
+    (onClick)="navigateToResult($event.option.symbol)" [listStyle]="{'max-height':'250px'}">
     <ng-template let-result pTemplate="item">
       <div class="result-item">
         <div>{{result.name}} ({{result.symbol}})</div>
@@ -46,11 +38,11 @@
       </div>
     </ng-template>
     <div class="card-content">
-      <div class="trend-indicator" [class.up]="marketTemperature.trend === 'up'" 
-           [class.down]="marketTemperature.trend === 'down'">
-        <i class="pi" [class.pi-arrow-up]="marketTemperature.trend === 'up'" 
-           [class.pi-arrow-down]="marketTemperature.trend === 'down'"
-           [class.pi-minus]="marketTemperature.trend !== 'up' && marketTemperature.trend !== 'down'"></i>
+      <div class="trend-indicator" [class.up]="marketTemperature.trend === 'up'"
+        [class.down]="marketTemperature.trend === 'down'">
+        <i class="pi" [class.pi-arrow-up]="marketTemperature.trend === 'up'"
+          [class.pi-arrow-down]="marketTemperature.trend === 'down'"
+          [class.pi-minus]="marketTemperature.trend !== 'up' && marketTemperature.trend !== 'down'"></i>
       </div>
       <div class="update-time" i18n>
         LastUpdatedTime: {{marketTemperature.updatedAt | date:'yyyy-MM-dd HH:mm'}}
@@ -62,50 +54,50 @@
 <div class="market-container">
   <h5 i18n>Market Trend</h5>
   @if (loading) {
-    <div class="loading">Loading market data...</div>
+  <div class="loading">Loading market data...</div>
   } @else {
-    <p-tabView>
-      <p-tabPanel header="Market Index">
-        <div class="cards-container">
-          @for (index of indices; track index.symbol) {
-            <p-card class="market-card">
-              <ng-template pTemplate="header">
-                <div class="card-header">
-                  <div class="card-title">{{index.name}}</div>
-                  <div class="card-subtitle">{{index.symbol}}</div>
-                </div>
-              </ng-template>
-              <div class="card-content">
-                <div class="price">{{index.price | number:'1.2-2'}}</div>
-                <div class="change" [class.positive]="index.change > 0" [class.negative]="index.change < 0">
-                  {{index.change > 0 ? '+' : ''}}{{index.change | number:'1.2-2'}} ({{index.percent}}%)
-                </div>
-              </div>
-            </p-card>
-          }
-        </div>
-      </p-tabPanel>
-      <p-tabPanel header="WatchList">
-        <div class="cards-container">
-          @for (stock of watchlist; track stock.symbol) {
-            <p-card class="market-card">
-              <ng-template pTemplate="header">
-                <div class="card-header">
-                  <div class="card-title">{{stock.name}}</div>
-                  <div class="card-subtitle">{{stock.symbol}}</div>
-                </div>
-              </ng-template>
-              <div class="card-content">
-                <div class="price">{{stock.price | number:'1.2-2'}}</div>
-                <div class="change" [class.positive]="stock.change > 0" [class.negative]="stock.change < 0">
-                  {{stock.change > 0 ? '+' : ''}}{{stock.change | number:'1.2-2'}} ({{stock.percent}}%)
-                </div>
-                <div class="volume">volume: {{stock.volume}}</div>
-              </div>
-            </p-card>
-          }
-        </div>
-      </p-tabPanel>
-    </p-tabView>
+  <p-tabView>
+    <p-tabPanel header="Market Index">
+      <div class="cards-container">
+        @for (index of indices; track index.symbol) {
+        <p-card class="market-card">
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <div class="card-title">{{index.name}}</div>
+              <div class="card-subtitle">{{index.symbol}}</div>
+            </div>
+          </ng-template>
+          <div class="card-content">
+            <div class="price">{{index.price | number:'1.2-2'}}</div>
+            <div class="change" [class.positive]="index.change > 0" [class.negative]="index.change < 0">
+              {{index.change > 0 ? '+' : ''}}{{index.change | number:'1.2-2'}} ({{index.percent}}%)
+            </div>
+          </div>
+        </p-card>
+        }
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="WatchList">
+      <div class="cards-container">
+        @for (stock of watchlist; track stock.symbol) {
+        <p-card class="market-card">
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <div class="card-title">{{stock.name}}</div>
+              <div class="card-subtitle">{{stock.symbol}}</div>
+            </div>
+          </ng-template>
+          <div class="card-content">
+            <div class="price">{{stock.price | number:'1.2-2'}}</div>
+            <div class="change" [class.positive]="stock.change > 0" [class.negative]="stock.change < 0">
+              {{stock.change > 0 ? '+' : ''}}{{stock.change | number:'1.2-2'}} ({{stock.percent}}%)
+            </div>
+            <div class="volume">volume: {{stock.volume}}</div>
+          </div>
+        </p-card>
+        }
+      </div>
+    </p-tabPanel>
+  </p-tabView>
   }
 </div>

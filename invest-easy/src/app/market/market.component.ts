@@ -9,6 +9,8 @@ import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
 import { CardModule } from 'primeng/card';
 import { TabViewModule } from 'primeng/tabview';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-market',
@@ -23,7 +25,9 @@ import { TabViewModule } from 'primeng/tabview';
     ButtonModule,
     ListboxModule,
     CardModule,
-    TabViewModule
+    TabViewModule,
+    IconFieldModule,
+    InputIconModule
   ]
 })
 export class MarketComponent implements OnInit {
