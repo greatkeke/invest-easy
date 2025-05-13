@@ -58,8 +58,8 @@
 .temperature-section {
   margin: 0.5rem 1rem;
 
-  h2 {
-    margin-bottom: 1rem;
+  h5 {
+    margin-top: 1rem;
     color: var(--text-color);
   }
 
@@ -69,13 +69,19 @@
     box-shadow: none;
     padding: 1rem;
 
-    .card-title {
-      font-size: 1rem;
-      font-weight: bold;
-    }
+    .card-header {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
 
-    .card-subtitle {
-      color: var(--text-secondary);
+      .card-title {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      .card-subtitle {
+        color: var(--text-secondary);
+      }
     }
 
     .trend-indicator {
