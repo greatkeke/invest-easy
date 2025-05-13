@@ -13,7 +13,7 @@
   </div>
 
   <p-listbox [options]="searchResults" *ngIf="searchResults.length > 0" class="search-results"
-    (onClick)="navigateToResult($event.option.symbol)" [listStyle]="{'max-height':'250px'}">
+    (onClick)="navigateToResult($event.option.symbol)" [listStyle]="{'max-height':'15rem'}">
     <ng-template let-result pTemplate="item">
       <div class="result-item">
         <div>{{result.name}} ({{result.symbol}})</div>
