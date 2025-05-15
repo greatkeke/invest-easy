@@ -8,6 +8,9 @@ import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-trade-stocks',
@@ -20,15 +23,23 @@ import { FormsModule } from '@angular/forms';
     InputNumberModule,
     DatePickerModule,
     FormsModule,
-    TopNavigationComponent
+    TopNavigationComponent,
+    DialogModule,
+    ToastModule
   ],
   templateUrl: './trade-stocks.component.html',
-  styleUrls: ['./trade-stocks.component.scss']
+  styleUrls: ['./trade-stocks.component.scss'],
+  providers: [MessageService]
 })
 export class TradeStocksComponent {
   today = new Date();
-  
-  constructor(private router: Router) {}
+
+  constructor(
+    private router: Router,
+    private messageService: MessageService
+  ) { }
+
+  displayPreview = false;
 
   // Chart data
   chartData = {
@@ -92,5 +103,23 @@ export class TradeStocksComponent {
   refreshData() {
     // TODO: Implement data refresh
     console.log('Refreshing data...');
+  }
+
+  showPreview() {
+    this.displayPreview = true;
+  }
+
+  confirmOrder() {
+    // TODO: Implement actual order submission
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Order Submitted',
+      detail: 'Your order has been placed successfully'
+    });
+    this.displayPreview = false;
+  }
+
+  cancelPreview() {
+    this.displayPreview = false;
   }
 }
