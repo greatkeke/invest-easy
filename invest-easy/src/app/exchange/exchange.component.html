@@ -1,0 +1,113 @@
+<app-top-navigation title="Exchange"></app-top-navigation>
+
+<div class="p-4">
+  <p-card header="Currency Exchange">
+    <form class="flex flex-col gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- From Group -->
+        <div class="p-4 border rounded">
+          <h3 class="text-lg font-semibold mb-4">From</h3>
+
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <p-select [options]="currencies" [(ngModel)]="fromCurrency" optionLabel="name" optionValue="code"
+              name="fromCurrency">
+              <ng-template pTemplate="selectedItem">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-flag-fill" [ngClass]="'pi-' + fromCurrency.toLowerCase()"></i>
+                  <span>{{fromCurrency}}</span>
+                </div>
+              </ng-template>
+              <ng-template let-currency pTemplate="item">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-flag-fill" [ngClass]="'pi-' + currency.code.toLowerCase()"></i>
+                  <span>{{currency.name}} ({{currency.code}})</span>
+                </div>
+              </ng-template>
+            </p-select>
+
+            <p-inputNumber [(ngModel)]="fromAmount" name="fromAmount" placeholder="Amount"
+              mode="decimal"></p-inputNumber>
+          </div>
+
+          <div class="flex flex-col gap-2 text-sm">
+            <div>Amount Available: {{getAvailableAmount(fromCurrency)}}</div>
+            <div>Reference Rate: {{getExchangeRate(fromCurrency, toCurrency)}}</div>
+            <div>
+              <label class="text-sm mr-2">Account:</label>
+              <p-select [options]="accounts" [(ngModel)]="fromAccount" optionLabel="name" optionValue="id"
+                name="fromAccount"></p-select>
+            </div>
+          </div>
+        </div>
+
+        <!-- To Group -->
+        <div class="p-4 border rounded">
+          <h3 class="text-lg font-semibold mb-4">To</h3>
+
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <p-select [options]="currencies" [(ngModel)]="toCurrency" optionLabel="name" optionValue="code"
+              name="toCurrency">
+              <ng-template pTemplate="selectedItem">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-flag-fill" [ngClass]="'pi-' + toCurrency.toLowerCase()"></i>
+                  <span>{{toCurrency}}</span>
+                </div>
+              </ng-template>
+              <ng-template let-currency pTemplate="item">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-flag-fill" [ngClass]="'pi-' + currency.code.toLowerCase()"></i>
+                  <span>{{currency.name}} ({{currency.code}})</span>
+                </div>
+              </ng-template>
+            </p-select>
+
+            <p-inputNumber [(ngModel)]="toAmount" name="toAmount" placeholder="Amount" mode="decimal"></p-inputNumber>
+          </div>
+
+          <div class="flex flex-col gap-2 text-sm">
+            <div>Completed: {{completedDate | date:'medium'}}</div>
+            <div>Account: Main Account</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-sm text-gray-600 mt-4">
+        <p class="font-semibold">Tips:</p>
+        <ol class="list-decimal list-inside space-y-1">
+          <li>Current page exchange rate is for reference purposes only. The actual rate will change.</li>
+          <li>The processing time is for reference only. The actual processing time may vary.</li>
+          <li>For the unsettled amount, it cannot be exchanged within self-accounts. Stocks costs two business days to
+            settle and futures costs one business day to settle.</li>
+        </ol>
+      </div>
+
+      <div class="flex flex-col items-center mt-6">
+        <p-button class="w-full p-4" styleClass="w-full" variant="outlined" label="Submit"
+          (onClick)="submitExchange()"></p-button>
+        <a routerLink="/exchange/history" class="text-primary-500 underline">View Exchange History</a>
+      </div>
+    </form>
+  </p-card>
+
+  <p-dialog [(visible)]="showDialog" [modal]="true" [style]="{width: '450px'}">
+    <ng-template pTemplate="header">
+      <span class="text-xl font-bold">Exchange {{dialogSuccess ? 'Successful' : 'Failed'}}</span>
+    </ng-template>
+    <div class="flex flex-col gap-2">
+      <p>{{dialogMessage}}</p>
+      <div *ngIf="dialogSuccess" class="grid grid-cols-2 gap-2 mt-2">
+        <div>From:</div>
+        <div>{{fromAmount}} {{fromCurrency}}</div>
+        <div>To:</div>
+        <div>{{toAmount}} {{toCurrency}}</div>
+        <div>Rate:</div>
+        <div>{{getExchangeRate(fromCurrency, toCurrency)}}</div>
+        <div>Date:</div>
+        <div>{{completedDate | date:'medium'}}</div>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button label="OK" (onClick)="showDialog = false" styleClass="p-button-text"></p-button>
+    </ng-template>
+  </p-dialog>
+</div>

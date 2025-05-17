@@ -7,9 +7,10 @@ import { TransferComponent } from './transfer/transfer.component';
 import { AssetDetailComponent } from './asset-detail/asset-detail.component';
 import { TradeStocksComponent } from './trade/trade-stocks.component';
 import { LayoutComponent } from './layout/layout.component';
+import { ExchangeComponent } from './exchange/exchange.component';
 
 export const routes: Routes = [
-  { 
+  {
     path: '',
     component: LayoutComponent,
     children: [
@@ -22,5 +23,6 @@ export const routes: Routes = [
   },
   { path: 'trade-stocks', component: TradeStocksComponent },
   { path: 'asset-detail', component: AssetDetailComponent },
-  { path: 'transfer', component: TransferComponent }
+  { path: 'transfer', component: TransferComponent },
+  { path: 'exchange', component: ExchangeComponent }
 ];
