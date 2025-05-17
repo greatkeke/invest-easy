@@ -24,12 +24,12 @@
       <span i18n>View eStatements & eAdvices</span>
     </div>
     
-    <div class="quicksteps-card" (click)="navigateTo('local-transfer')">
+    <div class="quicksteps-card" (click)="navigateTo('transfer')">
       <i class="pi pi-money-bill"></i>
       <span i18n>Transfer to local payees / FPS</span>
     </div>
     
-    <div class="quicksteps-card" (click)="navigateTo('hsbc-transfer')">
+    <div class="quicksteps-card" (click)="navigateTo('transfer/out')">
       <i class="pi pi-wallet"></i>
       <span i18n>Transfer to my local HSBC accounts</span>
     </div>
@@ -42,7 +42,7 @@
     <button pButton icon="{{showBalance ? 'pi pi-eye' : 'pi pi-eye-slash'}}" class="p-button-rounded p-button-text balance-toggle" (click)="toggleBalanceVisibility()"></button>
   </div>
   <div class="accounts-grid">
-    <p-card class="account-card">
+    <p-card class="account-card" (click)="navigateTo('asset-detail')">
       <div class="card-header">
         <h3>Account #{{account.id}}</h3>
       </div>
