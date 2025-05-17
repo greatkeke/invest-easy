@@ -3,15 +3,15 @@
 <div class="trade-container">
 
   <div class="trade-actions">
-    <p-button variant="outlined" label="Buy" icon="pi pi-shopping-cart" (onClick)="navigateTo('/trade-stocks')"></p-button>
-    <p-button variant="outlined" label="Sell" icon="pi pi-dollar" (onClick)="navigateTo('/trade-stocks')"></p-button>
-    <p-button variant="outlined" label="Transfer" icon="pi pi-wallet" (onClick)="navigateTo('/transfer')"></p-button>
-    <p-button variant="outlined" label="Exchange" icon="pi pi-bitcoin" (onClick)="navigateTo('/exchange')"></p-button>
+    <p-button variant="outlined" size="small" label="Buy" icon="pi pi-shopping-cart" (onClick)="navigateTo('/trade-stocks')"></p-button>
+    <p-button variant="outlined" size="small" label="Sell" icon="pi pi-dollar" (onClick)="navigateTo('/trade-stocks')"></p-button>
+    <p-button variant="outlined" size="small" label="Transfer" icon="pi pi-wallet" (onClick)="navigateTo('/transfer')"></p-button>
+    <p-button variant="outlined" size="small" label="Exchange" icon="pi pi-bitcoin" (onClick)="navigateTo('/exchange')"></p-button>
   </div>
 
   <div class="dashboard asset-dashboard shadow-md hover:shadow-lg">
     <div class="dashboard-header">
-      <h3 class="cursor-pointer" (click)="navigateTo('/asset-detail')">Asset Overview <i class="pi pi-chevron-right arrow-icon text-primary-300"></i></h3>
+      <h3 class="cursor-pointer text-md" (click)="navigateTo('/asset-detail')">Asset Overview <i class="pi pi-chevron-right arrow-icon text-primary-300"></i></h3>
       
       <button class="toggle-metrics" (click)="toggleMetrics()">
         <i class="pi" [class]="showMetrics ? 'pi-eye' : 'pi-eye-slash'"></i>
@@ -20,65 +20,61 @@
     <div class="metrics">
       <div class="metric-row">
         <div class="metric">
-          <span class="label">Total Assets</span>
-          <span class="value" *ngIf="showMetrics">{{ formatCurrency(totalAssets) }}</span>
-          <span class="value" *ngIf="!showMetrics">••••••</span>
+          <span class="label text-sm">Total Assets</span>
+          <span class="value text-sm" *ngIf="showMetrics">{{ formatCurrency(totalAssets) }}</span>
+          <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
         </div>
         <div class="metric">
-          <span class="label">Today's P/L</span>
-          <span class="value"  *ngIf="showMetrics" [class.positive]="todayPL > 0" [class.negative]="todayPL < 0">
+          <span class="label text-sm">Today's P/L</span>
+          <span class="value text-sm"  *ngIf="showMetrics" [class.positive]="todayPL > 0" [class.negative]="todayPL < 0">
             {{ formatCurrency(todayPL) }}
           </span>
-          <span class="value" *ngIf="!showMetrics">••••••</span>
+          <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
         </div>
       </div>
       <div class="metric-row">
         <div class="metric">
-          <span class="label">Market Value</span>
-          <span class="value"  *ngIf="showMetrics">{{ formatCurrency(marketValue) }}</span>
-          <span class="value" *ngIf="!showMetrics">••••••</span>
+          <span class="label text-sm">Market Value</span>
+          <span class="value text-sm"  *ngIf="showMetrics">{{ formatCurrency(marketValue) }}</span>
+          <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
         </div>
         <div class="metric">
-          <span class="label">Position P/L</span>
-          <span class="value" *ngIf="showMetrics" [class.positive]="positionPL > 0" [class.negative]="positionPL < 0">
+          <span class="label text-sm">Position P/L</span>
+          <span class="value text-sm" *ngIf="showMetrics" [class.positive]="positionPL > 0" [class.negative]="positionPL < 0">
             {{ formatCurrency(positionPL) }}
           </span>
-          <span class="value" *ngIf="!showMetrics">••••••</span>
+          <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
         </div>
         <div class="metric">
-          <span class="label">Max Withdrawable</span>
-          <span class="value" *ngIf="showMetrics">{{ formatCurrency(maxWithdrawable) }}</span>
-          <span class="value" *ngIf="!showMetrics">••••••</span>
+          <span class="label text-sm">Max Withdrawable</span>
+          <span class="value text-sm" *ngIf="showMetrics">{{ formatCurrency(maxWithdrawable) }}</span>
+          <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
         </div>
       </div>
     </div>
   </div>
 
   <div class="dashboard positions-dashboard shadow-lg">
-    <h3 class="">Positions</h3>
+    <h3 class="text-md">Positions</h3>
     <table>
       <thead>
-        <tr>
-          <th>Symbol</th>
-          <th>MV/Qty</th>
-          <th>Price/Cost</th>
-          <th>Today's P/L</th>
-          <th>P/L</th>
-          <th>% Portfolio</th>
+        <tr class="">
+          <th class="text-sm">Symbol</th>
+          <th class="text-sm">MV/Qty</th>
+          <th class="text-sm">Price/Cost</th>
+          <th class="text-sm">Today's P/L</th>
+          <th class="text-sm">P/L</th>
+          <th class="text-sm">% Portfolio</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let position of positions">
-          <td>{{ position.symbol }}</td>
-          <td>{{ position.marketValue | currency }} / {{ position.quantity }}</td>
-          <td>{{ position.price | currency }} / {{ position.cost | currency }}</td>
-          <td [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">
-            {{ position.todayPL | currency }}
-          </td>
-          <td [class.positive]="position.pl > 0" [class.negative]="position.pl < 0">
-            {{ position.pl | currency }}
-          </td>
-          <td>{{ position.portfolioPercent | percent }}</td>
+          <td class="text-sm">{{ position.symbol }}</td>
+          <td class="text-sm">{{ position.marketValue | currency }} / {{ position.quantity }}</td>
+          <td class="text-sm">{{ position.price | currency }} / {{ position.cost | currency }}</td>
+          <td class="text-sm" [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">{{ position.todayPL | currency }}</td>
+          <td class="text-sm" [class.positive]="position.pl > 0" [class.negative]="position.pl < 0">{{ position.pl | currency }}</td>
+          <td class="text-sm">{{ position.portfolioPercent | percent }}</td>
         </tr>
       </tbody>
     </table>

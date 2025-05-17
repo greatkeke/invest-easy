@@ -7,7 +7,7 @@
 .trade-actions {
   display: flex;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -67,8 +67,6 @@
       }
 
       .value {
-        font-size: 18px;
-        font-weight: 500;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
