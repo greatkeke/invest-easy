@@ -23,6 +23,7 @@ export const routes: Routes = [
   },
   { path: 'trade-stocks', component: TradeStocksComponent },
   { path: 'asset-detail', component: AssetDetailComponent },
+  { path: 'transfer/:tab', component: TransferComponent },
   { path: 'transfer', component: TransferComponent },
   { path: 'exchange', component: ExchangeComponent }
 ];

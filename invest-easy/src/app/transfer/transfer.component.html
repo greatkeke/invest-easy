@@ -4,15 +4,15 @@
 
   <!-- Main Content -->
   <div class="flex-1 overflow-auto p-4">
-    <p-tabs value="0" (onChange)="onTabChange($event)">
+    <p-tabs [value]="activeTabIndex"  (onChange)="onTabChange($event)">
       <p-tablist>
-        <p-tab value="0">In</p-tab>
-        <p-tab value="1">Out</p-tab>
-        <p-tab value="2">Record</p-tab>
+        <p-tab [value]="0">In</p-tab>
+        <p-tab [value]="1">Out</p-tab>
+        <p-tab [value]="2">Record</p-tab>
       </p-tablist>
       <p-tabpanels>
         <!-- Transfer In Tab -->
-        <p-tabpanel value="0">
+        <p-tabpanel [value]="0">
           <form (ngSubmit)="submitIn()" class="space-y-4">
             <div class="p-field">
               <label for="fromAccount" class="block mb-2 text-sm">From Account</label>
@@ -30,7 +30,7 @@
         </p-tabpanel>
 
         <!-- Transfer Out Tab -->
-        <p-tabpanel value="1">
+        <p-tabpanel [value]="1">
           <form (ngSubmit)="submitOut()" class="space-y-4">
             <div class="p-field">
               <label for="toAccount" class="block mb-2 text-sm">To Account</label>
@@ -57,7 +57,7 @@
         </p-tabpanel>
 
         <!-- Record Tab -->
-        <p-tabpanel value="2">
+        <p-tabpanel [value]="2">
           <div class="space-y-2">
             <div *ngFor="let record of records" class="p-2 border-b">
               <div class="flex justify-between">

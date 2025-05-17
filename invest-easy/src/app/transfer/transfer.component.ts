@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
@@ -30,7 +31,7 @@ import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.
   styleUrls: ['./transfer.component.scss'],
   providers: [MessageService]
 })
-export class TransferComponent {
+export class TransferComponent implements OnInit {
   accounts = [
     { label: 'Account 1', value: 'acc1' },
     { label: 'Account 2', value: 'acc2' },
@@ -59,10 +60,26 @@ export class TransferComponent {
   transferredAmount = 0;
   activeTabIndex = 0;
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit() {
+    const tab = this.route.snapshot.paramMap.get('tab');
+    if (tab === 'out') {
+      this.activeTabIndex = 1;
+    } else if (tab === 'record') {
+      this.activeTabIndex = 2;
+    } else {
+      this.activeTabIndex = 0;
+    }
+  }
 
   onTabChange(event: any) {
     this.activeTabIndex = event.index;
+    // Optional: Update URL when tab changes
+    // You would need to inject Router and use router.navigate
   }
 
   submitIn() {
