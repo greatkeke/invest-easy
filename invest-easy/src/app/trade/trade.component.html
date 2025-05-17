@@ -3,15 +3,15 @@
 <div class="trade-container">
 
   <div class="trade-actions">
-    <p-button label="Buy" icon="pi pi-shopping-cart" (onClick)="navigateToTradeStocks()"></p-button>
-    <p-button label="Sell" icon="pi pi-dollar"  (onClick)="navigateToTradeStocks()"></p-button>
-    <p-button label="Transfer" icon="pi pi-wallet"></p-button>
-    <p-button label="Exchange" icon="pi pi-bitcoin"></p-button>
+    <p-button variant="outlined" label="Buy" icon="pi pi-shopping-cart" (onClick)="navigateTo('/trade-stocks')"></p-button>
+    <p-button variant="outlined" label="Sell" icon="pi pi-dollar" (onClick)="navigateTo('/trade-stocks')"></p-button>
+    <p-button variant="outlined" label="Transfer" icon="pi pi-wallet" (onClick)="navigateTo('/transfer')"></p-button>
+    <p-button variant="outlined" label="Exchange" icon="pi pi-bitcoin"></p-button>
   </div>
 
   <div class="dashboard asset-dashboard shadow-md hover:shadow-lg">
     <div class="dashboard-header">
-      <h3 class="cursor-pointer" (click)="navigateToAssetDetail()">Asset Overview <i class="pi pi-chevron-right arrow-icon text-primary-300"></i></h3>
+      <h3 class="cursor-pointer" (click)="navigateTo('/asset-detail')">Asset Overview <i class="pi pi-chevron-right arrow-icon text-primary-300"></i></h3>
       
       <button class="toggle-metrics" (click)="toggleMetrics()">
         <i class="pi" [class]="showMetrics ? 'pi-eye' : 'pi-eye-slash'"></i>

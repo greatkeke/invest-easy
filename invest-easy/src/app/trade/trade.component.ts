@@ -14,13 +14,10 @@ import { Router } from '@angular/router';
 export class TradeComponent {
   constructor(private router: Router) {}
 
-  navigateToAssetDetail() {
-    this.router.navigate(['/asset-detail']);
+  navigateTo(target: string) {
+    this.router.navigate([target])
   }
 
-  navigateToTradeStocks() {
-    this.router.navigate(['/trade-stocks']);
-  }
   showMetrics = true;
   totalAssets = 365013.73; // Will be formatted as $125K
   todayPL = 2450; // Will be formatted as $2.45K 
