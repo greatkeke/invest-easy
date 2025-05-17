@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-100">
+<div class="min-h-screen">
   <app-top-navigation 
     title="Trade stocks"
     (refresh)="refreshData()">
@@ -6,7 +6,7 @@
 
   <div class="p-4 space-y-4">
     <!-- Price Card -->
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="rounded-lg shadow p-6">
       <div class="flex flex-col justify-between items-start mb-4">
         <h2 class="text-md font-bold">Intel</h2>
         <div class="flex w-full justify-between">
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Trading Info Card -->
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="rounded-lg shadow p-6">
       <h2 class="text-sm text-gray-900 mb-4">Trading Information</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div *ngFor="let info of tradingInfo" class="flex justify-between">
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Order Form -->
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="rounded-lg shadow p-6">
       <h2 class="text-sm text-gray-900 mb-4">Order Details</h2>
       <form class="space-y-4">
         <div>
@@ -77,12 +77,12 @@
     </div>
 
     <!-- Order Summary -->
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="rounded-lg shadow p-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-sm font-medium text-gray-900">Estimated total</h2>
         <span class="text-sm font-bold">${{estimatedTotal | number:'1.2-2'}}</span>
       </div>
-      <p-button label="Preview order" styleClass="w-full" [raised]="true" size="small" (onClick)="showPreview()"></p-button>
+      <p-button label="Preview order" styleClass="w-full" variant="outlined" [raised]="true" size="small" (onClick)="showPreview()"></p-button>
     </div>
   </div>
 
@@ -118,8 +118,8 @@
       </div>
     </div>
     <ng-template pTemplate="footer">
-      <p-button label="Cancel" icon="pi pi-times" (onClick)="cancelPreview()" styleClass="p-button-text"></p-button>
-      <p-button label="Confirm" icon="pi pi-check" (onClick)="confirmOrder()" styleClass="p-button-success"></p-button>
+      <p-button label="Cancel" variant="outlined" icon="pi pi-times" (onClick)="cancelPreview()" styleClass="p-button-text"></p-button>
+      <p-button label="Confirm" variant="outlined" icon="pi pi-check" (onClick)="confirmOrder()" styleClass="p-button-success"></p-button>
     </ng-template>
   </p-dialog>
 

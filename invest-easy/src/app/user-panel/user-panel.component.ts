@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-user-panel',
@@ -7,7 +8,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './user-panel.component.scss',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    ButtonModule
   ]
 })
 export class UserPanelComponent {

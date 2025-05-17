@@ -21,7 +21,6 @@
   <div class="overflow-y-auto h-full">
     <div *ngFor="let notification of notifications" 
          class="p-4 border-b cursor-pointer hover:bg-gray-100"
-         [class.bg-blue-50]="!notification.read"
          (click)="markAsRead(notification)">
       <div class="flex items-start">
         <div *ngIf="!notification.read" class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-2"></div>

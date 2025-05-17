@@ -25,7 +25,7 @@
                 currency="USD" [min]="0" [max]="1000000" [step]="0.01" [showButtons]="true"
                 size="small"></p-inputNumber>
             </div>
-            <p-button type="submit" label="Confirm" styleClass="p-button-primary" size="small"></p-button>
+            <p-button type="submit" label="Confirm" variant="outlined" styleClass="p-button-primary" size="small"></p-button>
           </form>
         </p-tabpanel>
 
@@ -52,7 +52,7 @@
               <p-password [(ngModel)]="outForm.password" name="password" required inputId="password" [feedback]="false"
                 size="small"></p-password>
             </div>
-            <p-button type="submit" label="Confirm" styleClass="p-button-primary" size="small"></p-button>
+            <p-button type="submit" label="Confirm" variant="outlined" styleClass="p-button-primary" size="small"></p-button>
           </form>
         </p-tabpanel>
 
@@ -81,8 +81,8 @@
   </div>
 
   <!-- Bottom Navigation -->
-  <div class="p-4 flex justify-center bg-primary-50">
-    <p-button label="Customer Service" (click)="openCustomerService()" class="pi pi-phone"
+  <div class="p-4 flex justify-center">
+    <p-button label="Customer Service" variant="outlined" (click)="openCustomerService()" class="pi pi-phone"
       styleClass="p-button-text p-button-plain"></p-button>
   </div>
 
