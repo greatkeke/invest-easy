@@ -51,7 +51,7 @@
   </p-card>
 </div>
 
-<div class="market-container">
+<div class="market-container mb-4">
   <h5 i18n>Market Trend</h5>
   @if (loading) {
   <div class="loading">Loading market data...</div>
@@ -80,7 +80,7 @@
     <p-tabpanel [value]="1">
       <div class="cards-container">
         @for (stock of watchlist; track stock.symbol) {
-        <p-card styleClass="p-2">
+        <p-card styleClass="p-2"  (click)="navigateToResult(stock.symbol)">
           <ng-template #title>{{stock.name}}</ng-template>
           <ng-template #subtitle>{{stock.symbol}}</ng-template>
           <div class="card-content">
