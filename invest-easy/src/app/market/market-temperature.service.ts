@@ -23,7 +23,7 @@ export class MarketTemperatureService {
     return new Observable(observer => {
       observer.next({
         temperature: 65,
-        description: '市场情绪中性',
+        description: 'Neutural Market Emotion',
         trend: 'neutral',
         updatedAt: new Date().toISOString()
       });
