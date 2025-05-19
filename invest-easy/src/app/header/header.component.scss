@@ -1,12 +1,13 @@
 .header {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  align-items: end;
   padding: 1rem;
   // background-image: url(../../../public/financial-regulation-header.jpg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  min-height: 6rem;
 
   .header-icons {
     display: flex;
