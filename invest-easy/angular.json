@@ -54,7 +54,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "10MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -82,6 +82,9 @@
             "development": {
               "buildTarget": "invest-easy:build:development"
             }
+          },
+          "options": {
+            "allowedHosts": ["localhost"]
           },
           "defaultConfiguration": "development"
         },
