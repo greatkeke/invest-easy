@@ -60,7 +60,7 @@
     <p-tabPanel header="Market Index">
       <div class="cards-container">
         @for (index of indices; track index.symbol) {
-        <p-card styleClass="p-2">
+        <p-card styleClass="p-2" (click)="navigateToResult(index.symbol)">
           <ng-template #title>{{index.name}}</ng-template>
           <ng-template #subtitle>{{index.symbol}}</ng-template>
           <div>

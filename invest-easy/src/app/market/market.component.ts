@@ -11,6 +11,7 @@ import { CardModule } from 'primeng/card';
 import { TabViewModule } from 'primeng/tabview';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-market',
@@ -27,7 +28,8 @@ import { InputIconModule } from 'primeng/inputicon';
     CardModule,
     TabViewModule,
     IconFieldModule,
-    InputIconModule
+    InputIconModule,
+    RouterModule
   ]
 })
 export class MarketComponent implements OnInit {
@@ -39,7 +41,8 @@ export class MarketComponent implements OnInit {
   searchResults: any[] = [];
 
   constructor(private marketService: MarketService,
-    private marketTempService: MarketTemperatureService) {}
+    private marketTempService: MarketTemperatureService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.loadMarketData();
@@ -86,15 +89,15 @@ export class MarketComponent implements OnInit {
       this.searchResults = [];
       return;
     }
-    
+
     const query = this.searchQuery.toLowerCase();
     this.searchResults = [
-      ...this.indices.filter(item => 
-        item.name.toLowerCase().includes(query) || 
+      ...this.indices.filter(item =>
+        item.name.toLowerCase().includes(query) ||
         item.symbol.toLowerCase().includes(query)
       ),
-      ...this.watchlist.filter(item => 
-        item.name.toLowerCase().includes(query) || 
+      ...this.watchlist.filter(item =>
+        item.name.toLowerCase().includes(query) ||
         item.symbol.toLowerCase().includes(query)
       )
     ];
@@ -106,8 +109,7 @@ export class MarketComponent implements OnInit {
   }
 
   navigateToResult(symbol: string): void {
-    // TODO: Implement navigation to stock detail page
-    console.log('Navigating to:', symbol);
+    this.router.navigate(['instrument',symbol]);
   }
 
   private getMarketName(symbol: string): string {

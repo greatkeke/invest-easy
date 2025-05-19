@@ -9,6 +9,7 @@ import { TradeStocksComponent } from './trade/trade-stocks.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ExchangeComponent } from './exchange/exchange.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
+import { InstrumentDetailComponent } from './instrument-detail/instrument-detail.component';
 
 export const routes: Routes = [
   {
@@ -27,5 +28,6 @@ export const routes: Routes = [
   { path: 'transfer/:tab', component: TransferComponent },
   { path: 'transfer', component: TransferComponent },
   { path: 'exchange', component: ExchangeComponent },
+  { path: 'instrument/:symbol', component: InstrumentDetailComponent },
   { path: 'contact-detail', component: ContactDetailComponent }
 ];

@@ -1,0 +1,34 @@
+<app-top-navigation title="Instrument Detail"></app-top-navigation>
+
+<div class="flex flex-col">
+  <div class="flex-1 p-4 overflow-auto">
+    <div class="relative p-4 rounded-lg shadow">
+      <p-button icon="pi pi-heart" [rounded]="true" [text]="true"  class="absolute top-4 right-4"></p-button>
+      
+      <div *ngIf="instrument" class="grid gap-4">
+        <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
+          <p-card header="Basic Info">
+            <p>Name: {{instrument.name}}</p>
+            <p>Symbol: {{instrument.symbol}}</p>
+            <p>Price: {{instrument.price}}</p>
+          </p-card>
+          
+          <p-card header="Market Data">
+            <p>Change: {{instrument.change}}</p>
+            <p>Volume: {{instrument.volume}}</p>
+          </p-card>
+        </div>
+        
+        <p-card header="Details">
+          <p>{{instrument.description}}</p>
+        </p-card>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex justify-around p-4">
+    <p-button icon="pi pi-shopping-cart" label="Trade" variant="outlined"></p-button>
+    <p-button icon="pi pi-bell" label="Alert" variant="outlined"></p-button>
+    <p-button icon="pi pi-share-alt" label="Share" variant="outlined"></p-button>
+  </div>
+</div>

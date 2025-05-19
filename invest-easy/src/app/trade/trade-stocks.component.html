@@ -1,7 +1,5 @@
 <div class="min-h-screen">
-  <app-top-navigation 
-    title="Trade stocks"
-    (refresh)="refreshData()">
+  <app-top-navigation title="Trade stocks" (refresh)="refreshData()">
   </app-top-navigation>
 
   <div class="p-4 space-y-4">
@@ -40,32 +38,32 @@
       <form class="space-y-4">
         <div>
           <label class="block text-xs text-gray-700 mb-2">Order type</label>
-          <p-select [options]="orderTypes" [(ngModel)]="orderForm.type" name="type" optionLabel="label" 
+          <p-select [options]="orderTypes" [(ngModel)]="orderForm.type" name="type" optionLabel="label"
             [showClear]="false" placeholder="Select order type" size="small"></p-select>
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Price</label>
-          <p-inputNumber [(ngModel)]="orderForm.price" name="price" mode="currency" currency="USD" 
-            [min]="0" [max]="10000" [step]="0.01" [showButtons]="true" size="small"></p-inputNumber>
+          <p-inputNumber [(ngModel)]="orderForm.price" name="price" mode="currency" currency="USD" [min]="0"
+            [max]="10000" [step]="0.01" [showButtons]="true" size="small"></p-inputNumber>
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Quantity</label>
-          <p-inputNumber [(ngModel)]="orderForm.quantity" name="quantity" [min]="1" [max]="10000" 
-            [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" 
-            decrementButtonIcon="pi pi-minus" size="small" inputStyleClass="max-w-20"></p-inputNumber>
+          <p-inputNumber [(ngModel)]="orderForm.quantity" name="quantity" [min]="1" [max]="10000" [showButtons]="true"
+            buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" size="small"
+            inputStyleClass="max-w-20"></p-inputNumber>
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Good until</label>
-          <p-datepicker [(ngModel)]="orderForm.goodUntil" name="goodUntil" [showIcon]="true" 
-            dateFormat="yy-mm-dd" [minDate]="today" size="small" appendTo="body"></p-datepicker>
+          <p-datepicker [(ngModel)]="orderForm.goodUntil" name="goodUntil" [showIcon]="true" dateFormat="yy-mm-dd"
+            [minDate]="today" size="small" appendTo="body"></p-datepicker>
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Pay from</label>
-          <p-select [options]="accounts" [(ngModel)]="orderForm.payFrom" name="payFrom" optionLabel="label" 
+          <p-select [options]="accounts" [(ngModel)]="orderForm.payFrom" name="payFrom" optionLabel="label"
             [showClear]="false" placeholder="Select account" size="small"></p-select>
         </div>
 
@@ -82,12 +80,13 @@
         <h2 class="text-sm font-medium text-gray-900">Estimated total</h2>
         <span class="text-sm font-bold">${{estimatedTotal | number:'1.2-2'}}</span>
       </div>
-      <p-button label="Preview order" styleClass="w-full" variant="outlined"  size="small" (onClick)="showPreview()"></p-button>
+      <p-button label="Preview order" styleClass="w-full" variant="outlined" size="small"
+        (onClick)="showPreview()"></p-button>
     </div>
   </div>
 
   <!-- Preview Dialog -->
-  <p-dialog header="Order Preview" [(visible)]="displayPreview" [modal]="true" [style]="{width: '50vw'}" 
+  <p-dialog header="Order Preview" [(visible)]="displayPreview" [modal]="true" [style]="{width: '50vw'}"
     [breakpoints]="{'960px': '75vw', '768px': '90vw'}" [draggable]="false" [resizable]="false">
     <div class="space-y-4">
       <div class="grid grid-cols-2 gap-4">
@@ -118,8 +117,10 @@
       </div>
     </div>
     <ng-template pTemplate="footer">
-      <p-button label="Cancel" variant="outlined" icon="pi pi-times" (onClick)="cancelPreview()" styleClass="p-button-text"></p-button>
-      <p-button label="Confirm" variant="outlined" icon="pi pi-check" (onClick)="confirmOrder()" styleClass="p-button-success"></p-button>
+      <p-button label="Cancel" variant="outlined" icon="pi pi-times" (onClick)="cancelPreview()"
+        styleClass="p-button-text"></p-button>
+      <p-button label="Confirm" variant="outlined" icon="pi pi-check" (onClick)="confirmOrder()"
+        styleClass="p-button-success"></p-button>
     </ng-template>
   </p-dialog>
 
