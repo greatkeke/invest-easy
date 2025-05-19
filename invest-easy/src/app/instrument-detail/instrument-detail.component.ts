@@ -5,17 +5,19 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { CommonModule } from '@angular/common';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-instrument-detail',
   templateUrl: './instrument-detail.component.html',
   styleUrls: ['./instrument-detail.component.scss'],
-  imports: [ButtonModule, CardModule, TopNavigationComponent, CommonModule],
+  imports: [ButtonModule, CardModule, TopNavigationComponent, CommonModule, ToastModule],
   providers: [MessageService]
 })
 export class InstrumentDetailComponent implements OnInit {
   instrument: any;
   loading = true;
+  isFavorite = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,6 +48,23 @@ export class InstrumentDetailComponent implements OnInit {
       description: `This is a mock description for ${symbol}. The company operates in the financial sector and has shown consistent growth.`
     };
     this.loading = false;
+  }
+
+  toggleFavorite(): void {
+    this.isFavorite = !this.isFavorite;
+    this.messageService.add({
+      severity: 'success',
+      summary: this.isFavorite ? 'Added to favorites' : 'Removed from favorites',
+      detail: this.isFavorite ? 'This instrument has been added to your collection' : 'This instrument has been removed from your collection'
+    });
+  }
+
+  setPriceAlert(): void {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Price alert set',
+      detail: 'You will be notified when the price changes significantly'
+    });
   }
 
   async shareLink(): Promise<void> {

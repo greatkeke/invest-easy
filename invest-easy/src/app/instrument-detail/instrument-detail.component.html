@@ -3,7 +3,13 @@
 <div class="flex flex-col">
   <div class="flex-1 p-4 overflow-auto">
     <div class="relative p-4 rounded-lg shadow">
-      <p-button icon="pi pi-heart" [rounded]="true" [text]="true"  class="absolute top-4 right-4"></p-button>
+      <p-button 
+        [icon]="isFavorite ? 'pi pi-heart-fill' : 'pi pi-heart'" 
+        [rounded]="true" 
+        [text]="true" 
+        class="absolute top-4 right-4"
+        (click)="toggleFavorite()">
+      </p-button>
       
       <div *ngIf="instrument" class="grid gap-4">
         <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
@@ -28,7 +34,9 @@
   
   <div class="flex justify-around p-4">
     <p-button icon="pi pi-shopping-cart" label="Trade" variant="outlined" (click)="navigateTo('/trade-stocks')"></p-button>
-    <p-button icon="pi pi-bell" label="Alert" variant="outlined"></p-button>
+    <p-button icon="pi pi-bell" label="Alert" variant="outlined" (click)="setPriceAlert()"></p-button>
     <p-button icon="pi pi-share-alt" label="Share" variant="outlined" (click)="shareLink()"></p-button>
   </div>
 </div>
+
+  <p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }" />
