@@ -47,4 +47,31 @@ export class InstrumentDetailComponent implements OnInit {
     };
     this.loading = false;
   }
+
+  async shareLink(): Promise<void> {
+    const url = window.location.href;
+    const title = 'Check this instrument';
+    
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: title,
+          url: url
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Link copied',
+          detail: 'The link has been copied to your clipboard'
+        });
+      }
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error sharing',
+        detail: 'Could not share the link'
+      });
+    }
+  }
 }
