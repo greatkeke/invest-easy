@@ -8,10 +8,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
 import { CardModule } from 'primeng/card';
-import { TabViewModule } from 'primeng/tabview';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { Router, RouterModule } from '@angular/router';
+import { TabsModule } from 'primeng/tabs';
 
 @Component({
   selector: 'app-market',
@@ -26,7 +26,7 @@ import { Router, RouterModule } from '@angular/router';
     ButtonModule,
     ListboxModule,
     CardModule,
-    TabViewModule,
+    TabsModule,
     IconFieldModule,
     InputIconModule,
     RouterModule

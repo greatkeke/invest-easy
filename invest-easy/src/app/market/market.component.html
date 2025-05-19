@@ -56,11 +56,15 @@
   @if (loading) {
   <div class="loading">Loading market data...</div>
   } @else {
-  <p-tabView>
-    <p-tabPanel header="Market Index">
+  <p-tabs [value]="0">
+    <p-tablist>
+      <p-tab [value]="0">Market Index</p-tab>
+      <p-tab [value]="1">Watch List</p-tab>
+    </p-tablist>
+    <p-tabpanel [value]="0">
       <div class="cards-container">
         @for (index of indices; track index.symbol) {
-        <p-card styleClass="p-2" (click)="navigateToResult(index.symbol)">
+        <p-card styleClass="p-0" (click)="navigateToResult(index.symbol)">
           <ng-template #title>{{index.name}}</ng-template>
           <ng-template #subtitle>{{index.symbol}}</ng-template>
           <div>
@@ -72,8 +76,8 @@
         </p-card>
         }
       </div>
-    </p-tabPanel>
-    <p-tabPanel header="Watch List">
+    </p-tabpanel>
+    <p-tabpanel [value]="1">
       <div class="cards-container">
         @for (stock of watchlist; track stock.symbol) {
         <p-card styleClass="p-2">
@@ -89,7 +93,7 @@
         </p-card>
         }
       </div>
-    </p-tabPanel>
-  </p-tabView>
+    </p-tabpanel>
+  </p-tabs>
   }
 </div>
