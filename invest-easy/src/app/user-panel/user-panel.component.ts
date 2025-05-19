@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
   ]
 })
 export class UserPanelComponent {
+  now: Date = new Date();
   menuItems = [
     { label: 'General' },
     { label: 'Security' },
