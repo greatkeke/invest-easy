@@ -1,8 +1,8 @@
-<div class="header scale-down">
-  <h1 class="header-title grow">{{title}}</h1>
+<div class="header scale-down" [ngStyle]="{'background-image': 'url(' + bg_img + ')'}">
+  <h1 class="header-title grow text-white">{{title}}</h1>
   <div class="header-icons">
-    <button pButton icon="pi pi-bell" (click)="goToNotifications()" class="p-button-rounded p-button-text"></button>
-    <button pButton icon="pi pi-user" (click)="toggleUserPanel()" class="p-button-rounded p-button-text"></button>
+    <p-button icon="pi pi-bell" severity="secondary" [rounded]="true" size="small" (click)="goToNotifications()" class=""></p-button>
+    <p-button icon="pi pi-user" severity="secondary" [rounded]="true" size="small" (click)="toggleUserPanel()" class="p-button-rounded p-button-text"></p-button>
   </div>
 
   <p-drawer header="Bottom Drawer" #drawerRef [(visible)]="displayUserPanel" position="full"
