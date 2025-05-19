@@ -8,6 +8,7 @@ import { AssetDetailComponent } from './asset-detail/asset-detail.component';
 import { TradeStocksComponent } from './trade/trade-stocks.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ExchangeComponent } from './exchange/exchange.component';
+import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 
 export const routes: Routes = [
   {
@@ -25,5 +26,6 @@ export const routes: Routes = [
   { path: 'asset-detail', component: AssetDetailComponent },
   { path: 'transfer/:tab', component: TransferComponent },
   { path: 'transfer', component: TransferComponent },
-  { path: 'exchange', component: ExchangeComponent }
+  { path: 'exchange', component: ExchangeComponent },
+  { path: 'contact-detail', component: ContactDetailComponent }
 ];

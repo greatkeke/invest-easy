@@ -5,7 +5,7 @@
       icon="pi pi-times" iconPos="right" variant="outlined" [rounded]="true" [text]="true">
     </p-button>
   </div>
-  <div class="px-4 py-2 font-bold border-solid shadow-sm mx-4 mb-2 rounded-md flex justify-between">
+  <div class="px-4 py-2 font-bold border-solid shadow-sm mx-4 mb-2 rounded-md flex justify-between" (click)="navigateTo('/contact-detail')">
     <div class="">
       <h5>Janery, Chou</h5>
       <small class="font-thin text-wrap">Last successful logon: {{now}}</small>
