@@ -26,9 +26,7 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/invest-easy
           tags: |
-            type=ref,event=branch
             type=ref,event=tag
-            type=sha
 
       - name: Build and push
         uses: docker/build-push-action@v5
