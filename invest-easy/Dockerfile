@@ -13,15 +13,14 @@ COPY . .
 
 # Build both client and server
 RUN npm run build
-# RUN npm run build:ssr
 
 # Stage 2: Serve the application
 FROM node:18-alpine
 WORKDIR /app
 
 # Copy built files from build stage
-COPY --from=build /app/dist/invest-easy/browser ./browser
-COPY --from=build /app/dist/invest-easy/server ./server
+COPY --from=build /app/dist/invest-easy/browser ./dist/invest-easy/browser
+COPY --from=build /app/dist/invest-easy/server ./dist/invest-easy/server
 
 # Install production dependencies
 COPY package.json package-lock.json ./
