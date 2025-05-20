@@ -1,16 +1,25 @@
 <div class="header scale-down" [ngStyle]="{'background-image': 'url(' + bg_img + ')'}">
   <h1 class="header-title grow text-white">{{title}}</h1>
   <div class="header-icons">
-    <p-button icon="pi pi-bell" severity="secondary" [rounded]="true" size="small" (click)="goToNotifications()" class=""></p-button>
-    <p-button icon="pi pi-user" severity="secondary" [rounded]="true" size="small" (click)="toggleUserPanel()" class="p-button-rounded p-button-text"></p-button>
+    <p-button icon="pi pi-bell" severity="secondary" [rounded]="true" size="small" (click)="goToNotifications()"
+      class=""></p-button>
+    <p-button icon="pi pi-user" severity="secondary" [rounded]="true" size="small" (click)="toggleUserPanel()"
+      class="p-button-rounded p-button-text"></p-button>
   </div>
-
-  <p-drawer header="Bottom Drawer" #drawerRef [(visible)]="displayUserPanel" position="full"
-    [style]="{background: 'transparent' }">
-    <ng-template #headless>
-      <app-user-panel (panelClosed)="displayUserPanel=false"></app-user-panel>
-    </ng-template>
-  </p-drawer>
-
-  <app-notification-center></app-notification-center>
 </div>
+
+<p-dialog [(visible)]="displayUserPanel" [modal]="true" [dismissableMask]="true"
+  styleClass="border-0! bg-transparent! absolute m-0! r-0! top-16! bottom-0! max-h-[100vh]! h-[100vh]!">
+  <ng-template #headless>
+    <app-user-panel (panelClosed)="toggleUserPanel()"></app-user-panel>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="displayNotificationCenter" [breakpoints]="{ '768px': '100vw' }" [modal]="true"
+  [dismissableMask]="true" position="right"
+  styleClass="rounded-none! w-[25vw] h-[100vh]! max-h-[100vh]! m-0! r-0! t-0! absolute">
+  <ng-template #header>
+    <div class="text-xl font-bold p-4">Notifications</div>
+  </ng-template>
+  <app-notification-center></app-notification-center>
+</p-dialog>

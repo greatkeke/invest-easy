@@ -1,11 +1,11 @@
-<div
-  class="user-panel fixed bottom-0 top-[10vh] w-screen max-h-[90vh] bg-primary-50 dark:bg-primary-800 text-gray-500 dark:text-gray-400 shadow-lg">
+<div class="bg-primary-50 dark:bg-primary-800 text-gray-500 dark:text-gray-400 shadow-lg">
   <div class="flex items-center p-2 justify-end">
     <p-button (click)="closePanel()" class="text-gray-500 w-full hover:text-gray-700 dark:hover:text-gray-300"
       icon="pi pi-times" iconPos="right" variant="outlined" [rounded]="true" [text]="true">
     </p-button>
   </div>
-  <div class="px-4 py-2 font-bold border-solid shadow-sm mx-4 mb-2 rounded-md flex justify-between" (click)="navigateTo('/contact-detail')">
+  <div class="px-4 py-2 font-bold border-solid shadow-sm mx-4 mb-2 rounded-md flex justify-between"
+    (click)="navigateTo('/contact-detail')">
     <div class="">
       <h5>Janery, Chou</h5>
       <small class="font-thin text-wrap">Last successful logon: {{now}}</small>
