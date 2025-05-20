@@ -13,7 +13,7 @@ COPY . .
 
 # Build both client and server
 RUN npm run build
-RUN npm run build:ssr
+# RUN npm run build:ssr
 
 # Stage 2: Serve the application
 FROM node:18-alpine
