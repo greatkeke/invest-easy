@@ -27,17 +27,8 @@ COPY --from=build /app/dist/invest-easy/server ./server
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-# Copy nginx config
-COPY nginx.conf ./
+# Expose port
+EXPOSE 4000
 
-# Install nginx and supervisord
-RUN apk add --no-cache nginx supervisor
-
-# Configure supervisord
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Expose ports
-EXPOSE 80 4000
-
-# Start services
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Start the SSR server
+CMD ["npm", "run", "serve:ssr:invest-easy"]
