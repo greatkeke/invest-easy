@@ -3,7 +3,6 @@
   justify-content: flex-end;
   align-items: end;
   padding: 1rem;
-  // background-image: url(../../../public/financial-regulation-header.jpg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -21,22 +20,15 @@
 
 @keyframes scale-down {
   from {
-    background-size: 100%;
+    transform: scaleY(100%);
   }
 
   to {
-    background-size: 10%;
+    transform: scaleY(50%);
   }
 }
 
 .scale-down {
-  animation: scale-down cubic-bezier(.01,1.13,.29,.16);
+  animation: scale-down cubic-bezier(.01, 1.13, .29, .16);
   animation-timeline: scroll();
 }
-
-// .user-panel-dialog {
-//   .p-dialog {
-//     border-radius: 16px 16px 0 0 !important;
-//     max-height: 80vh;
-//   }
-// }
