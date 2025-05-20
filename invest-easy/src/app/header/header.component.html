@@ -3,17 +3,10 @@
   <div class="header-icons">
     <p-button icon="pi pi-bell" severity="secondary" [rounded]="true" size="small" (click)="goToNotifications()"
       class=""></p-button>
-    <p-button icon="pi pi-user" severity="secondary" [rounded]="true" size="small" (click)="toggleUserPanel()"
+    <p-button icon="pi pi-user" severity="secondary" [rounded]="true" size="small" (click)="navigateTo('/user-center')"
       class="p-button-rounded p-button-text"></p-button>
   </div>
 </div>
-
-<p-dialog [(visible)]="displayUserPanel" [modal]="true" [dismissableMask]="true"
-  styleClass="border-0! bg-transparent! absolute m-0! r-0! top-16! bottom-0! max-h-[100vh]! h-[100vh]!">
-  <ng-template #headless>
-    <app-user-panel (panelClosed)="toggleUserPanel()"></app-user-panel>
-  </ng-template>
-</p-dialog>
 
 <p-dialog [(visible)]="displayNotificationCenter" [breakpoints]="{ '768px': '100vw' }" [modal]="true"
   [dismissableMask]="true" position="right"

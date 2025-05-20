@@ -10,6 +10,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { ExchangeComponent } from './exchange/exchange.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 import { InstrumentDetailComponent } from './instrument-detail/instrument-detail.component';
+import { UserPanelComponent } from './user-panel/user-panel.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,7 @@ export const routes: Routes = [
       { path: '', redirectTo: '/home', pathMatch: 'full' }
     ]
   },
+  { path: 'user-center', component: UserPanelComponent },
   { path: 'trade-stocks', component: TradeStocksComponent },
   { path: 'asset-detail', component: AssetDetailComponent },
   { path: 'transfer/:tab', component: TransferComponent },

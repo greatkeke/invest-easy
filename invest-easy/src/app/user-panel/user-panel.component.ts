@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 
@@ -29,11 +29,12 @@ export class UserPanelComponent {
 
   @Output() panelClosed = new EventEmitter<void>();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private location: Location) {
   }
 
   closePanel() {
     this.panelClosed.emit();
+    this.location.back();
   }
 
   navigateTo(target: string) {
