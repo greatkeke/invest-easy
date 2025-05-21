@@ -1,14 +1,18 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TopNavigationComponent } from '../top-navigation/top-navigation.component';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-advertisement',
   templateUrl: './advertisement.component.html',
   styleUrls: ['./advertisement.component.scss'],
-  imports: [TopNavigationComponent]
+  imports: [TopNavigationComponent, ProgressBarModule, ProgressSpinnerModule, CommonModule]
 })
 export class AdvertisementComponent {
+  isLoading: boolean = true;
   adType: string = '';
 
   adTitle: string = '';
@@ -96,10 +100,13 @@ export class AdvertisementComponent {
       console.log(this.adType)
 
       if (this.adType && this.adMappings[this.adType]) {
-        const ad = this.adMappings[this.adType];
-        this.adTitle = ad.title;
-        this.adDescription = ad.description;
-        this.adImage = ad.image;
+        setTimeout(() => {
+          const ad = this.adMappings[this.adType];
+          this.adTitle = ad.title;
+          this.adDescription = ad.description;
+          this.adImage = ad.image;
+          this.isLoading = false;
+        }, 3000);
       }
     })
   }

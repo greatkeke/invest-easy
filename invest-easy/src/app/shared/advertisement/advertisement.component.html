@@ -2,7 +2,14 @@
     <app-top-navigation [title]="adType"></app-top-navigation>
 
     <div class="ad-content p-4">
-        <div class="flex flex-col md:flex-row gap-4">
+        <p-progressBar *ngIf="isLoading" mode="indeterminate" [style]="{'height': '6px', 'width': '100%'}"></p-progressBar>
+        <div *ngIf="isLoading" class="flex flex-col items-center justify-center gap-8 h-96">
+            <p-progressSpinner styleClass="w-16 h-16" strokeWidth="4" animationDuration="1s">
+            </p-progressSpinner>
+            <p class="text-gray-600">Loading advertisement...</p>
+        </div>
+
+        <div *ngIf="!isLoading" class="flex flex-col md:flex-row gap-4">
             <div class="w-full md:w-1/2">
                 <img [src]="adImage" [alt]="adTitle" class="rounded-lg shadow-md w-full">
             </div>
