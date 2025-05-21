@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HistoryComponent } from '../shared/history/history.component';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -25,7 +26,8 @@ import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.
     InputNumberModule,
     PasswordModule,
     ButtonModule,
-    TopNavigationComponent
+    TopNavigationComponent,
+    HistoryComponent
   ],
   templateUrl: './transfer.component.html',
   styleUrls: ['./transfer.component.scss'],
@@ -49,12 +51,6 @@ export class TransferComponent implements OnInit {
     amount: null,
     password: ''
   };
-
-  records = [
-    { type: 'In', amount: 500, time: new Date('2025-05-15'), balance: 10500 },
-    { type: 'Out', amount: 200, time: new Date('2025-05-14'), balance: 9800 },
-    { type: 'In', amount: 1000, time: new Date('2025-05-10'), balance: 9000 }
-  ];
 
   showSuccessDialog = false;
   transferredAmount = 0;

@@ -20,10 +20,10 @@ export class TradeComponent {
 
   showMetrics = true;
   totalAssets = 365013.73; // Will be formatted as $125K
-  todayPL = 2450; // Will be formatted as $2.45K 
-  marketValue = 118000; // Will be formatted as $118K
-  positionPL = 7500; // Will be formatted as $7.5K
-  maxWithdrawable = 85000; // Will be formatted as $85K
+  todayPL = 53.94; // Will be formatted as $2.45K 
+  marketValue = 23410.78; // Will be formatted as $118K
+  positionPL = 120.34; // Will be formatted as $7.5K
+  maxWithdrawable = 25673.73; // Will be formatted as $85K
 
   formatCurrency(value: number): string {
     if (value >= 1000000) {
@@ -41,33 +41,33 @@ export class TradeComponent {
 
   positions = [
     {
-      symbol: 'AAPL',
+      symbol: 'QQQ',
       marketValue: 45000,
       quantity: 150,
       price: 300,
       cost: 280,
       todayPL: 1200,
-      pl: 3000,
+      pl: 46.78,
       portfolioPercent: 0.36
     },
     {
-      symbol: 'MSFT',
+      symbol: 'HSTI',
       marketValue: 38000,
       quantity: 200,
       price: 190,
       cost: 175,
       todayPL: 850,
-      pl: 3000,
+      pl: -30.12,
       portfolioPercent: 0.30
     },
     {
-      symbol: 'GOOGL',
+      symbol: 'FoundBonds',
       marketValue: 35000,
       quantity: 25,
       price: 1400,
       cost: 1350,
       todayPL: 400,
-      pl: 1500,
+      pl: 5.44,
       portfolioPercent: 0.28
     }
   ];

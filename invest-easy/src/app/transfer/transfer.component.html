@@ -58,18 +58,7 @@
 
         <!-- Record Tab -->
         <p-tabpanel [value]="2">
-          <div class="space-y-2">
-            <div *ngFor="let record of records" class="p-2 border-b">
-              <div class="flex justify-between">
-                <span>{{ record.type }}</span>
-                <span class="text-primary-500">{{ record.amount | currency }}</span>
-              </div>
-              <div class="flex justify-between text-sm text-gray-500">
-                <span>{{ record.time | date:'short' }}</span>
-                <span>Balance: {{ record.balance | currency }}</span>
-              </div>
-            </div>
-          </div>
+          <app-history></app-history>
         </p-tabpanel>
       </p-tabpanels>
     </p-tabs>
