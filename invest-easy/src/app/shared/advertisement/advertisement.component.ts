@@ -97,7 +97,6 @@ export class AdvertisementComponent {
   ngOnInit() {
     this.route.params.subscribe(pm => {
       this.adType = pm['adType'] || '';
-      console.log(this.adType)
 
       if (this.adType && this.adMappings[this.adType]) {
         setTimeout(() => {
