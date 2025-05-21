@@ -2,6 +2,11 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TopNavigationComponent } from '../../shared/top-navigation/top-navigation.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputMaskModule } from 'primeng/inputmask';
+import { SelectModule } from 'primeng/select';
 
 interface DefinedItem {
   Id: number;
@@ -14,7 +19,16 @@ interface DefinedItem {
 
 @Component({
   selector: 'app-general-settings',
-  imports: [CommonModule, ReactiveFormsModule, TopNavigationComponent],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    TopNavigationComponent,
+    InputTextModule,
+    InputNumberModule,
+    CheckboxModule,
+    InputMaskModule,
+    SelectModule
+  ],
   templateUrl: './general-settings.component.html',
   styleUrl: './general-settings.component.scss'
 })
