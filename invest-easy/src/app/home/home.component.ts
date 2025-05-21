@@ -44,4 +44,8 @@ export class HomeComponent implements OnInit {
   navigateTo(route: string) {
     this.router.navigate([route]);
   }
+
+  navigateToAd(adType: string) {
+    this.router.navigate(['/advertisement', { adType }]);
+  }
 }

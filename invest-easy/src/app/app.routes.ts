@@ -11,6 +11,7 @@ import { ExchangeComponent } from './exchange/exchange.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 import { InstrumentDetailComponent } from './instrument-detail/instrument-detail.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
+import { AdvertisementComponent } from './shared/advertisement/advertisement.component';
 
 export const routes: Routes = [
   {
@@ -31,5 +32,6 @@ export const routes: Routes = [
   { path: 'transfer', component: TransferComponent },
   { path: 'exchange', component: ExchangeComponent },
   { path: 'instrument/:symbol', component: InstrumentDetailComponent },
-  { path: 'contact-detail', component: ContactDetailComponent }
+  { path: 'contact-detail', component: ContactDetailComponent },
+  { path: 'advertisement', component: AdvertisementComponent }
 ];

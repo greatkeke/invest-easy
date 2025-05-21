@@ -1,0 +1,11 @@
+.ad-container {
+  @apply min-h-screen bg-gray-50;
+
+  .ad-content {
+    @apply max-w-6xl mx-auto;
+
+    .primaryNG-button {
+      @apply bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200;
+    }
+  }
+}
