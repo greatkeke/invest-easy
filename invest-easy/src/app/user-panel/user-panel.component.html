@@ -4,10 +4,10 @@
       icon="pi pi-times" iconPos="right" variant="outlined" [rounded]="true" [text]="true">
     </p-button>
   </div>
-  <div class="px-4 py-2 font-bold border-solid shadow-sm mx-4 mb-2 rounded-md flex justify-between"
+  <div class="px-4 py-2 font-bold border-solid shadow-sm mx-4 mb-2 rounded-md flex justify-between bg-red-300 dark:bg-primary-300"
     (click)="navigateTo('/contact-detail')">
     <div class="">
-      <h5>Janery, Chou</h5>
+      <h5>Welcome, 190108</h5>
       <small class="font-thin text-wrap">Last successful logon: {{now}}</small>
     </div>
     <div class="flex flex-col justify-center">
@@ -37,7 +37,7 @@
       <i class="pi pi-chevron-right"></i>
     </li>
     <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
-      <div class="flex items-center">
+      <div class="flex items-center" (click)="navigateTo('/contact-detail')">
         <i class="pi pi-user mr-2"></i>
         <span i18n>Contact details</span>
       </div>
