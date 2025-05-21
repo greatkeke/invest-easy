@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { GeneralSettingsComponent } from './user-panel/general-settings/general-settings.component';
 import { HomeComponent } from './home/home.component';
 import { MarketComponent } from './market/market.component';
 import { NewsComponent } from './news/news.component';
@@ -33,5 +34,6 @@ export const routes: Routes = [
   { path: 'exchange', component: ExchangeComponent },
   { path: 'instrument/:symbol', component: InstrumentDetailComponent },
   { path: 'contact-detail', component: ContactDetailComponent },
-  { path: 'advertisement', component: AdvertisementComponent }
+  { path: 'advertisement', component: AdvertisementComponent },
+  { path: 'general-settings', component: GeneralSettingsComponent }
 ];

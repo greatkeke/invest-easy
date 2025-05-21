@@ -1,0 +1,60 @@
+<app-top-navigation></app-top-navigation>
+<form [formGroup]="form">
+  <div *ngFor="let item of items" class="form-group">
+    <label [for]="item.DefinedAttributeName">{{item.DefinedAttributeName}}</label>
+    
+    <ng-container [ngSwitch]="item.DefinedAttributeType">
+      <!-- Text Input -->
+      <input *ngSwitchCase="'text'" 
+        [id]="item.DefinedAttributeName"
+        [formControlName]="item.DefinedAttributeName"
+        type="text"
+        class="form-control">
+
+      <!-- Number Input -->
+      <input *ngSwitchCase="'number'" 
+        [id]="item.DefinedAttributeName"
+        [formControlName]="item.DefinedAttributeName"
+        type="number"
+        class="form-control">
+
+      <!-- Boolean Checkbox -->
+      <input *ngSwitchCase="'boolean'" 
+        [id]="item.DefinedAttributeName"
+        [formControlName]="item.DefinedAttributeName"
+        type="checkbox"
+        class="form-check-input">
+
+      <!-- Email Input -->
+      <input *ngSwitchCase="'email'" 
+        [id]="item.DefinedAttributeName"
+        [formControlName]="item.DefinedAttributeName"
+        type="email"
+        class="form-control">
+
+      <!-- Phone Input -->
+      <input *ngSwitchCase="'phone'" 
+        [id]="item.DefinedAttributeName"
+        [formControlName]="item.DefinedAttributeName"
+        type="tel"
+        class="form-control">
+
+      <!-- Address Textarea -->
+      <textarea *ngSwitchCase="'address'" 
+        [id]="item.DefinedAttributeName"
+        [formControlName]="item.DefinedAttributeName"
+        class="form-control"
+        rows="3"></textarea>
+
+      <!-- Select Dropdown -->
+      <select *ngSwitchCase="'select'" 
+        [id]="item.DefinedAttributeName"
+        [formControlName]="item.DefinedAttributeName"
+        class="form-select">
+        <option *ngFor="let option of item.DefinedAttributeValue" [value]="option">
+          {{option}}
+        </option>
+      </select>
+    </ng-container>
+  </div>
+</form>
