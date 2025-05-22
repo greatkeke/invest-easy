@@ -1,0 +1,21 @@
+.orders-container {
+  @apply h-full flex flex-col;
+
+  .p-table {
+    @apply flex-1;
+
+    .p-tag {
+      @apply w-full justify-center;
+    }
+
+    .p-datatable-tbody {
+      tr {
+        @apply cursor-pointer hover:bg-gray-50;
+      }
+    }
+
+    .p-datatable-footer {
+      @apply sticky bottom-0 bg-white border-t border-gray-200;
+    }
+  }
+}

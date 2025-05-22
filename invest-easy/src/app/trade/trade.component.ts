@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { OrdersComponent } from './orders/orders.component';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { ButtonModule } from 'primeng/button';
@@ -7,7 +8,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-trade',
   standalone: true,
-  imports: [CommonModule, HeaderComponent,ButtonModule],
+  imports: [CommonModule, HeaderComponent, ButtonModule, OrdersComponent],
   templateUrl: './trade.component.html',
   styleUrls: ['./trade.component.scss']
 })
