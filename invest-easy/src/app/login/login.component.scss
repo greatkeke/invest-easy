@@ -1,0 +1,49 @@
+:host {
+  display: block;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.p-button-primary {
+  background-color: #db0011 !important;
+  border-color: #db0011 !important;
+
+  &:hover {
+    background-color: #c0000f !important;
+    border-color: #c0000f !important;
+  }
+}
+
+.p-button-text.p-button-plain {
+  color: #666;
+
+  &:hover {
+    color: #db0011;
+    background: transparent;
+  }
+}
+
+.p-inputtext:enabled:hover,
+.p-inputtext:enabled:focus {
+  border-color: #db0011;
+  box-shadow: 0 0 0 1px #db0011;
+}
+
+.p-password-panel {
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight {
+  background-color: #db0011;
+  border-color: #db0011;
+}

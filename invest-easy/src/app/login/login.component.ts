@@ -25,26 +25,42 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 export class LoginComponent {
   constructor(private http: HttpClient, private router: Router) {}
   username = '';
+  email = '';
   password = '';
+  confirmPassword = '';
   rememberMe = false;
   loading = false;
+  isSignUp = false;
+  errorMessage = '';
+
+  toggleMode() {
+    this.isSignUp = !this.isSignUp;
+    this.errorMessage = '';
+  }
 
   onSubmit() {
-    this.loading = true;
-    const mockApiUrl = 'https://jsonplaceholder.typicode.com/posts'; // Using placeholder mock API
-    const loginData = {
-      username: this.username,
-      password: this.password
-    };
+    if (this.isSignUp && this.password !== this.confirmPassword) {
+      this.errorMessage = 'Passwords do not match';
+      return;
+    }
 
-    this.http.post(mockApiUrl, loginData).subscribe({
+    this.loading = true;
+    this.errorMessage = '';
+    const mockApiUrl = 'https://jsonplaceholder.typicode.com/posts';
+    const authData = this.isSignUp 
+      ? { email: this.email, username: this.username, password: this.password }
+      : { username: this.username, password: this.password };
+
+    this.http.post(mockApiUrl, authData).subscribe({
       next: () => {
         this.loading = false;
         this.router.navigate(['/home']);
       },
       error: (err) => {
         this.loading = false;
-        console.error('Login failed:', err);
+        this.errorMessage = this.isSignUp 
+          ? 'Sign up failed. Please try again.' 
+          : 'Login failed. Invalid credentials.';
       }
     });
   }
