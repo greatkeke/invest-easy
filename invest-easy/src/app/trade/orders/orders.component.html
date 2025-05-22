@@ -13,7 +13,7 @@
     <ng-template #body let-order let-expanded="expanded">
       <tr [pRowToggler]="order">
         <td>
-          <p-tag [value]="order.status" [severity]="getStatusSeverity(order.status)"></p-tag>
+          <p-tag [value]="trimStatus(order.status)" [severity]="getStatusSeverity(order.status)" styleClass=""></p-tag>
         </td>
         <td>{{order.name}}</td>
         <td>{{order.price}}</td>

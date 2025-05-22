@@ -65,4 +65,8 @@ export class OrdersComponent {
       default: return null;
     }
   }
+
+  trimStatus(status: string): string {
+    return status.substring(0, 4);
+  }
 }
