@@ -28,8 +28,11 @@
         <label for="rememberMe">Remind me</label>
       </div>
 
-      <div>
-        <p-button type="submit" label="Login" styleClass="p-button-raised p-button-primary"></p-button>
+      <div class="flex items-center gap-2">
+        <p-button type="submit" label="Login" styleClass="p-button-raised p-button-primary"
+          [disabled]="loading"></p-button>
+        <p-progress-spinner *ngIf="loading" strokeWidth="8" fill="transparent" animationDuration=".5s"
+          [style]="{ width: '1rem', height: '1rem' }" />
       </div>
     </div>
   </form>
