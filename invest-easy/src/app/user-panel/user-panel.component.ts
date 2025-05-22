@@ -40,4 +40,8 @@ export class UserPanelComponent {
   navigateTo(target: string) {
     this.router.navigate([target]);
   }
+
+  LogOff() {
+    this.router.navigate(['/login']);
+  }
 }
