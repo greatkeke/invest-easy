@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './login/login.component';
 import { GeneralSettingsComponent } from './user-panel/general-settings/general-settings.component';
 import { HomeComponent } from './home/home.component';
 import { MarketComponent } from './market/market.component';
@@ -15,6 +16,7 @@ import { UserPanelComponent } from './user-panel/user-panel.component';
 import { AdvertisementComponent } from './shared/advertisement/advertisement.component';
 
 export const routes: Routes = [
+  { path: 'login', component: LoginComponent },
   {
     path: '',
     component: LayoutComponent,

@@ -1,0 +1,36 @@
+<div class="h-[100vh] w-full flex justify-center items-center">
+  <form class="" (ngSubmit)="onSubmit()">
+    <h2 class="font-bold mb-4">Login</h2>
+    <div class="flex flex-col gap-4">
+
+      <p-image src="HSBC_MASTERBRAND_LOGO_RGB.svg" alt="Login" width="250" />
+
+      <div class="">
+        <p-iftalabel>
+          <p-iconfield>
+            <p-inputicon class="pi pi-user" />
+            <input pInputText id="username" [(ngModel)]="username" autocomplete="off" name="username" required />
+          </p-iconfield>
+          <label for="username">Username</label>
+        </p-iftalabel>
+      </div>
+
+      <div class="">
+        <p-iftalabel>
+          <p-password id="password" [(ngModel)]="password" name="password" [feedback]="true" [toggleMask]="true"
+            required></p-password>
+          <label for="password">Password</label>
+        </p-iftalabel>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <p-checkbox [(ngModel)]="rememberMe" name="rememberMe" value="rememberMe" inputId="rememberMe" />
+        <label for="rememberMe">Remind me</label>
+      </div>
+
+      <div>
+        <p-button type="submit" label="Login" styleClass="p-button-raised p-button-primary"></p-button>
+      </div>
+    </div>
+  </form>
+</div>
