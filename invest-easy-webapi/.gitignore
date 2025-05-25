@@ -146,3 +146,5 @@ cython_debug/
 
 # Windows
 Thumbs.db
+
+test.db

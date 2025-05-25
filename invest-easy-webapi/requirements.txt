@@ -1,0 +1,10 @@
+fastapi[standard]
+fastapi-users
+pydantic
+sqlalchemy
+aiosqlite
+uvicorn
+python-jose
+passlib
+python-multipart
+fastapi_users_db_sqlalchemy
