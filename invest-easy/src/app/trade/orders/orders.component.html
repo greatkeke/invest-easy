@@ -23,10 +23,12 @@
 
     <ng-template #expandedrow let-order>
       <tr>
-        <td><p-button label="Quotes" size="small"></p-button></td>
-        <td><p-button label="Edit" size="small"></p-button></td>
-        <td><p-button label="Cancel" size="small"></p-button></td>
-        <td><p-button label="Details" size="small"></p-button></td>
+        <td colspan="4" class="button-container">
+          <p-button label="Quotes" size="small" variant="outlined" styleClass="mr-2"></p-button>
+          <p-button label="Edit" size="small" variant="outlined" styleClass="mr-2"></p-button>
+          <p-button label="Cancel" size="small" variant="outlined" styleClass="mr-2"></p-button>
+          <p-button label="Details" size="small" variant="outlined" styleClass=""></p-button>
+        </td>
       </tr>
     </ng-template>
 
@@ -39,17 +41,13 @@
     </ng-template>
   </p-table>
 
-  <div class="">
-    <div *ngIf="!allLoaded">
-      <div colspan="4" class="text-center p-3" (click)="loadOrders()">
-        <i *ngIf="loading" class="pi pi-spinner pi-spin mr-2"></i>
-        Load More
-      </div>
+  <div class="load-more-container">
+    <div *ngIf="!allLoaded" class="load-more" (click)="loadOrders()">
+      <i *ngIf="loading" class="pi pi-spinner pi-spin text-red-500 mr-2"></i>
+      Load More
     </div>
-    <div *ngIf="allLoaded && !loading">
-      <div colspan="4" class="text-center p-3 text-gray-500">
-        All orders loaded
-      </div>
+    <div *ngIf="allLoaded && !loading" class="all-loaded">
+      All orders loaded
     </div>
   </div>
 </div>

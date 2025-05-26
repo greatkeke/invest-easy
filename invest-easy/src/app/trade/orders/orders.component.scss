@@ -1,0 +1,38 @@
+.orders-container {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+  .p-datatable {
+    .p-datatable-thead > tr > th {
+      color: #495057;
+      font-weight: 600;
+      padding: 1rem;
+      border: none;
+    }
+
+    .p-datatable-tbody > tr {
+      transition: background-color 0.2s;
+
+      & > td {
+        padding: 1rem;
+        border: none;
+        border-bottom: 1px solid #e9ecef;
+      }
+    }
+  }
+
+  .load-more {
+    cursor: pointer;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+
+  .all-loaded {
+    padding: 1rem;
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.875rem;
+  }
+}
