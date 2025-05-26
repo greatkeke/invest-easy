@@ -14,6 +14,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Client,
   },
   {
+    path: 'market',
+    renderMode: RenderMode.Client,
+  },
+  {
     path: '**',
     renderMode: RenderMode.Prerender
   }
