@@ -2,8 +2,13 @@
   <!-- Top Navigation -->
   <app-top-navigation title="Transfer"></app-top-navigation>
 
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
+
   <!-- Main Content -->
-  <div class="flex-1 overflow-auto p-4">
+  <div class="flex-1 overflow-auto">
     <p-tabs [value]="activeTabIndex"  (onChange)="onTabChange($event)">
       <p-tablist>
         <p-tab [value]="0">In</p-tab>
@@ -64,15 +69,14 @@
     </p-tabs>
   </div>
 
-  <div class="p-4">
-    <small class="block">Be careful of security. </small>
-    <small>Never tell anyone about the security code.</small>
+  <div class="security-message">
+    <p>Be careful of security. Never tell anyone about the security code.</p>
   </div>
 
   <!-- Bottom Navigation -->
-  <div class="p-4 flex justify-center">
-    <p-button label="Customer Service" variant="outlined" (click)="openCustomerService()" class="pi pi-phone"
-      styleClass="p-button-text p-button-plain"></p-button>
+  <div class="p-4 text-center">
+    <p-button label="Customer Service" (click)="openCustomerService()" icon="pi pi-phone"
+      styleClass="p-button-text"></p-button>
   </div>
 
   <!-- Transfer Success Dialog -->

@@ -55,6 +55,7 @@ export class TransferComponent implements OnInit {
   showSuccessDialog = false;
   transferredAmount = 0;
   activeTabIndex = 0;
+  isLoading = false;
 
   constructor(
     private messageService: MessageService,
@@ -78,7 +79,7 @@ export class TransferComponent implements OnInit {
     // You would need to inject Router and use router.navigate
   }
 
-  submitIn() {
+  async submitIn() {
     if (!this.inForm.fromAccount || !this.inForm.amount) {
       this.messageService.add({
         severity: 'error',
@@ -88,11 +89,18 @@ export class TransferComponent implements OnInit {
       return;
     }
 
-    this.transferredAmount = this.inForm.amount;
-    this.showSuccessDialog = true;
+    this.isLoading = true;
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      this.transferredAmount = this.inForm.amount;
+      this.showSuccessDialog = true;
+    } finally {
+      this.isLoading = false;
+    }
   }
 
-  submitOut() {
+  async submitOut() {
     if (!this.outForm.toAccount || !this.outForm.amount || !this.outForm.password) {
       this.messageService.add({
         severity: 'error',
@@ -111,8 +119,15 @@ export class TransferComponent implements OnInit {
       return;
     }
 
-    this.transferredAmount = this.outForm.amount;
-    this.showSuccessDialog = true;
+    this.isLoading = true;
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      this.transferredAmount = this.outForm.amount;
+      this.showSuccessDialog = true;
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   closeDialog() {
