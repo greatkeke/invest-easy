@@ -2,10 +2,9 @@ name: Docker Build and Push
 
 on:
   push:
+    branches: [ "main" ]
     tags:
       - 'v*'
-    branches:
-      - main
   # release:
   #   types: [created]
 
@@ -35,6 +34,7 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/invest-easy
           tags: |
+            type=ref,event=branch
             type=ref,event=tag
             type=sha
 
