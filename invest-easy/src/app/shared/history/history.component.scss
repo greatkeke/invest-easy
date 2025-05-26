@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.record-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.load-more-container {
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+}

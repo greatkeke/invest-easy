@@ -15,15 +15,28 @@ export class HistoryComponent {
     { type: 'Out', amount: 200, time: new Date('2025-05-14'), balance: 9800 },
     { type: 'In', amount: 1000, time: new Date('2025-05-10'), balance: 9000 }
   ];
+  isLoading = false;
+  allRecordsLoaded = false;
 
   loadMore() {
-    // Mock loading more records
-    const newRecords = [
-      { type: 'Out', amount: 150, time: new Date('2025-05-08'), balance: 8850 },
-      { type: 'In', amount: 300, time: new Date('2025-05-05'), balance: 8550 },
-      { type: 'Out', amount: 50, time: new Date('2025-05-01'), balance: 8500 }
-    ];
-    this.records = [...this.records, ...newRecords];
+    if (this.allRecordsLoaded) return;
+    
+    this.isLoading = true;
+    // Simulate API call delay
+    setTimeout(() => {
+      // Mock loading more records
+      const newRecords = [
+        { type: 'Out', amount: 150, time: new Date('2025-05-08'), balance: 8850 },
+        { type: 'In', amount: 300, time: new Date('2025-05-05'), balance: 8550 },
+        { type: 'Out', amount: 50, time: new Date('2025-05-01'), balance: 8500 }
+      ];
+      this.records = [...this.records, ...newRecords];
+      this.isLoading = false;
+      
+      // In a real app, this would be set based on API response
+      if (this.records.length >= 6) {
+        this.allRecordsLoaded = true;
+      }
+    }, 1000);
   }
 }
-
