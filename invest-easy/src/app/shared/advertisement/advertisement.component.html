@@ -4,9 +4,9 @@
     <div class="ad-content p-4">
         <p-progressBar *ngIf="isLoading" mode="indeterminate" [style]="{'height': '6px', 'width': '100%'}"></p-progressBar>
         <div *ngIf="isLoading" class="flex flex-col items-center justify-center gap-8 h-96">
-            <p-progressSpinner styleClass="w-16 h-16" strokeWidth="4" animationDuration="1s">
+            <p-progressSpinner styleClass="w-16 h-16 border-red-500" strokeWidth="4" animationDuration="1s">
             </p-progressSpinner>
-            <p class="text-gray-600">Loading advertisement...</p>
+            <p class="text-gray-600">Loading...</p>
         </div>
 
         <div *ngIf="!isLoading" class="flex flex-col md:flex-row gap-4">
