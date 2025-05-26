@@ -1,13 +1,16 @@
 <div class="space-y-4">
-    <div *ngFor="let record of records" 
-         class="p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-        <div class="flex justify-between items-center">
-            <span class="font-medium">{{ record.type }}</span>
-            <span class="text-primary-500 font-semibold">{{ record.amount | currency }}</span>
-        </div>
-        <div class="flex justify-between text-sm text-gray-500 mt-1">
-            <span>{{ record.time | date:'short' }}</span>
-            <span>Balance: {{ record.balance | currency }}</span>
+    <p-progressBar *ngIf="isInit" mode="indeterminate" [style]="{'height': '6px', 'width': '100%'}"></p-progressBar>
+    <div *ngIf="!isInit">
+        <div *ngFor="let record of records"
+            class="p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div class="flex justify-between items-center">
+                <span class="font-medium">{{ record.type }}</span>
+                <span class="text-primary-500 font-semibold">{{ record.amount | currency }}</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+                <span>{{ record.time | date:'short' }}</span>
+                <span>Balance: {{ record.balance | currency }}</span>
+            </div>
         </div>
     </div>
 
@@ -15,10 +18,8 @@
         <div *ngIf="isLoading" class="flex justify-center py-2">
             <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"></div>
         </div>
-        <p-button *ngIf="!isLoading && !allRecordsLoaded" 
-                 [link]="true" 
-                 (click)="loadMore()" 
-                 class="text-primary-500 hover:underline cursor-pointer">
+        <p-button *ngIf="!isLoading && !allRecordsLoaded" [link]="true" (click)="loadMore()"
+            class="text-primary-500 hover:underline cursor-pointer">
             Load More
         </p-button>
         <p *ngIf="allRecordsLoaded" class="text-gray-500">All records loaded</p>

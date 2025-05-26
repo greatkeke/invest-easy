@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [CommonModule,ButtonModule],
+  imports: [CommonModule, ButtonModule, ProgressBarModule],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
 })
@@ -15,12 +16,20 @@ export class HistoryComponent {
     { type: 'Out', amount: 200, time: new Date('2025-05-14'), balance: 9800 },
     { type: 'In', amount: 1000, time: new Date('2025-05-10'), balance: 9000 }
   ];
+  isInit = false;
   isLoading = false;
   allRecordsLoaded = false;
 
+  ngOnInit(): void {
+    this.isInit = true;
+    setTimeout(() => {
+      this.isInit = false;
+    }, 1500);
+  }
+
   loadMore() {
     if (this.allRecordsLoaded) return;
-    
+
     this.isLoading = true;
     // Simulate API call delay
     setTimeout(() => {
@@ -32,7 +41,7 @@ export class HistoryComponent {
       ];
       this.records = [...this.records, ...newRecords];
       this.isLoading = false;
-      
+
       // In a real app, this would be set based on API response
       if (this.records.length >= 6) {
         this.allRecordsLoaded = true;
