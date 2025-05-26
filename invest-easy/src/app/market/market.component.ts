@@ -78,9 +78,9 @@ export class MarketComponent implements OnInit {
     // TODO: Implement watchlist data loading
     // Mock data for now
     this.watchlist = [
-      { symbol: '600036', name: '招商银行', price: 35.20, change: 0.45, percent: '1.29', volume: '45.2万手' },
-      { symbol: '000858', name: '五粮液', price: 152.80, change: -1.20, percent: '-0.78', volume: '12.8万手' },
-      { symbol: '601318', name: '中国平安', price: 48.90, change: 0.32, percent: '0.66', volume: '28.5万手' }
+      { symbol: '600036', name: 'CM Bank', price: 35.20, change: 0.45, percent: '1.29', volume: '45.2' },
+      { symbol: '000858', name: 'Wuliangye Yibin', price: 152.80, change: -1.20, percent: '-0.78', volume: '12.8' },
+      { symbol: '601318', name: 'Pingan', price: 48.90, change: 0.32, percent: '0.66', volume: '28.5' }
     ];
   }
 
@@ -114,15 +114,15 @@ export class MarketComponent implements OnInit {
 
   private getMarketName(symbol: string): string {
     const names: Record<string, string> = {
-      '000001': '上证指数',
-      '399001': '深证成指',
-      'HSI': '恒生指数',
-      'DJIA': '道琼斯',
-      'NDX': '纳斯达克',
-      'SPX': '标普500',
-      '600036': '招商银行',
-      '000858': '五粮液',
-      '601318': '中国平安'
+      '000001': 'SSE Composite Index',
+      '399001': 'Shenzhen Component Index',
+      'HSI': 'Hang Seng Index',
+      'DJIA': 'Dow Jones Industrial Average',
+      'NDX': 'Nasdaq Composite Index',
+      'SPX': 'S&P 500 Index',
+      '600036': 'CM Bank',
+      '000858': 'Wuliangye Yibin',
+      '601318': 'Pingan'
     };
     return names[symbol] || symbol;
   }
