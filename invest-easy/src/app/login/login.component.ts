@@ -55,8 +55,8 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
     const apiUrl = this.isSignUp
-      ? 'http://localhost:8000/auth/register'
-      : 'http://localhost:8000/auth/jwt/login';
+      ? 'auth/register'
+      : 'auth/jwt/login';
 
     const authData = this.isSignUp
       ? { email: this.email, password: this.password }
