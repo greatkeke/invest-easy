@@ -3,7 +3,7 @@ fastapi-users[sqlalchemy]
 pydantic
 sqlalchemy
 aiosqlite
-uvicorn
+uvicorn[standard]
 python-jose
 passlib
 python-multipart
