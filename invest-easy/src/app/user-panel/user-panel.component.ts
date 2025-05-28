@@ -2,6 +2,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-user-panel',
@@ -29,8 +31,11 @@ export class UserPanelComponent {
 
   @Output() panelClosed = new EventEmitter<void>();
 
-  constructor(private router: Router, private location: Location) {
-  }
+  constructor(
+    private router: Router, 
+    private location: Location,
+    private http: HttpClient
+  ) {}
 
   closePanel() {
     this.panelClosed.emit();
@@ -41,7 +46,14 @@ export class UserPanelComponent {
     this.router.navigate([target]);
   }
 
-  LogOff() {
-    this.router.navigate(['/login']);
+  async LogOff() {
+    try {
+      await lastValueFrom(this.http.post('auth/jwt/logout', {}));
+      // Clear any client-side auth state if needed
+      this.router.navigate(['/login']);
+    } catch (error) {
+      console.error('Logout failed:', error);
+      this.router.navigate(['/login']);
+    }
   }
 }
