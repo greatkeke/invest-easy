@@ -16,9 +16,11 @@ from fastapi_users_db_sqlalchemy import (
 
 DATABASE_PATH = os.getenv("DATABASE_PATH")
 if not DATABASE_PATH:
-    DATABASE_PATH = "./test.db"
+    DATABASE_PATH = "."
 
-DATABASE_URL = f"sqlite+aiosqlite:///{DATABASE_PATH}"
+DATABASE_NAME = "easy.db"
+
+DATABASE_URL = f"sqlite+aiosqlite:///{DATABASE_PATH}/{DATABASE_NAME}"
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
