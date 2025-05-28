@@ -5,7 +5,6 @@ FROM python:3.13.2
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PORT=8000
-ENV DATABASE_PATH=/app
 
 # Set working directory
 WORKDIR /app
@@ -17,8 +16,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
+# Add volume for database persistence
+VOLUME /app/db
+
 # Expose the configured port
-EXPOSE ${PORT}
+EXPOSE 10008
 
 # Run the application
-CMD ["uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "${PORT}"]
+CMD ["uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "10008"]

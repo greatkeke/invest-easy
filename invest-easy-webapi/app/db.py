@@ -1,7 +1,6 @@
 
 # Database setup
 from collections.abc import AsyncGenerator
-import os
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -14,13 +13,7 @@ from fastapi_users_db_sqlalchemy import (
     SQLAlchemyUserDatabase,
 )
 
-DATABASE_PATH = os.getenv("DATABASE_PATH")
-if not DATABASE_PATH:
-    DATABASE_PATH = "."
-
-DATABASE_NAME = "easy.db"
-
-DATABASE_URL = f"sqlite+aiosqlite:///{DATABASE_PATH}/{DATABASE_NAME}"
+DATABASE_URL = f"sqlite+aiosqlite:///./db/easy.db"
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
