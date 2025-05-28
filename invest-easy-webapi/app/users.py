@@ -1,7 +1,7 @@
 from typing import Optional
 from uuid import UUID
 from fastapi import Request, Depends
-from fastapi_users import FastAPIUsers
+from fastapi_users import FastAPIUsers, UUIDIDMixin
 from fastapi_users.authentication import AuthenticationBackend, CookieTransport
 from fastapi_users.manager import BaseUserManager
 from fastapi_users.authentication.strategy.db import (
@@ -13,7 +13,7 @@ from .db import AccessToken, User, get_access_token_db, get_user_db
 
 
 # User manager
-class UserManager(BaseUserManager[User, UUID]):
+class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
 

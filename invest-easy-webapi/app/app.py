@@ -12,6 +12,7 @@ async def lifespan(app: FastAPI):
     await create_tables()
     yield
 
+
 app = FastAPI(lifespan=lifespan)
 
 # Include routers
@@ -39,9 +40,11 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
+
 
 @app.get("/authenticated-route")
 async def authenticated_route(user: User = Depends(current_active_user)):
