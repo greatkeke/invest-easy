@@ -1,11 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-interface LoginResponse {
-  access_token: string;
-  token_type: string;
-}
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +13,19 @@ import { IftaLabelModule } from 'primeng/iftalabel';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ImageModule } from 'primeng/image';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
+interface LoginResponse {
+  access_token: string;
+  token_type: string;
+}
+
+interface SignUpResponse {
+  id: string;
+  email: string;
+  is_active: boolean;
+  is_superuser: boolean;
+  is_verified: boolean;
+}
 
 @Component({
   selector: 'app-login',
@@ -47,20 +55,44 @@ export class LoginComponent {
   onSubmit(form: NgForm) {
     if (form.invalid) return;
 
-    if (this.isSignUp && this.password !== this.confirmPassword) {
+    this.loading = true;
+    this.errorMessage = '';
+
+    if (this.isSignUp) {
+      this.signUp(form);
+    } else {
+      this.login(form);
+    }
+  }
+
+
+  signUp(form: NgForm): void {
+    if (this.password !== this.confirmPassword) {
       this.errorMessage = 'Passwords do not match';
       return;
     }
+    const apiUrl = 'auth/register';
+    const authData = { email: this.email, password: this.password };
 
-    this.loading = true;
-    this.errorMessage = '';
-    const apiUrl = this.isSignUp
-      ? 'auth/register'
-      : 'auth/jwt/login';
+    this.http.post<SignUpResponse>(apiUrl, authData, { observe: 'response' }).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.isSignUp = false;
+        if (response.body) {
+          this.username = response.body.email;
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        this.errorMessage = err.error?.detail || ('Registration failed. Please try again.');
+      }
+    });
+  }
 
-    const authData = this.isSignUp
-      ? { email: this.email, password: this.password }
-      : { username: this.username, password: this.password };
+  login(form: NgForm): void {
+    const apiUrl = 'auth/jwt/login';
+
+    const authData = { username: this.username, password: this.password };
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -69,17 +101,14 @@ export class LoginComponent {
     this.http.post<LoginResponse>(apiUrl, this.toFormData(authData), { observe: 'response', headers }).subscribe({
       next: (response) => {
         this.loading = false;
-        if (response.body && !this.isSignUp) {
+        if (response.body) {
           localStorage.setItem('access_token', response.body.access_token);
         }
         this.router.navigate(['/home']);
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.error?.detail ||
-          (this.isSignUp
-            ? 'Registration failed. Please try again.'
-            : 'Login failed. Please check your credentials.');
+        this.errorMessage = err.error?.detail || ('Login failed. Please check your credentials.');
       }
     });
   }
@@ -96,4 +125,6 @@ export class LoginComponent {
 
 
 
+
 }
+
