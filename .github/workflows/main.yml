@@ -29,6 +29,7 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/invest-easy
           tags: |
+            latest
             type=ref,event=branch
             type=ref,event=tag
             type=sha
