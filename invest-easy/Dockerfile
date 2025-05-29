@@ -1,8 +1,6 @@
 # Stage 1: Build the Angular application
 FROM node:18-alpine AS build
 
-ENV API_BASE_URL '/'
-
 WORKDIR /app
 
 # Copy package files
@@ -19,6 +17,9 @@ RUN npm run build
 
 # Stage 2: Serve the application
 FROM node:18-alpine
+
+ENV API_BASE_URL url
+
 WORKDIR /app
 
 # Copy built files from build stage
