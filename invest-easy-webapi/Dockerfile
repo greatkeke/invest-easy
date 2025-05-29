@@ -4,6 +4,7 @@ FROM python:3.13.2
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV ALLOW_ORIGINS
 
 # Set working directory
 WORKDIR /app
