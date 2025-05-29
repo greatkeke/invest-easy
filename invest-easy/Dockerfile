@@ -18,8 +18,6 @@ RUN npm run build
 # Stage 2: Serve the application
 FROM node:18-alpine
 
-ENV API_BASE_URL url
-
 WORKDIR /app
 
 # Copy built files from build stage
@@ -32,6 +30,8 @@ RUN npm ci --omit=dev
 
 # Expose port
 EXPOSE 4000
+
+VOLUME /app/dist/invest-easy/browser/assets 
 
 # Start the SSR server
 CMD ["npm", "run", "serve:ssr:invest-easy"]
