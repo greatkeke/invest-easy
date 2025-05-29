@@ -32,10 +32,10 @@ export class UserPanelComponent {
   @Output() panelClosed = new EventEmitter<void>();
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private location: Location,
     private http: HttpClient
-  ) {}
+  ) { }
 
   closePanel() {
     this.panelClosed.emit();
@@ -48,7 +48,7 @@ export class UserPanelComponent {
 
   async LogOff() {
     try {
-      await lastValueFrom(this.http.post('auth/jwt/logout', {}));
+      await lastValueFrom(this.http.post('auth/jwt/logout', null, { withCredentials: true }));
       // Clear any client-side auth state if needed
       this.router.navigate(['/login']);
     } catch (error) {

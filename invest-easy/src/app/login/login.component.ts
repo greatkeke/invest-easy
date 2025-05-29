@@ -98,7 +98,8 @@ export class LoginComponent {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
-    this.http.post<LoginResponse>(apiUrl, this.toFormData(authData), { observe: 'response', headers }).subscribe({
+    // Without setting withCredentials=true, browsers will ignore cookies sent from the backend during a CORS request .
+    this.http.post<LoginResponse>(apiUrl, this.toFormData(authData), { observe: 'response', headers: headers, withCredentials: true }).subscribe({
       next: (response) => {
         this.loading = false;
         if (response.body) {
