@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
+import { ConfigService } from '../shared/config.service';
 
 @Component({
   selector: 'app-user-panel',
@@ -34,8 +35,11 @@ export class UserPanelComponent {
   constructor(
     private router: Router,
     private location: Location,
-    private http: HttpClient
+    private http: HttpClient,
   ) { }
+
+  ngOnInit(): void {
+  }
 
   closePanel() {
     this.panelClosed.emit();
@@ -48,6 +52,7 @@ export class UserPanelComponent {
 
   async LogOff() {
     try {
+
       await lastValueFrom(this.http.post('auth/jwt/logout', null, { withCredentials: true }));
       // Clear any client-side auth state if needed
       this.router.navigate(['/login']);

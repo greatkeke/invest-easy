@@ -1,9 +1,12 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { inject } from '@angular/core';
+import { ConfigService } from './config.service';
 
 export const InterceptorSkipHeader = 'X-Skip-Interceptor';
 
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
+  const configSvc = inject(ConfigService);
+
   // Skip if URL is already absolute
   if (req.url.startsWith('http')) {
     return next(req);
@@ -16,7 +19,7 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
 
   // Prepend base API URL for relative paths
   const apiReq = req.clone({
-    url: `${environment.apiBaseUrl}/${req.url}`
+    url: `${configSvc.apiBaseUrl}/${req.url}`
   });
 
   return next(apiReq);

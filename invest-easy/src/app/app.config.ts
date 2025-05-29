@@ -1,8 +1,8 @@
 import { ApplicationConfig, provideZoneChangeDetection, isDevMode, inject, provideAppInitializer } from '@angular/core';
 import { ConfigService } from './shared/config.service';
 import { provideRouter } from '@angular/router';
-import { HttpClient, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { apiInterceptor } from './shared/api-interceptor';
+import { HttpClient, HttpHeaders, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { apiInterceptor, InterceptorSkipHeader } from './shared/api-interceptor';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
@@ -12,6 +12,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import Material from '@primeng/themes/material';
 import { definePreset } from '@primeng/themes';
+import { catchError, firstValueFrom, tap } from 'rxjs';
 
 const appPreset = definePreset(Material, {
   semantic: {
@@ -63,10 +64,17 @@ const appPreset = definePreset(Material, {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // provideAppInitializer(() => {
-    //   const http = inject(HttpClient);
-    //   return new ConfigService(http).loadConfig();
-    // }),
+    provideAppInitializer(() => {
+      const http = inject(HttpClient);
+      const configSvc = inject(ConfigService);
+      return firstValueFrom(
+        http.get('/assets/config.json', { headers: new HttpHeaders().set(InterceptorSkipHeader, 'true') })
+          .pipe(
+            tap((data: any) => configSvc.config.apiBaseUrl = data.API_BASE_URL),
+            catchError(err => configSvc.config.apiBaseUrl = "error")
+          )
+      );
+    }),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
