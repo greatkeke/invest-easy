@@ -52,7 +52,7 @@ def get_database_strategy(
 auth_backend = AuthenticationBackend(
     name="jwt",
     transport=transport,
-    get_strategy=get_jwt_strategy,
+    get_strategy=get_database_strategy,
 )
 
 # FastAPI Users setup
