@@ -1,7 +1,10 @@
 
 # Database setup
 from collections.abc import AsyncGenerator
+import uuid
 from fastapi import Depends
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, func
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from fastapi_users_db_sqlalchemy.access_token import (

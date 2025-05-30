@@ -2,20 +2,29 @@ from typing import Optional
 from uuid import UUID
 from fastapi import Request, Depends
 from fastapi_users import FastAPIUsers, UUIDIDMixin
-from fastapi_users.authentication import AuthenticationBackend, BearerTransport, JWTStrategy
+from fastapi_users.authentication import (
+    AuthenticationBackend,
+    BearerTransport,
+    JWTStrategy,
+)
 from fastapi_users.manager import BaseUserManager
 from fastapi_users.authentication.strategy.db import (
     AccessTokenDatabase,
     DatabaseStrategy,
 )
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
-from .db import AccessToken, User, get_access_token_db, get_user_db
+from .db import AccessToken, User, get_access_token_db, get_async_session, get_user_db
+from .accounts.defaultAccounts import create_default_account
 
 
 # User manager
 class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
     async def on_after_register(self, user: User, request: Optional[Request] = None):
-        print(f"User {user.id} has registered.")
+        async for session in get_async_session():
+            await create_default_account(
+                user_id=user.id, username=user.email, session=session
+            )
+            break
 
 
 async def get_user_manager(

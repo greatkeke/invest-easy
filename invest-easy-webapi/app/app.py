@@ -1,10 +1,12 @@
 from contextlib import asynccontextmanager
 from typing import Annotated
 from fastapi import Depends, FastAPI
+from sqlalchemy.ext.asyncio import AsyncSession
 from .users import fastapi_users, auth_backend, current_active_user
 from .users import User
 from .schemas import UserRead, UserCreate, UserUpdate
-from .db import create_tables
+from .db import create_tables, get_async_session
+from .accounts.accounts import get_user_accounts
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
 
@@ -34,6 +36,14 @@ app.include_router(
     prefix="/users",
     tags=["users"],
 )
+
+@app.get("/users/accounts")
+async def get_user_accounts_endpoint(
+    user: User = Depends(current_active_user),
+    session: AsyncSession = Depends(get_async_session)
+):
+    accounts = get_user_accounts(session, user)
+    return {"accounts": accounts}
 
 app.add_middleware(
     CORSMiddleware,
