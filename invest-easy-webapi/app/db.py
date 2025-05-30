@@ -1,4 +1,3 @@
-
 # Database setup
 from collections.abc import AsyncGenerator
 import uuid
@@ -22,9 +21,10 @@ async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 Base = declarative_base()
 
+
 # User model
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    pass
+    username = Column(String(30), unique=True, nullable=False)
 
 
 class AccessToken(SQLAlchemyBaseAccessTokenTableUUID, Base):

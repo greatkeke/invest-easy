@@ -2,12 +2,12 @@ from fastapi_users.schemas import BaseUser, BaseUserCreate, BaseUserUpdate
 
 # Pydantic schemas
 class UserRead(BaseUser):
-    pass
+    username: str
 
 
 class UserCreate(BaseUserCreate):
-    pass
+    username: str
 
 
 class UserUpdate(BaseUserUpdate):
-    pass
+    username: str

@@ -73,7 +73,7 @@ export class LoginComponent {
       return;
     }
     const apiUrl = 'auth/register';
-    const authData = { email: this.email, password: this.password };
+    const authData = { email: this.email, username: this.username, password: this.password };
 
     this.http.post<SignUpResponse>(apiUrl, authData, { observe: 'response' }).subscribe({
       next: (response) => {
@@ -124,8 +124,4 @@ export class LoginComponent {
     return formData.join('&');
   }
 
-
-
-
 }
-

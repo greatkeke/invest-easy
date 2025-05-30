@@ -54,7 +54,7 @@ def read_root():
 
 @app.get("/authenticated-user/name")
 async def authenticated_route(user: User = Depends(current_active_user)):
-    return {"username": user.email}
+    return {"username": user.username}
 
 
 @app.get("/accounts")

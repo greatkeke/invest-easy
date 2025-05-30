@@ -5,7 +5,8 @@
     </div>
 
     <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="flex flex-col gap-4 relative">
-      <div *ngIf="loading" class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50 rounded-lg">
+      <div *ngIf="loading"
+        class="absolute inset-0 bg-opacity-70 flex items-center justify-center z-50 rounded-lg">
         <p-progressSpinner styleClass="w-12 h-12" strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
       </div>
       <div *ngIf="errorMessage" class="p-4 bg-red-100 text-red-700 rounded">
@@ -16,14 +17,14 @@
         <p-iftalabel>
           <p-iconfield>
             <p-inputicon class="pi pi-envelope" />
-            <input pInputText id="email" [(ngModel)]="email" type="email" name="email" required 
-                   #emailField="ngModel" placeholder="Enter your email" />
+            <input pInputText id="email" [(ngModel)]="email" type="email" name="email" required #emailField="ngModel"
+              placeholder="Enter your email" />
             @if (emailField.invalid && (emailField.dirty || emailField.touched)) {
-              <small class="text-red-500 block mt-1">
-                @if (emailField.errors?.['required']) {
-                  Email is required
-                }
-              </small>
+            <small class="text-red-500 block mt-1">
+              @if (emailField.errors?.['required']) {
+              Email is required
+              }
+            </small>
             }
           </p-iconfield>
           <label for="email">Email</label>
@@ -34,14 +35,14 @@
         <p-iftalabel>
           <p-iconfield>
             <p-inputicon class="pi pi-user" />
-            <input pInputText id="username" [(ngModel)]="username" name="username" required 
-                   #usernameField="ngModel" placeholder="Enter your username" />
+            <input pInputText id="username" [(ngModel)]="username" name="username" required #usernameField="ngModel"
+              placeholder="Enter your username" />
             @if (usernameField.invalid && (usernameField.dirty || usernameField.touched)) {
-              <small class="text-red-500 block mt-1">
-                @if (usernameField.errors?.['required']) {
-                  Username is required
-                }
-              </small>
+            <small class="text-red-500 block mt-1">
+              @if (usernameField.errors?.['required']) {
+              Username is required
+              }
+            </small>
             }
           </p-iconfield>
           <label for="username">Username</label>
@@ -50,15 +51,14 @@
 
       <div>
         <p-iftalabel>
-          <p-password id="password" [(ngModel)]="password" name="password" 
-                      [toggleMask]="true" [feedback]="isSignUp" required
-                      #passwordField="ngModel" placeholder="Enter your password"></p-password>
+          <p-password id="password" [(ngModel)]="password" name="password" [toggleMask]="true" [feedback]="isSignUp"
+            required #passwordField="ngModel" placeholder="Enter your password"></p-password>
           @if (passwordField.invalid && (passwordField.dirty || passwordField.touched)) {
-            <small class="text-red-500 block mt-1">
-              @if (passwordField.errors?.['required']) {
-                Password is required
-              }
-            </small>
+          <small class="text-red-500 block mt-1">
+            @if (passwordField.errors?.['required']) {
+            Password is required
+            }
+          </small>
           }
           <label for="password">Password</label>
         </p-iftalabel>
@@ -66,15 +66,14 @@
 
       <div *ngIf="isSignUp" class="animate-fadeIn">
         <p-iftalabel>
-          <p-password id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" 
-                      [toggleMask]="true" required #confirmPasswordField="ngModel" 
-                      placeholder="Confirm your password"></p-password>
+          <p-password id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" [toggleMask]="true"
+            required #confirmPasswordField="ngModel" placeholder="Confirm your password"></p-password>
           @if (confirmPasswordField.invalid && (confirmPasswordField.dirty || confirmPasswordField.touched)) {
-            <small class="text-red-500 block mt-1">
-              @if (confirmPasswordField.errors?.['required']) {
-                Confirm Password is required
-              }
-            </small>
+          <small class="text-red-500 block mt-1">
+            @if (confirmPasswordField.errors?.['required']) {
+            Confirm Password is required
+            }
+          </small>
           }
           <label for="confirmPassword">Confirm Password</label>
         </p-iftalabel>
@@ -86,11 +85,11 @@
       </div>
 
       <div class="flex flex-col gap-2">
-        <p-button type="submit" [label]="isSignUp ? 'Sign Up' : 'Login'" 
-                  styleClass="p-button-raised p-button-primary" [disabled]="loading"></p-button>
-        
-        <p-button type="button" label="Forgot password?" 
-                  styleClass="p-button-text p-button-plain text-sm" *ngIf="!isSignUp"></p-button>
+        <p-button type="submit" [label]="isSignUp ? 'Sign Up' : 'Login'" styleClass="p-button-raised p-button-primary"
+          [disabled]="loading"></p-button>
+
+        <p-button type="button" label="Forgot password?" styleClass="p-button-text p-button-plain text-sm"
+          *ngIf="!isSignUp"></p-button>
       </div>
 
       <div class="text-center mt-4">
