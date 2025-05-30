@@ -14,6 +14,7 @@ import { ContactDetailComponent } from './contact-detail/contact-detail.componen
 import { InstrumentDetailComponent } from './instrument-detail/instrument-detail.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { AdvertisementComponent } from './shared/advertisement/advertisement.component';
+import { AuthGuard } from './shared/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,21 +22,77 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: 'home', component: HomeComponent },
-      { path: 'market', component: MarketComponent },
-      { path: 'news', component: NewsComponent },
-      { path: 'trade', component: TradeComponent },
+      {
+        path: 'home',
+        component: HomeComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'market',
+        component: MarketComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'news',
+        component: NewsComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'trade',
+        component: TradeComponent,
+        canActivate: [AuthGuard]
+      },
       { path: '', redirectTo: '/home', pathMatch: 'full' }
     ]
   },
-  { path: 'user-center', component: UserPanelComponent },
-  { path: 'trade-stocks', component: TradeStocksComponent },
-  { path: 'asset-detail', component: AssetDetailComponent },
-  { path: 'transfer/:tab', component: TransferComponent },
-  { path: 'transfer', component: TransferComponent },
-  { path: 'exchange', component: ExchangeComponent },
-  { path: 'instrument/:symbol', component: InstrumentDetailComponent },
-  { path: 'contact-detail', component: ContactDetailComponent },
-  { path: 'advertisement', component: AdvertisementComponent },
-  { path: 'general-settings', component: GeneralSettingsComponent }
+  {
+    path: 'user-center',
+    component: UserPanelComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'trade-stocks',
+    component: TradeStocksComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'asset-detail',
+    component: AssetDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'transfer/:tab',
+    component: TransferComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'transfer',
+    component: TransferComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'exchange',
+    component: ExchangeComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'instrument/:symbol',
+    component: InstrumentDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'contact-detail',
+    component: ContactDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'advertisement',
+    component: AdvertisementComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'general-settings',
+    component: GeneralSettingsComponent,
+    canActivate: [AuthGuard]
+  }
 ];
