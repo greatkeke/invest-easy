@@ -4,9 +4,14 @@ from typing import List
 from pydantic_settings import BaseSettings, SettingsConfigDict
 import logging
 
+
 class Settings(BaseSettings):
-    allow_origins: str = os.getenv("allow_origins", "*")
-    model_config = SettingsConfigDict(env_file=".env")
+    allow_origins: str = "*"  # Default value, will be overridden by .env
+    model_config = SettingsConfigDict(
+        env_file=os.path.abspath(os.path.join(os.path.dirname(__file__), ".env")),
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+    )
 
     @property
     def allow_origins_list(self) -> List[str]:
@@ -18,7 +23,13 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings():
-    return Settings()
+    settings = Settings()
+    logging.info(f"Current allow_origins value: {settings.allow_origins}")
+    if settings.allow_origins == "*":
+        logging.warning(
+            "Using default allow_origins value - check .env file configuration"
+        )
+    return settings
 
 
 settings = get_settings()
