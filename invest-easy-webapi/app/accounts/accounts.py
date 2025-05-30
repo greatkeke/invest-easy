@@ -31,11 +31,11 @@ class UserAccount(Base):
 
 async def get_user_accounts(session: AsyncSession, user: User):
     result = await session.execute(
-        select(Account)
+        select(Account.id, Account.name)
         .join(
             UserAccount,
             UserAccount.accountId == Account.id and UserAccount.isActive == True,
         )
         .where(UserAccount.userId == user.id and Account.isActive == True)
     )
-    return result.scalars().all()
+    return [{"id": str(row[0]), "name": row[1]} for row in result.all()]

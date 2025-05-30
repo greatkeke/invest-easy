@@ -37,13 +37,6 @@ app.include_router(
     tags=["users"],
 )
 
-@app.get("/users/accounts")
-async def get_user_accounts_endpoint(
-    user: User = Depends(current_active_user),
-    session: AsyncSession = Depends(get_async_session)
-):
-    accounts = get_user_accounts(session, user)
-    return {"accounts": accounts}
 
 app.add_middleware(
     CORSMiddleware,
@@ -62,3 +55,12 @@ def read_root():
 @app.get("/authenticated-user/name")
 async def authenticated_route(user: User = Depends(current_active_user)):
     return {"username": user.email}
+
+
+@app.get("/accounts")
+async def get_user_accounts_endpoint(
+    user: User = Depends(current_active_user),
+    session: AsyncSession = Depends(get_async_session),
+):
+    accounts = await get_user_accounts(session, user)
+    return accounts

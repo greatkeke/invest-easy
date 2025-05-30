@@ -3,6 +3,7 @@ import { HistoryComponent } from '../shared/history/history.component';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { SelectModule } from 'primeng/select';
 import { TabsModule } from 'primeng/tabs';
 import { DialogModule } from 'primeng/dialog';
@@ -34,11 +35,7 @@ import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.
   providers: [MessageService]
 })
 export class TransferComponent implements OnInit {
-  accounts = [
-    { label: 'Account 1', value: 'acc1' },
-    { label: 'Account 2', value: 'acc2' },
-    { label: 'Account 3', value: 'acc3' }
-  ];
+  accounts: { label: string; value: string }[] = [];
 
   inForm = {
     fromAccount: '',
@@ -59,7 +56,8 @@ export class TransferComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
@@ -71,6 +69,33 @@ export class TransferComponent implements OnInit {
     } else {
       this.activeTabIndex = 0;
     }
+
+    this.fetchAccounts();
+  }
+
+  fetchAccounts() {
+    this.isLoading = true;
+    this.http.get<any[]>('/accounts').subscribe({
+      next: (accounts) => {
+        this.accounts = accounts.map(account => ({
+          label: account.name,
+          value: account.id
+        }));
+        if (this.accounts.length > 0) {
+          this.inForm.fromAccount = this.accounts[0].value;
+          this.outForm.toAccount = this.accounts[0].value;
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load accounts'
+        });
+        this.isLoading = false;
+      }
+    });
   }
 
   onTabChange(event: any) {
