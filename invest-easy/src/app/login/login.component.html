@@ -4,7 +4,10 @@
       <p-image src="HSBC_MASTERBRAND_LOGO_RGB.svg" alt="Login" width="250" />
     </div>
 
-    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="flex flex-col gap-4">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="flex flex-col gap-4 relative">
+      <div *ngIf="loading" class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50 rounded-lg">
+        <p-progressSpinner styleClass="w-12 h-12" strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+      </div>
       <div *ngIf="errorMessage" class="p-4 bg-red-100 text-red-700 rounded">
         {{ errorMessage }}
       </div>
