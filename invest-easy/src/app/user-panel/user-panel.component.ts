@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { ConfigService } from '../shared/config.service';
+import { AUTH_TOKEN_KEY } from '../shared/api-interceptor';
 
 @Component({
   selector: 'app-user-panel',
@@ -18,6 +19,7 @@ import { ConfigService } from '../shared/config.service';
 })
 export class UserPanelComponent {
   now: Date = new Date();
+  username: string = '';
   menuItems = [
     { label: 'General' },
     { label: 'Security' },
@@ -38,7 +40,20 @@ export class UserPanelComponent {
     private http: HttpClient,
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.fetchUsername();
+  }
+
+  async fetchUsername(): Promise<void> {
+    try {
+      const response = await lastValueFrom(
+        this.http.get<{username:string}>('/authenticated-user/name')
+      );
+      this.username = response.username;
+    } catch (error) {
+      console.error('Failed to fetch username:', error);
+      this.username = 'User';
+    }
   }
 
   closePanel() {
@@ -52,9 +67,8 @@ export class UserPanelComponent {
 
   async LogOff() {
     try {
-
-      await lastValueFrom(this.http.post('auth/jwt/logout', null, { withCredentials: true }));
-      // Clear any client-side auth state if needed
+      await lastValueFrom(this.http.post('/auth/jwt/logout', null));
+      localStorage.removeItem(AUTH_TOKEN_KEY);
       this.router.navigate(['/login']);
     } catch (error) {
       console.error('Logout failed:', error);

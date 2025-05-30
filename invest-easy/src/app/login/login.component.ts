@@ -13,6 +13,7 @@ import { IftaLabelModule } from 'primeng/iftalabel';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ImageModule } from 'primeng/image';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AUTH_TOKEN_KEY } from '../shared/api-interceptor';
 
 interface LoginResponse {
   access_token: string;
@@ -98,12 +99,11 @@ export class LoginComponent {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
-    // Without setting withCredentials=true, browsers will ignore cookies sent from the backend during a CORS request .
-    this.http.post<LoginResponse>(apiUrl, this.toFormData(authData), { observe: 'response', headers: headers, withCredentials: true }).subscribe({
+    this.http.post<LoginResponse>(apiUrl, this.toFormData(authData), { observe: 'response', headers: headers }).subscribe({
       next: (response) => {
         this.loading = false;
         if (response.body) {
-          localStorage.setItem('access_token', response.body.access_token);
+          localStorage.setItem(AUTH_TOKEN_KEY, response.body.access_token);
         }
         this.router.navigate(['/home']);
       },

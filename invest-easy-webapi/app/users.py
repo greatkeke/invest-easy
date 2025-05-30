@@ -2,7 +2,7 @@ from typing import Optional
 from uuid import UUID
 from fastapi import Request, Depends
 from fastapi_users import FastAPIUsers, UUIDIDMixin
-from fastapi_users.authentication import AuthenticationBackend, CookieTransport
+from fastapi_users.authentication import AuthenticationBackend, BearerTransport, JWTStrategy
 from fastapi_users.manager import BaseUserManager
 from fastapi_users.authentication.strategy.db import (
     AccessTokenDatabase,
@@ -27,11 +27,11 @@ async def get_user_manager(
 SECRET = "SECRET"
 
 # Authentication setup
-transport = CookieTransport(cookie_max_age=3600)
+transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
-# def get_jwt_strategy() -> JWTStrategy:
-#     return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
+def get_jwt_strategy() -> JWTStrategy:
+    return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
 
 
 def get_database_strategy(
@@ -43,7 +43,7 @@ def get_database_strategy(
 auth_backend = AuthenticationBackend(
     name="jwt",
     transport=transport,
-    get_strategy=get_database_strategy,
+    get_strategy=get_jwt_strategy,
 )
 
 # FastAPI Users setup
