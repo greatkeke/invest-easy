@@ -18,6 +18,7 @@ COPY . .
 
 # Add volume for database persistence
 VOLUME /app/db
+VOLUME /app/env
 
 # Expose the configured port
 EXPOSE 10008

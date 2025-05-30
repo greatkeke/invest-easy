@@ -6,7 +6,7 @@ async def create_default_account(user_id: uuid.UUID, username: str, session: Asy
     """Create a default account for a new user"""
     # Create the account
     account = Account(
-        name=f"{username} account",
+        name=f"{username} - account",
         isActive=True
     )
     session.add(account)

@@ -8,7 +8,7 @@ import logging
 class Settings(BaseSettings):
     allow_origins: str = "*"  # Default value, will be overridden by .env
     model_config = SettingsConfigDict(
-        env_file=os.path.abspath(os.path.join(os.path.dirname(__file__), ".env")),
+        env_file=os.path.abspath(os.path.join(os.path.dirname(__file__), "../env/.env")),
         env_file_encoding="utf-8",
         case_sensitive=False,
     )
