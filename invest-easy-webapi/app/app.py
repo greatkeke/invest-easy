@@ -9,6 +9,7 @@ from .db import create_tables, get_async_session
 from .accounts.accounts import get_user_accounts
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
+from .routers import transfer
 
 
 @asynccontextmanager
@@ -36,6 +37,8 @@ app.include_router(
     prefix="/users",
     tags=["users"],
 )
+
+app.include_router(transfer.router)
 
 
 app.add_middleware(

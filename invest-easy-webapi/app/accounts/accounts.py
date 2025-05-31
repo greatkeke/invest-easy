@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, func
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
@@ -17,16 +18,16 @@ class Account(Base):
     name = Column(String, nullable=False)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
-    isActive = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True)
 
 
 class UserAccount(Base):
     __tablename__ = "user_accounts"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    userId = Column(UUID(as_uuid=True), ForeignKey("user.id"), nullable=False)
-    accountId = Column(UUID(as_uuid=True), ForeignKey("accounts.id"), nullable=False)
-    isActive = Column(Boolean, default=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"), nullable=False)
+    account_id = Column(UUID(as_uuid=True), ForeignKey("accounts.id"), nullable=False)
+    is_active = Column(Boolean, default=True)
 
 
 async def get_user_accounts(session: AsyncSession, user: User):
@@ -34,8 +35,8 @@ async def get_user_accounts(session: AsyncSession, user: User):
         select(Account.id, Account.name)
         .join(
             UserAccount,
-            UserAccount.accountId == Account.id and UserAccount.isActive == True,
+            UserAccount.account_id == Account.id and UserAccount.is_active == True,
         )
-        .where(UserAccount.userId == user.id and Account.isActive == True)
+        .where(UserAccount.user_id == user.id and Account.is_active == True)
     )
     return [{"id": str(row[0]), "name": row[1]} for row in result.all()]
