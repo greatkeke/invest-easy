@@ -22,7 +22,13 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         async for session in get_async_session():
             await create_default_account(
-                user_id=user.id, username=str(user.username), session=session
+                user_id=user.id, username=str(user.username), account_type='HKD', session=session
+            )
+            await create_default_account(
+                user_id=user.id, username=str(user.username), account_type='USD', session=session
+            )
+            await create_default_account(
+                user_id=user.id, username=str(user.username), account_type='CHN', session=session
             )
             break
 

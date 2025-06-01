@@ -2,11 +2,11 @@ import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from .accounts import Account, UserAccount
 
-async def create_default_account(user_id: uuid.UUID, username: str, session: AsyncSession):
+async def create_default_account(user_id: uuid.UUID, username: str, account_type: str, session: AsyncSession):
     """Create a default account for a new user"""
     # Create the account
     account = Account(
-        name=f"{username} - account",
+        name=f"{username} - {account_type} account",
         is_active=True
     )
     session.add(account)
