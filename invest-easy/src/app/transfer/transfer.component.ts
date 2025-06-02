@@ -13,6 +13,7 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-transfer',
@@ -38,12 +39,12 @@ export class TransferComponent implements OnInit {
   accounts: { label: string; value: string }[] = [];
 
   inForm = {
-    fromAccount: '',
+    toAccount: '',
     amount: null
   };
 
   outForm = {
-    toAccount: '',
+    fromAccount: '',
     balance: 10000, // Mock balance
     amount: null,
     password: ''
@@ -82,8 +83,8 @@ export class TransferComponent implements OnInit {
           value: account.id
         }));
         if (this.accounts.length > 0) {
-          this.inForm.fromAccount = this.accounts[0].value;
-          this.outForm.toAccount = this.accounts[0].value;
+          this.inForm.toAccount = this.accounts[0].value;
+          this.outForm.fromAccount = this.accounts[0].value;
         }
         this.isLoading = false;
       },
@@ -105,7 +106,7 @@ export class TransferComponent implements OnInit {
   }
 
   async submitIn() {
-    if (!this.inForm.fromAccount || !this.inForm.amount) {
+    if (!this.inForm.toAccount || !this.inForm.amount) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -116,17 +117,27 @@ export class TransferComponent implements OnInit {
 
     this.isLoading = true;
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await lastValueFrom(this.http.post('/transfer/in', {
+        account_id: this.inForm.toAccount,
+        amount: this.inForm.amount,
+        transfer_in: true
+      }));
       this.transferredAmount = this.inForm.amount;
       this.showSuccessDialog = true;
-    } finally {
+    } catch (error) {
+      let accountName = this.accounts.filter(x => x.value === this.inForm.toAccount)?.pop()?.label;
+      this.messageService.add({ 
+        severity: 'error',
+        summary: 'Failed',
+        detail: "Failed to transfer into " + accountName });
+    }
+    finally {
       this.isLoading = false;
     }
   }
 
   async submitOut() {
-    if (!this.outForm.toAccount || !this.outForm.amount || !this.outForm.password) {
+    if (!this.outForm.fromAccount || !this.outForm.amount || !this.outForm.password) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -186,7 +197,7 @@ export class TransferComponent implements OnInit {
   }
 
   private resetForms() {
-    this.inForm = { fromAccount: '', amount: null };
+    this.inForm = { toAccount: '', amount: null };
     this.outForm = { ...this.outForm, amount: null, password: '' };
   }
 }

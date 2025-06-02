@@ -20,9 +20,9 @@
         <p-tabpanel [value]="0">
           <form (ngSubmit)="submitIn()" class="space-y-4">
             <div class="p-field">
-              <label for="fromAccount" class="block mb-2 text-sm">From Account</label>
-              <p-select [options]="accounts" [(ngModel)]="inForm.fromAccount" name="fromAccount" required
-                inputId="fromAccount" size="small" placeholder="chose an account"></p-select>
+              <label for="toAccount" class="block mb-2 text-sm">To Account</label>
+              <p-select [options]="accounts" [(ngModel)]="inForm.toAccount" name="toAccount" required
+                inputId="toAccount" size="small" placeholder="chose an account"></p-select>
             </div>
             <div class="p-field">
               <label for="amount" class="block mb-2 text-sm">Amount</label>
@@ -38,9 +38,9 @@
         <p-tabpanel [value]="1">
           <form (ngSubmit)="submitOut()" class="space-y-4">
             <div class="p-field">
-              <label for="toAccount" class="block mb-2 text-sm">To Account</label>
-              <p-select [options]="accounts" [(ngModel)]="outForm.toAccount" name="toAccount" required
-                inputId="toAccount" size="small" placeholder="chose an account"></p-select>
+              <label for="fromAccount" class="block mb-2 text-sm">From Account</label>
+              <p-select [options]="accounts" [(ngModel)]="outForm.fromAccount" name="fromAccount" required
+                inputId="fromAccount" size="small" placeholder="chose an account"></p-select>
             </div>
             <div class="p-field">
               <label for="balance" class="block mb-2 text-sm">Available Balance</label>

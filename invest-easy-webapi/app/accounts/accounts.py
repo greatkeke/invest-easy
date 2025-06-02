@@ -1,6 +1,5 @@
 from typing import List
-from sqlalchemy import String, Boolean, DateTime, ForeignKey, func
-from ..balance.balance import Balance, BalanceHistory
+from sqlalchemy import String, Boolean, DateTime, ForeignKey, func, text
 from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
@@ -18,12 +17,10 @@ class Account(Base):
 
     id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = mapped_column(String, nullable=False)
+    ccy = mapped_column(String(3), nullable=False, server_default=text("HKD"))
     created_at = mapped_column(DateTime, server_default=func.now())
     updated_at = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
     is_active = mapped_column(Boolean, default=True)
-    balance_histories: Mapped[List["BalanceHistory"]] = relationship(
-        "BalanceHistory", back_populates="account"
-    )
 
 
 class UserAccount(Base):
@@ -34,6 +31,7 @@ class UserAccount(Base):
     account_id = mapped_column(
         UUID(as_uuid=True), ForeignKey("accounts.id"), nullable=False
     )
+    created_at = mapped_column(DateTime, server_default=func.now())
     is_active = mapped_column(Boolean, default=True)
     balances: Mapped[List["Balance"]] = relationship(
         "Balance", back_populates="user_account"
