@@ -87,12 +87,16 @@ class balance_service:
 
     async def get_records(self, user_id: uuid.UUID, pageSize: int = 3, pageIndex: int = 0):
         records = await self.session.execute(
-            select(BalanceHistory)
+            select(BalanceHistory, Account.name)
             .join(Balance, BalanceHistory.balance_id == Balance.id)
             .join(UserAccount, UserAccount.id == Balance.user_account_id)
+            .join(Account, Account.id == UserAccount.account_id)
             .where(UserAccount.user_id == user_id, UserAccount.is_active == True)
             .order_by(BalanceHistory.created_at.desc())
             .limit(pageSize)
             .offset(pageIndex * pageSize)
         )
-        return records.scalars().all()
+        return [{
+            "record": record[0],
+            "account_name": record[1]
+        } for record in records.all()]

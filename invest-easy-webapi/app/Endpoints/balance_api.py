@@ -51,7 +51,10 @@ async def get_records(
 ):
     records = await svc.get_records(current_user.id, pageSize, pageIndex)
     return {
-        "records": records,
+        "records": [{
+            **record["record"].__dict__,
+            "account_name": record["account_name"]
+        } for record in records],
         "pagination": {
             "pageSize": pageSize,
             "pageIndex": pageIndex
