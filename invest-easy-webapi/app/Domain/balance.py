@@ -1,4 +1,3 @@
-from typing import List
 import uuid
 from sqlalchemy import (
     UUID,
@@ -6,10 +5,9 @@ from sqlalchemy import (
     Float,
     Boolean,
     DateTime,
-    ForeignKey,
     func,
 )
-from sqlalchemy.orm import DeclarativeBase, relationship, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
