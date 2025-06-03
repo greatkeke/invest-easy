@@ -1,9 +1,9 @@
+from typing import Annotated
 import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from ..Infrastructure.users import User, current_active_user
-from ..Services.balance_service.balance_service import transfer_in_amount
-from ..Infrastructure.db import get_async_session
+from ..Services.balance_service.balance_service import balance_service
 
 
 class TransferRequest(BaseModel):
@@ -29,15 +29,14 @@ def get():
 @router.post("/in")
 async def transfer_amount(
     request: TransferRequest,
-    current_user: User = Depends(current_active_user),
-    session=Depends(get_async_session),
+    current_user: Annotated[User,  Depends(current_active_user)],
+    svc: Annotated[balance_service, Depends(balance_service)],
 ):
-    success = await transfer_in_amount(
+    success = await svc.transfer_in_amount(
         transfer_user_id=current_user.id,
         account_id=request.account_id,
         amount=request.amount,
         ccy=request.ccy,
-        session=session,
     )
 
     if not success:
