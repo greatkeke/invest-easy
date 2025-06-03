@@ -9,7 +9,6 @@ from ..Services.balance_service.balance_service import balance_service
 class TransferRequest(BaseModel):
     account_id: uuid.UUID
     amount: float
-    ccy: str = "HKD"
     transfer_in: bool = True
 
 
@@ -36,7 +35,6 @@ async def transfer_amount(
         transfer_user_id=current_user.id,
         account_id=request.account_id,
         amount=request.amount,
-        ccy=request.ccy,
     )
 
     if not success:
