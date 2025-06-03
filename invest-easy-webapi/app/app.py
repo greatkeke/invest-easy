@@ -1,15 +1,12 @@
 from contextlib import asynccontextmanager
-from typing import Annotated
 from fastapi import Depends, FastAPI
-from sqlalchemy.ext.asyncio import AsyncSession
-from .users import fastapi_users, auth_backend, current_active_user
-from .users import User
-from .schemas import UserRead, UserCreate, UserUpdate
-from .db import create_tables, get_async_session
-from .accounts.accounts import get_user_accounts
+from .Infrastructure.users import User, fastapi_users, auth_backend, current_active_user
+from .Infrastructure.schemas import UserRead, UserCreate, UserUpdate
+from .Infrastructure.db import create_tables
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
-from .routers import transfer
+from .Endpoints import balance_api
+from .Endpoints import accounts_api
 
 
 @asynccontextmanager
@@ -38,7 +35,8 @@ app.include_router(
     tags=["users"],
 )
 
-app.include_router(transfer.router)
+app.include_router(accounts_api.router)
+app.include_router(balance_api.router)
 
 
 app.add_middleware(
@@ -58,12 +56,3 @@ def read_root():
 @app.get("/authenticated-user/name")
 async def authenticated_route(user: User = Depends(current_active_user)):
     return {"username": user.username}
-
-
-@app.get("/accounts")
-async def get_user_accounts_endpoint(
-    user: User = Depends(current_active_user),
-    session: AsyncSession = Depends(get_async_session),
-):
-    accounts = await get_user_accounts(session, user)
-    return accounts

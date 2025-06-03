@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
-from .accounts import Account, UserAccount
+from ..Domain.accounts import Account, UserAccount
 
 
 async def create_default_account(

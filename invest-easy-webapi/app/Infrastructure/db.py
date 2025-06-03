@@ -1,35 +1,14 @@
 # Database setup
 from collections.abc import AsyncGenerator
-import uuid
 from fastapi import Depends
-from sqlalchemy import String, Boolean, DateTime, ForeignKey, func
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy.orm import DeclarativeBase, mapped_column
-from fastapi_users_db_sqlalchemy.access_token import (
-    SQLAlchemyAccessTokenDatabase,
-    SQLAlchemyBaseAccessTokenTableUUID,
-)
-from fastapi_users_db_sqlalchemy import (
-    SQLAlchemyBaseUserTableUUID,
-    SQLAlchemyUserDatabase,
-)
+from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyAccessTokenDatabase
+from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
+from ..Domain.users import Base, User, AccessToken
 
 DATABASE_URL = f"sqlite+aiosqlite:///./db/easy.db"
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
-
-class Base(DeclarativeBase):
-    pass
-
-
-# User model
-class User(SQLAlchemyBaseUserTableUUID, Base):
-    username = mapped_column(String(30), unique=True, nullable=False)
-
-
-class AccessToken(SQLAlchemyBaseAccessTokenTableUUID, Base):
-    pass
 
 
 # Create tables function

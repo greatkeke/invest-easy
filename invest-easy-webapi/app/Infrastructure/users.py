@@ -14,7 +14,7 @@ from fastapi_users.authentication.strategy.db import (
 )
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from .db import AccessToken, User, get_access_token_db, get_async_session, get_user_db
-from .accounts.defaultAccounts import create_default_account
+from .defaultAccounts import create_default_account
 
 
 # User manager

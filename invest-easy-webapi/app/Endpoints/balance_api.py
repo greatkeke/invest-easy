@@ -1,10 +1,9 @@
 import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from ..users import User, current_active_user
-from ..balance.balance import transfer_in_amount
-from ..db import get_async_session
-from sqlalchemy import UUID
+from ..Infrastructure.users import User, current_active_user
+from ..Services.balance_service.balance_service import transfer_in_amount
+from ..Infrastructure.db import get_async_session
 
 
 class TransferRequest(BaseModel):
