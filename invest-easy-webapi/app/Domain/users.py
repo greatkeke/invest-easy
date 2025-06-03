@@ -15,9 +15,8 @@ class Base(DeclarativeBase):
 
 # User model
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    username = mapped_column(String(30), unique=True, nullable=False)
+    username = mapped_column(String(30), nullable=False)
 
 
 class AccessToken(SQLAlchemyBaseAccessTokenTableUUID, Base):
     pass
-
