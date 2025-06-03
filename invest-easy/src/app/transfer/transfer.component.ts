@@ -76,7 +76,7 @@ export class TransferComponent implements OnInit {
 
   fetchAccounts() {
     this.isLoading = true;
-    this.http.get<any[]>('/accounts').subscribe({
+    this.http.get<any[]>('/accounts/').subscribe({
       next: (accounts) => {
         this.accounts = accounts.map(account => ({
           label: account.name,
