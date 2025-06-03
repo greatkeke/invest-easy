@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ...Domain.accounts import UserAccount, Account
 from ...Domain.balance import Balance, BalanceHistory
 from ...Infrastructure.db import get_async_session
+from ...Domain.users import User
 
 
 class balance_service:
@@ -34,7 +35,7 @@ class balance_service:
 
             if not user_account:
                 logging.error(
-                    f"No user acount found with: user_id:{transfer_user_id}, account_id: {account_id}."
+                    f"No user account found with: user_id:{transfer_user_id}, account_id: {account_id}."
                 )
                 raise ValueError("No user account found.")
 
@@ -83,3 +84,15 @@ class balance_service:
             await self.session.rollback()
             logging.error(f"Transfer failed: {str(e)}")
             return False
+
+    async def get_records(self, user_id: uuid.UUID, pageSize: int = 3, pageIndex: int = 0):
+        records = await self.session.execute(
+            select(BalanceHistory)
+            .join(Balance, BalanceHistory.balance_id == Balance.id)
+            .join(UserAccount, UserAccount.id == Balance.user_account_id)
+            .where(UserAccount.user_id == user_id, UserAccount.is_active == True)
+            .order_by(BalanceHistory.created_at.desc())
+            .limit(pageSize)
+            .offset(pageIndex * pageSize)
+        )
+        return records.scalars().all()

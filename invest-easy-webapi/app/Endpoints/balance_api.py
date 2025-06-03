@@ -41,3 +41,19 @@ async def transfer_amount(
         raise HTTPException(status_code=400, detail="Transfer failed")
 
     return {"status": "success", "message": "Transfer completed"}
+
+@router.get('/records')
+async def get_records(
+    current_user: Annotated[User, Depends(current_active_user)],
+    svc: Annotated[balance_service, Depends(balance_service)],
+    pageSize: int = 3,
+    pageIndex: int = 0
+):
+    records = await svc.get_records(current_user.id, pageSize, pageIndex)
+    return {
+        "records": records,
+        "pagination": {
+            "pageSize": pageSize,
+            "pageIndex": pageIndex
+        }
+    }
