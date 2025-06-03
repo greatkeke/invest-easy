@@ -50,7 +50,7 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"health": "ok"}
 
 
 @app.get("/authenticated-user/name")
