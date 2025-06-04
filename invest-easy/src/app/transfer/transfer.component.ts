@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HistoryComponent } from '../history/history.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -45,7 +45,7 @@ export class TransferComponent implements OnInit {
 
   outForm = {
     fromAccount: '',
-    balance: 10000, // Mock balance
+    balance: 0, // Mock balance
     amount: null,
     password: ''
   };
@@ -59,11 +59,12 @@ export class TransferComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private route: ActivatedRoute,
+    private router: Router,
     private http: HttpClient
   ) { }
 
   ngOnInit() {
-    const tab = this.route.snapshot.paramMap.get('tab');
+    const tab = this.route.snapshot.queryParamMap.get('tab');
     if (tab === 'out') {
       this.activeTabIndex = 1;
     } else if (tab === 'record') {
@@ -101,10 +102,21 @@ export class TransferComponent implements OnInit {
   }
 
   onTabChange(event: any) {
-    this.activeTabIndex = event.index;
+    this.activeTabIndex = event;
     if (this.activeTabIndex == 2) {
       this.RecordChangesAt = new Date();
     }
+
+    let tabParam = '';
+    if (this.activeTabIndex === 1) {
+      tabParam = 'out';
+    } else if (this.activeTabIndex === 2) {
+      tabParam = 'record';
+    }
+    this.router.navigate([], {
+      queryParams: { tab: tabParam },
+      queryParamsHandling: 'merge'
+    });
   }
 
   async submitIn() {

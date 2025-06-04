@@ -9,7 +9,7 @@
 
   <!-- Main Content -->
   <div class="flex-1 overflow-auto">
-    <p-tabs [value]="activeTabIndex"  (onChange)="onTabChange($event)">
+    <p-tabs [value]="activeTabIndex"  (valueChange)="onTabChange($event)">
       <p-tablist>
         <p-tab [value]="0">In</p-tab>
         <p-tab [value]="1">Out</p-tab>
