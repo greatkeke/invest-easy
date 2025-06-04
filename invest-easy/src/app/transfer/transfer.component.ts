@@ -159,11 +159,22 @@ export class TransferComponent implements OnInit {
 
     this.isLoading = true;
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await lastValueFrom(this.http.post('/transfer/out', {
+        account_id: this.outForm.fromAccount,
+        amount: this.outForm.amount,
+        password: this.outForm.password
+      }));
       this.transferredAmount = this.outForm.amount;
+      this.RecordChangesAt = new Date();
       this.showSuccessDialog = true;
-    } finally {
+    } catch (error) {
+      let accountName = this.accounts.filter(x => x.value === this.outForm.fromAccount)?.pop()?.label;
+      this.messageService.add({ 
+        severity: 'error',
+        summary: 'Failed',
+        detail: "Failed to transfer from " + accountName });
+    }
+    finally {
       this.isLoading = false;
     }
   }
