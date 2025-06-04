@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
-import { HistoryComponent } from '../shared/history/history.component';
+import { HistoryComponent } from '../history/history.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({

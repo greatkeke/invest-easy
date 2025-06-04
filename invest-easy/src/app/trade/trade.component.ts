@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { OrdersComponent } from './orders/orders.component';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../header/header.component';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../shared/header/header.component';
 
 @Component({
   selector: 'app-trade',

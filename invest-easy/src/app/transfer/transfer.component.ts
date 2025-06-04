@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HistoryComponent } from '../shared/history/history.component';
+import { HistoryComponent } from '../history/history.component';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

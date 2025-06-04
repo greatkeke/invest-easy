@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TopNavigationComponent } from '../top-navigation/top-navigation.component';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CommonModule } from '@angular/common';
+import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 
 @Component({
   selector: 'app-advertisement',

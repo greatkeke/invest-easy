@@ -34,11 +34,7 @@ export class HistoryComponent {
   }
 
   ngOnInit(): void {
-    this.isInit = true;
     this.loadRecords();
-    setTimeout(() => {
-      this.isInit = false;
-    }, 1500);
   }
 
   loadMore() {

@@ -2,8 +2,8 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, NgStyle } from '@angular/common';
 import { Router } from '@angular/router';
-import { NotificationCenterComponent } from '../notification-center/notification-center.component';
 import { DialogModule } from 'primeng/dialog';
+import { NotificationCenterComponent } from '../../notification-center/notification-center.component';
 
 @Component({
   selector: 'app-header',

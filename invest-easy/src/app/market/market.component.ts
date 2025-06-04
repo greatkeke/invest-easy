@@ -3,7 +3,6 @@ import { MarketService } from './market.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MarketTemperatureService } from './market-temperature.service';
-import { HeaderComponent } from '../header/header.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
@@ -12,6 +11,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { Router, RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
+import { HeaderComponent } from '../shared/header/header.component';
 
 @Component({
   selector: 'app-market',
