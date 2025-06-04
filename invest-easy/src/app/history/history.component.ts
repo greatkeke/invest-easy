@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -23,6 +23,14 @@ interface Record {
 })
 
 export class HistoryComponent {
+  @Input() RecordChanges: any;
+  
+  ngOnChanges(changes: SimpleChanges) {
+    if (!changes['RecordChanges'].firstChange) {
+      this.loadRecords();
+    }
+  }
+  
   records: Record[] = [];
   isInit = false;
   isLoading = false;

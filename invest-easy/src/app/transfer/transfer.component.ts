@@ -54,6 +54,7 @@ export class TransferComponent implements OnInit {
   transferredAmount = 0;
   activeTabIndex = 0;
   isLoading = false;
+  RecordChangesAt = new Date();
 
   constructor(
     private messageService: MessageService,
@@ -123,6 +124,7 @@ export class TransferComponent implements OnInit {
         transfer_in: true
       }));
       this.transferredAmount = this.inForm.amount;
+      this.RecordChangesAt = new Date();
       this.showSuccessDialog = true;
     } catch (error) {
       let accountName = this.accounts.filter(x => x.value === this.inForm.toAccount)?.pop()?.label;
