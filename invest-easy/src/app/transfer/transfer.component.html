@@ -42,11 +42,11 @@
               <p-select [options]="accounts" [(ngModel)]="outForm.fromAccount" name="fromAccount" required
                 inputId="fromAccount" size="small" placeholder="chose an account"></p-select>
             </div>
-            <div class="p-field">
+            <!-- <div class="p-field">
               <label for="balance" class="block mb-2 text-sm">Available Balance</label>
               <p-inputNumber [(ngModel)]="outForm.balance" name="balance" readonly inputId="balance" mode="currency"
                 currency="USD" size="small"></p-inputNumber>
-            </div>
+            </div> -->
             <div class="p-field">
               <label for="amount" class="block mb-2 text-sm">Transfer Amount</label>
               <p-inputNumber [(ngModel)]="outForm.amount" name="amount" required inputId="amount" mode="currency"

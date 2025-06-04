@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HistoryComponent } from '../history/history.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { CommonModule, Location } from '@angular/common';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { SelectModule } from 'primeng/select';
 import { TabsModule } from 'primeng/tabs';
 import { DialogModule } from 'primeng/dialog';
@@ -60,7 +60,8 @@ export class TransferComponent implements OnInit {
     private messageService: MessageService,
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -113,10 +114,9 @@ export class TransferComponent implements OnInit {
     } else if (this.activeTabIndex === 2) {
       tabParam = 'record';
     }
-    this.router.navigate([], {
-      queryParams: { tab: tabParam },
-      queryParamsHandling: 'merge'
-    });
+
+    const params = new HttpParams().appendAll({ tab: tabParam });
+    this.location.replaceState(location.pathname, params.toString());
   }
 
   async submitIn() {
@@ -158,15 +158,6 @@ export class TransferComponent implements OnInit {
         severity: 'error',
         summary: 'Error',
         detail: 'Please fill all required fields'
-      });
-      return;
-    }
-
-    if (this.outForm.amount > this.outForm.balance) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Insufficient balance'
       });
       return;
     }
@@ -225,7 +216,7 @@ export class TransferComponent implements OnInit {
   }
 
   private resetForms() {
-    this.inForm = { toAccount: '', amount: null };
+    this.inForm = { ...this.inForm, amount: null };
     this.outForm = { ...this.outForm, amount: null, password: '' };
   }
 }
