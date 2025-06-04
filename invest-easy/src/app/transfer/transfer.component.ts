@@ -196,14 +196,6 @@ export class TransferComponent implements OnInit {
     this.resetForms();
   }
 
-  openCustomerService() {
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Info',
-      detail: 'Customer service will contact you shortly'
-    });
-  }
-
   showSecurityTip() {
     setTimeout(() => {
       this.messageService.add({
