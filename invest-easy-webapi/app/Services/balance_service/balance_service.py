@@ -62,12 +62,18 @@ class balance_service:
 
             if not existing_balance:
                 existing_balance = Balance(
-                    user_account_id=user_account.id, balance=amount, ccy=account.ccy
+                    user_account_id=user_account.id, balance=0.0, ccy=account.ccy
                 )
                 self.session.add(existing_balance)
                 await self.session.flush()
-            else:
+
+            if transfer_in:
                 existing_balance.balance += amount
+            else:
+                if existing_balance.balance >= amount:
+                    existing_balance.balance -= amount
+                else:
+                    raise ValueError("No such amount balance left.")
 
             # Create history record
             history = BalanceHistory(
@@ -85,7 +91,9 @@ class balance_service:
             logging.error(f"Transfer failed: {str(e)}")
             return False
 
-    async def get_records(self, user_id: uuid.UUID, pageSize: int = 3, pageIndex: int = 0):
+    async def get_records(
+        self, user_id: uuid.UUID, pageSize: int = 3, pageIndex: int = 0
+    ):
         records = await self.session.execute(
             select(BalanceHistory, Account.name)
             .join(Balance, BalanceHistory.balance_id == Balance.id)
@@ -96,7 +104,6 @@ class balance_service:
             .limit(pageSize)
             .offset(pageIndex * pageSize)
         )
-        return [{
-            "record": record[0],
-            "account_name": record[1]
-        } for record in records.all()]
+        return [
+            {"record": record[0], "account_name": record[1]} for record in records.all()
+        ]
