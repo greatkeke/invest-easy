@@ -102,8 +102,9 @@ export class TransferComponent implements OnInit {
 
   onTabChange(event: any) {
     this.activeTabIndex = event.index;
-    // Optional: Update URL when tab changes
-    // You would need to inject Router and use router.navigate
+    if (this.activeTabIndex == 2) {
+      this.RecordChangesAt = new Date();
+    }
   }
 
   async submitIn() {
@@ -128,10 +129,11 @@ export class TransferComponent implements OnInit {
       this.showSuccessDialog = true;
     } catch (error) {
       let accountName = this.accounts.filter(x => x.value === this.inForm.toAccount)?.pop()?.label;
-      this.messageService.add({ 
+      this.messageService.add({
         severity: 'error',
         summary: 'Failed',
-        detail: "Failed to transfer into " + accountName });
+        detail: "Failed to transfer into " + accountName
+      });
     }
     finally {
       this.isLoading = false;
@@ -169,10 +171,11 @@ export class TransferComponent implements OnInit {
       this.showSuccessDialog = true;
     } catch (error) {
       let accountName = this.accounts.filter(x => x.value === this.outForm.fromAccount)?.pop()?.label;
-      this.messageService.add({ 
+      this.messageService.add({
         severity: 'error',
         summary: 'Failed',
-        detail: "Failed to transfer from " + accountName });
+        detail: "Failed to transfer from " + accountName
+      });
     }
     finally {
       this.isLoading = false;
