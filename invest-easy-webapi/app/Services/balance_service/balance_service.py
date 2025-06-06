@@ -5,13 +5,13 @@ import uuid
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from ...Domain.accounts import UserAccount, Account
-from ...Domain.balance import Balance, BalanceHistory
-from ...Infrastructure.db import get_async_session
-from ...Domain.users import User
+from ...domain.accounts import UserAccount, Account
+from ...domain.balance import Balance, BalanceHistory
+from ...infrastructure.db import get_async_session
+from ...domain.users import User
 
 
-class balance_service:
+class BalanceService:
     def __init__(self, session: Annotated[AsyncSession, Depends(get_async_session)]):
         self.session = session
 

@@ -1,8 +1,8 @@
 from typing import Annotated, List
 from fastapi import APIRouter, Depends
-from ..Infrastructure.users import current_active_user
-from ..Infrastructure.users import User
-from ..Services.market_service.market_service import market_service
+from ..infrastructure.users import current_active_user
+from ..infrastructure.users import User
+from ..services.market_service.market_service import MarketService
 
 
 router = APIRouter(

@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from ...Domain.users import User
-from ...Domain.accounts import Account, UserAccount
+from ...domain.users import User
+from ...domain.accounts import Account, UserAccount
 from sqlalchemy import select
 
 

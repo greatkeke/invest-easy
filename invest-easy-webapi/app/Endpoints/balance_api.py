@@ -2,13 +2,13 @@ from typing import Annotated
 import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from ..Infrastructure.users import (
-    User,
+from ..domain.users import User
+from ..infrastructure.users import (
     current_active_user,
     UserManager,
     get_user_manager,
 )
-from ..Services.balance_service.balance_service import balance_service
+from ..services.balance_service.balance_service import BalanceService
 
 
 class TransferRequest(BaseModel):
@@ -35,7 +35,7 @@ def get():
 async def transfer_amount(
     request: TransferRequest,
     current_user: Annotated[User, Depends(current_active_user)],
-    svc: Annotated[balance_service, Depends(balance_service)],
+    svc: Annotated[BalanceService, Depends(BalanceService)],
 ):
     success = await svc.transfer_in_amount(
         transfer_user_id=current_user.id,
@@ -53,7 +53,7 @@ async def transfer_amount(
 async def transfer_out_amount(
     request: TransferRequest,
     current_user: Annotated[User, Depends(current_active_user)],
-    svc: Annotated[balance_service, Depends(balance_service)],
+    svc: Annotated[BalanceService, Depends(BalanceService)],
     user_manager: Annotated[UserManager, Depends(get_user_manager)],
 ):
     # Verify password
@@ -85,7 +85,7 @@ async def transfer_out_amount(
 @router.get("/records")
 async def get_records(
     current_user: Annotated[User, Depends(current_active_user)],
-    svc: Annotated[balance_service, Depends(balance_service)],
+    svc: Annotated[BalanceService, Depends(BalanceService)],
     pageSize: int = 3,
     pageIndex: int = 0,
 ):

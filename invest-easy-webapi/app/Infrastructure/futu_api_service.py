@@ -7,7 +7,7 @@ from pandas import DataFrame
 from ..config import settings
 
 
-class futu_api_service:
+class FutuApiService:
     def __init__(self):
         self._host = settings.futu_openD_host
         self._port = settings.futu_openD_port

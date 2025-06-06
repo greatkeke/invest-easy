@@ -1,12 +1,12 @@
 from typing import Annotated, List
 from fastapi import Depends
 from pandas import DataFrame
-from ...Infrastructure.futu_api_service import futu_api_service
+from ...infrastructure.futu_api_service import FutuApiService
 
 
-class market_service:
+class MarketService:
     def __init__(
-        self, futu_api_svc: Annotated[futu_api_service, Depends(futu_api_service)]
+        self, futu_api_svc: Annotated[FutuApiService, Depends(FutuApiService)]
     ):
         self.futu_api_svc = futu_api_svc
 

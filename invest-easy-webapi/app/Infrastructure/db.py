@@ -4,9 +4,9 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyAccessTokenDatabase
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
-from ..Domain.users import Base, User, AccessToken
-from ..Domain.accounts import Base as BaseAccount
-from ..Domain.balance import Base as BaseBlance
+from ..domain.users import Base, User, AccessToken
+from ..domain.accounts import Base as BaseAccount
+from ..domain.balance import Base as BaseBlance
 
 DATABASE_URL = f"sqlite+aiosqlite:///./db/easy.db"
 engine = create_async_engine(DATABASE_URL)

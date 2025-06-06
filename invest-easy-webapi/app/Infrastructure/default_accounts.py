@@ -1,7 +1,7 @@
 from datetime import datetime
 import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..Domain.accounts import Account, UserAccount
+from ..domain.accounts import Account, UserAccount
 
 
 async def create_default_account(
