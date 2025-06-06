@@ -10,11 +10,13 @@ interface MarketIndex {
   percent: string;
 }
 
+import { MarketSnapshot } from './market-snapshot.model';
 @Injectable({
   providedIn: 'root'
 })
 export class MarketService {
   private apiUrl = 'https://push2.eastmoney.com/api/qt/ulist.np/get';
+  private snapshotUrl = '/market/snapshot';
 
   constructor(private http: HttpClient) { }
 
@@ -26,5 +28,9 @@ export class MarketService {
       _: Date.now()
     };
     return this.http.get(this.apiUrl, { params });
+  }
+
+  getMarketSnapshot(codes: string[]): Observable<MarketSnapshot[]> {
+    return this.http.post<MarketSnapshot[]>(this.snapshotUrl, { code_list: codes });
   }
 }
