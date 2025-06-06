@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { MarketService } from '../market/market.service';
+import { MarketSnapshot } from '../market/market-snapshot.model';
 
 @Component({
   selector: 'app-trade-stocks',
@@ -31,13 +33,40 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./trade-stocks.component.scss'],
   providers: [MessageService]
 })
-export class TradeStocksComponent {
+export class TradeStocksComponent implements OnInit {
   today = new Date();
+  marketSnapshot: MarketSnapshot | null = null;
+  loading = true;
 
   constructor(
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private marketService: MarketService
   ) { }
+
+  ngOnInit() {
+    this.loadMarketData();
+  }
+
+  loadMarketData() {
+    this.loading = true;
+    this.marketService.getMarketSnapshot(['HK.00700']).subscribe({
+      next: (snapshots) => {
+        if (snapshots && snapshots.length > 0) {
+          this.marketSnapshot = snapshots[0];
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load market data'
+        });
+        this.loading = false;
+      }
+    });
+  }
 
   displayPreview = false;
 
@@ -54,25 +83,7 @@ export class TradeStocksComponent {
     ]
   };
 
-  // Trading info
-  tradingInfo = [
-    { label: 'Open', value: '150.00' },
-    { label: 'Prev. close', value: '149.50' },
-    { label: 'Day low', value: '149.80' },
-    { label: 'Day high', value: '161.20' },
-    { label: '52 wk low', value: '120.50' },
-    { label: '52 wk high', value: '175.30' },
-    { label: 'Turnover', value: '1.2M' },
-    { label: 'Currency', value: 'USD' },
-    { label: 'P/E ratio', value: '25.4' },
-    { label: 'Market cap', value: '2.5T' },
-    { label: 'Lot size', value: '100' },
-    { label: 'Spread', value: '0.10' },
-    { label: 'Div yield', value: '0.7%' },
-    { label: 'Volume', value: '15.4M' },
-    { label: 'CAS eligible', value: 'Yes' },
-    { label: 'POS eligible', value: 'No' }
-  ];
+  // Trading info is now dynamically loaded from market snapshot
 
   // Form data
   orderTypes = [

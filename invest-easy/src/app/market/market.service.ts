@@ -31,6 +31,6 @@ export class MarketService {
   }
 
   getMarketSnapshot(codes: string[]): Observable<MarketSnapshot[]> {
-    return this.http.post<MarketSnapshot[]>(this.snapshotUrl, { code_list: codes });
+    return this.http.post<MarketSnapshot[]>(this.snapshotUrl, codes);
   }
 }

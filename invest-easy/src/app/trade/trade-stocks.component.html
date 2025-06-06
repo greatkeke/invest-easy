@@ -3,13 +3,27 @@
   </app-top-navigation>
 
   <div class="p-4 space-y-4">
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="rounded-lg shadow p-6 text-center">
+      <p>Loading market data...</p>
+    </div>
+
     <!-- Price Card -->
-    <div class="rounded-lg shadow p-6">
+    <div *ngIf="!loading && marketSnapshot" class="rounded-lg shadow p-6">
       <div class="flex flex-col justify-between items-start mb-4">
-        <h2 class="text-md font-bold">Intel</h2>
+        <h2 class="text-md font-bold">{{marketSnapshot.name || 'N/A'}}</h2>
         <div class="flex w-full justify-between">
-          <span class="text-md ">$161.00</span>
-          <span class="text-md text-green-500">+1.00 (+0.63%)</span>
+          <span class="text-md">{{marketSnapshot.last_price | currency:'USD':'symbol':'1.2-2'}}</span>
+          <span *ngIf="marketSnapshot.prev_close_price" 
+                class="text-md"
+                [ngClass]="{
+                  'text-green-500': marketSnapshot.last_price >= marketSnapshot.prev_close_price,
+                  'text-red-500': marketSnapshot.last_price < marketSnapshot.prev_close_price
+                }">
+            {{ (marketSnapshot.last_price - marketSnapshot.prev_close_price) >= 0 ? '+' : '' }}
+            {{ (marketSnapshot.last_price - marketSnapshot.prev_close_price) | number:'1.2-2' }}
+            ({{ ((marketSnapshot.last_price - marketSnapshot.prev_close_price) / marketSnapshot.prev_close_price * 100) | number:'1.2-2' }}%)
+          </span>
         </div>
       </div>
       <div class="min-h-10">
@@ -22,12 +36,56 @@
     </div>
 
     <!-- Trading Info Card -->
-    <div class="rounded-lg shadow p-6">
+    <div *ngIf="!loading && marketSnapshot" class="rounded-lg shadow p-6">
       <h2 class="text-sm text-gray-900 mb-4">Trading Information</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div *ngFor="let info of tradingInfo" class="flex justify-between">
-          <span class="text-xs text-gray-700">{{info.label}}</span>
-          <span class="text-xs">{{info.value}}</span>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">Open</span>
+          <span class="text-xs">{{marketSnapshot.open_price | currency:'USD':'symbol':'1.2-2'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">Prev. close</span>
+          <span class="text-xs">{{marketSnapshot.prev_close_price | currency:'USD':'symbol':'1.2-2'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">Day low</span>
+          <span class="text-xs">{{marketSnapshot.low_price | currency:'USD':'symbol':'1.2-2'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">Day high</span>
+          <span class="text-xs">{{marketSnapshot.high_price | currency:'USD':'symbol':'1.2-2'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">52 wk low</span>
+          <span class="text-xs">{{marketSnapshot.lowest52weeks_price | currency:'USD':'symbol':'1.2-2'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">52 wk high</span>
+          <span class="text-xs">{{marketSnapshot.highest52weeks_price | currency:'USD':'symbol':'1.2-2'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">Turnover</span>
+          <span class="text-xs">{{marketSnapshot.turnover | number:'1.0-0'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">Volume</span>
+          <span class="text-xs">{{marketSnapshot.volume | number:'1.0-0'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">P/E ratio</span>
+          <span class="text-xs">{{marketSnapshot.pe_ratio | number:'1.2-2'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">Market cap</span>
+          <span class="text-xs">{{marketSnapshot.total_market_val / 1000000 | number:'1.0-0'}}M</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">Lot size</span>
+          <span class="text-xs">{{marketSnapshot.lot_size | number:'1.0-0'}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs text-gray-700">Spread</span>
+          <span class="text-xs">{{marketSnapshot.price_spread | currency:'USD':'symbol':'1.2-2'}}</span>
         </div>
       </div>
     </div>
