@@ -10,3 +10,4 @@ python-multipart
 fastapi_users_db_sqlalchemy
 pydantic_settings
 python-dotenv
+futu-api

@@ -5,8 +5,7 @@ from .Infrastructure.schemas import UserRead, UserCreate, UserUpdate
 from .Infrastructure.db import create_tables
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
-from .Endpoints import balance_api
-from .Endpoints import accounts_api
+from .Endpoints import balance_api, accounts_api, trade_api
 
 
 @asynccontextmanager
@@ -37,6 +36,7 @@ app.include_router(
 
 app.include_router(accounts_api.router)
 app.include_router(balance_api.router)
+app.include_router(trade_api.router)
 
 
 app.add_middleware(

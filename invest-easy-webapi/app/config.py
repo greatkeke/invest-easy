@@ -7,8 +7,13 @@ import logging
 
 class Settings(BaseSettings):
     allow_origins: str = "*"  # Default value, will be overridden by .env
+    futu_openD_host: str = "127.0.0.1"
+    futu_openD_port: int = 1000
+
     model_config = SettingsConfigDict(
-        env_file=os.path.abspath(os.path.join(os.path.dirname(__file__), "../env/.env")),
+        env_file=os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../env/.env")
+        ),
         env_file_encoding="utf-8",
         case_sensitive=False,
     )
@@ -29,6 +34,8 @@ def get_settings():
         logging.warning(
             "Using default allow_origins value - check .env file configuration"
         )
+    logging.warning(f"futu openD host on: {settings.futu_openD_host}")
+    logging.warning(f"futu openD port on: {settings.futu_openD_port}")
     return settings
 
 
