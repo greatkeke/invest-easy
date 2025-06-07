@@ -11,6 +11,7 @@ interface MarketIndex {
 }
 
 import { MarketSnapshot } from './market-snapshot.model';
+import { RTData } from './rt-data.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,5 +33,9 @@ export class MarketService {
 
   getMarketSnapshot(codes: string[]): Observable<MarketSnapshot[]> {
     return this.http.post<MarketSnapshot[]>(this.snapshotUrl, codes);
+  }
+
+  getRTData(code: string): Observable<any[]> {
+    return this.http.get<RTData[]>('/market/rt-data', { params: { code } });
   }
 }

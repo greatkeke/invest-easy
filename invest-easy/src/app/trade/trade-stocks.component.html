@@ -30,7 +30,16 @@
         <p-chart type="line" [data]="chartData" [options]="{
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { display: false } }
+          plugins: { legend: { display: false } },
+          elements: {
+            line: {
+              borderColor: 'rgb(59, 130, 246)',
+              borderWidth: 1
+            },
+            point: {
+              radius: 0
+            }
+          }
         }"></p-chart>
       </div>
     </div>

@@ -13,6 +13,17 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { MarketService } from '../market/market.service';
 import { MarketSnapshot } from '../market/market-snapshot.model';
+import { RTData } from '../market/rt-data.model';
+
+interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    borderColor: string;
+    tension: number;
+  }[];
+}
 
 @Component({
   selector: 'app-trade-stocks',
@@ -55,7 +66,7 @@ export class TradeStocksComponent implements OnInit {
         if (snapshots && snapshots.length > 0) {
           this.marketSnapshot = snapshots[0];
         }
-        this.loading = false;
+        this.loadRTData();
       },
       error: (error) => {
         this.messageService.add({
@@ -68,15 +79,44 @@ export class TradeStocksComponent implements OnInit {
     });
   }
 
+  loadRTData() {
+    this.marketService.getRTData('HK.00700').subscribe({
+      next: (data: RTData[]) => {
+        if (data && data.length > 0) {
+          this.chartData = {
+            labels: data.map((item: RTData) => item.time.split(' ')[1].substring(0, 5)), // Extract time part
+            datasets: [
+              {
+                label: 'Price',
+                data: data.map((item: RTData) => item.cur_price),
+                borderColor: '#4CAF50',
+                tension: 0.4
+              }
+            ]
+          };
+        }
+        this.loading = false;
+      },
+      error: (error: any) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load real-time data'
+        });
+        this.loading = false;
+      }
+    });
+  }
+
   displayPreview = false;
 
   // Chart data
-  chartData = {
-    labels: ['9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00'],
+  chartData: ChartData = {
+    labels: [],
     datasets: [
       {
         label: 'Price',
-        data: [150, 152, 151, 153, 154, 155, 156, 155, 156, 157, 158, 159, 160, 161],
+        data: [],
         borderColor: '#4CAF50',
         tension: 0.4
       }

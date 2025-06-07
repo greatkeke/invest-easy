@@ -1,5 +1,5 @@
 from typing import Annotated, List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from ..infrastructure.users import current_active_user
 from ..infrastructure.users import User
 from ..services.market_service.market_service import MarketService
@@ -20,10 +20,10 @@ async def get_market_snapshot(
     return svc.get_market_snapshot(code_list=code_list)
 
 
-@router.post("/rt-data")
+@router.get("/rt-data")
 async def get_rt_data(
-    code: str,
     svc: Annotated[MarketService, Depends(MarketService)],
+    code: str = Query(..., description="Stock code (e.g. 'HK.00700')"),
 ):
     """
     Get real-time tick data for a stock
