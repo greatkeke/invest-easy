@@ -61,7 +61,7 @@ export class TradeStocksComponent implements OnInit {
     this.loadMarketData();
     this.loadAccounts();
   }
-  
+
   async loadAccounts() {
     try {
       const accounts = await this.accountsService.fetchAccounts();
@@ -84,6 +84,7 @@ export class TradeStocksComponent implements OnInit {
       next: (snapshots) => {
         if (snapshots && snapshots.length > 0) {
           this.marketSnapshot = snapshots[0];
+          this.orderForm.price = this.marketSnapshot.last_price;
         }
         this.loadRTData();
       },
@@ -152,10 +153,10 @@ export class TradeStocksComponent implements OnInit {
   accounts: Account[] = [];
   orderForm = {
     type: this.orderTypes[0],
-    price: 160.50,
+    price: 0,
     quantity: 100,
     goodUntil: new Date(),
-    payFrom: this.accounts[0]
+    payFrom: this.accounts.length > 0 ? this.accounts[0] : { label: '' }
   };
 
   // Calculate estimated total
