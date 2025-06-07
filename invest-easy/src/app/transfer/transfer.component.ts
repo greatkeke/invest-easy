@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, Location } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { AccountsService } from '../shared/api-services/accounts.service';
 import { SelectModule } from 'primeng/select';
 import { TabsModule } from 'primeng/tabs';
 import { DialogModule } from 'primeng/dialog';
@@ -61,7 +62,8 @@ export class TransferComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private location: Location
+    private location: Location,
+    private accountsService: AccountsService
   ) { }
 
   ngOnInit() {
@@ -74,33 +76,24 @@ export class TransferComponent implements OnInit {
       this.activeTabIndex = 0;
     }
 
-    this.fetchAccounts();
-  }
-
-  fetchAccounts() {
     this.isLoading = true;
-    this.http.get<any[]>('/accounts/').subscribe({
-      next: (accounts) => {
-        this.accounts = accounts.map(account => ({
-          label: account.name,
-          value: account.id
-        }));
-        if (this.accounts.length > 0) {
-          this.inForm.toAccount = this.accounts[0].value;
-          this.outForm.fromAccount = this.accounts[0].value;
-        }
-        this.isLoading = false;
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load accounts'
-        });
-        this.isLoading = false;
+    this.accountsService.fetchAccounts().then(accounts => {
+      this.accounts = accounts;
+      if (this.accounts.length > 0) {
+        this.inForm.toAccount = this.accounts[0].value;
+        this.outForm.fromAccount = this.accounts[0].value;
       }
+      this.isLoading = false;
+    }).catch(() => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to load accounts'
+      });
+      this.isLoading = false;
     });
   }
+
 
   onTabChange(event: any) {
     this.activeTabIndex = event;
