@@ -159,9 +159,9 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm text-gray-700">Order Type</label>
-          <p class="font-medium">{{orderForm.type === 'limit' ? 'Limit Price' : 'Market Price'}}</p>
+          <p class="font-medium">{{orderForm.type?.label}}</p>
         </div>
-        <div *ngIf="orderForm.type === 'limit'">
+        <div *ngIf="orderForm.type?.label === 'limit'">
           <label class="block text-sm text-gray-700">Price</label>
           <p class="font-medium">{{orderForm.price | currency:'USD'}}</p>
         </div>
@@ -175,7 +175,7 @@
         </div>
         <div>
           <label class="block text-sm text-gray-700">Pay From</label>
-          <p class="font-medium">{{orderForm.payFrom === 'cash' ? 'Cash Account (USD)' : 'Margin Account (USD)'}}</p>
+          <p class="font-medium">{{orderForm.payFrom?.label}}</p>
         </div>
         <div>
           <label class="block text-sm text-gray-700">Estimated Total</label>

@@ -67,7 +67,7 @@ export class TradeStocksComponent implements OnInit {
       const accounts = await this.accountsService.fetchAccounts();
       if (accounts && accounts.length > 0) {
         this.accounts = accounts;
-        this.orderForm.payFrom = accounts[0].value;
+        this.orderForm.payFrom = accounts[0];
       }
     } catch (error) {
       this.messageService.add({
@@ -151,11 +151,11 @@ export class TradeStocksComponent implements OnInit {
   ];
   accounts: Account[] = [];
   orderForm = {
-    type: 'limit',
+    type: this.orderTypes[0],
     price: 160.50,
     quantity: 100,
     goodUntil: new Date(),
-    payFrom: ''
+    payFrom: this.accounts[0]
   };
 
   // Calculate estimated total
