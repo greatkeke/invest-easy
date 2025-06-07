@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, Location } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { AccountsService } from '../shared/api-services/accounts.service';
+import { AccountsService, Account } from '../shared/api-services/accounts.service';
 import { SelectModule } from 'primeng/select';
 import { TabsModule } from 'primeng/tabs';
 import { DialogModule } from 'primeng/dialog';
@@ -37,7 +37,7 @@ import { lastValueFrom } from 'rxjs';
   providers: [MessageService]
 })
 export class TransferComponent implements OnInit {
-  accounts: { label: string; value: string }[] = [];
+  accounts: Account[] = [];
 
   inForm = {
     toAccount: '',

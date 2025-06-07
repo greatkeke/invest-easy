@@ -14,6 +14,7 @@ import { MessageService } from 'primeng/api';
 import { MarketService } from '../market/market.service';
 import { MarketSnapshot } from '../market/market-snapshot.model';
 import { RTData } from '../market/rt-data.model';
+import { Account, AccountsService } from '../shared/api-services/accounts.service';
 
 interface ChartData {
   labels: string[];
@@ -52,11 +53,29 @@ export class TradeStocksComponent implements OnInit {
   constructor(
     private router: Router,
     private messageService: MessageService,
-    private marketService: MarketService
+    private marketService: MarketService,
+    private accountsService: AccountsService
   ) { }
 
   ngOnInit() {
     this.loadMarketData();
+    this.loadAccounts();
+  }
+  
+  async loadAccounts() {
+    try {
+      const accounts = await this.accountsService.fetchAccounts();
+      if (accounts && accounts.length > 0) {
+        this.accounts = accounts;
+        this.orderForm.payFrom = accounts[0].value;
+      }
+    } catch (error) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to load accounts'
+      });
+    }
   }
 
   loadMarketData() {
@@ -130,16 +149,13 @@ export class TradeStocksComponent implements OnInit {
     { label: 'Limit price', value: 'limit' },
     { label: 'Market price', value: 'market' }
   ];
-  accounts = [
-    { label: 'Cash Account (USD)', value: 'cash' },
-    { label: 'Margin Account (USD)', value: 'margin' }
-  ];
+  accounts: Account[] = [];
   orderForm = {
     type: 'limit',
     price: 160.50,
     quantity: 100,
     goodUntil: new Date(),
-    payFrom: 'cash'
+    payFrom: ''
   };
 
   // Calculate estimated total
