@@ -1,13 +1,13 @@
 from contextlib import asynccontextmanager
 from typing import Annotated
 from fastapi import Depends, FastAPI
-from .infrastructure.users import fastapi_users, auth_backend, current_active_user
-from .infrastructure.schemas import UserRead, UserCreate, UserUpdate
-from .infrastructure.db import create_tables
+from app.infrastructure.users import fastapi_users, auth_backend, current_active_user
+from app.infrastructure.schemas import UserRead, UserCreate, UserUpdate
+from app.infrastructure.db import create_tables
 from fastapi.middleware.cors import CORSMiddleware
-from .config import settings
-from .endpoints import balance_api, accounts_api, market_api, trade_api
-from .domain.users import User
+from app.config import settings
+from app.endpoints import balance_api, accounts_api, market_api, trade_api
+from app.domain.users import User
 
 
 @asynccontextmanager
