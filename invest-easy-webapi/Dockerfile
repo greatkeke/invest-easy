@@ -5,10 +5,10 @@ FROM python:3.13.2
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV ALLOW_ORIGINS *
-ENV PYTHONPATH=/app
+ENV PYTHONPATH=/invest-easy-webapi/app
 
 # Set working directory
-WORKDIR /app
+WORKDIR /invest-easy-webapi
 
 # Copy requirements first to leverage Docker cache
 COPY requirements.txt .
@@ -18,7 +18,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Add volume for database persistence
-VOLUME /app/db
+VOLUME /invest-easy-webapi/db
+VOLUME /invest-easy-webapi/env
 
 # Expose the configured port
 EXPOSE 10008
