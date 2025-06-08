@@ -4,8 +4,6 @@ FROM python:3.13.2
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV ALLOW_ORIGINS *
-ENV PYTHONPATH=/invest-easy-webapi/app
 
 # Set working directory
 WORKDIR /invest-easy-webapi
