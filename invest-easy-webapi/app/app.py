@@ -1,11 +1,13 @@
 from contextlib import asynccontextmanager
+from typing import Annotated
 from fastapi import Depends, FastAPI
-from .infrastructure.users import User, fastapi_users, auth_backend, current_active_user
+from .infrastructure.users import fastapi_users, auth_backend, current_active_user
 from .infrastructure.schemas import UserRead, UserCreate, UserUpdate
 from .infrastructure.db import create_tables
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
 from .endpoints import balance_api, accounts_api, market_api, trade_api
+from .domain.users import User
 
 
 @asynccontextmanager
@@ -55,5 +57,5 @@ def read_root():
 
 
 @app.get("/authenticated-user/name")
-async def authenticated_route(user: User = Depends(current_active_user)):
+async def authenticated_route(user: Annotated[User, Depends(current_active_user)]):
     return {"username": user.username}

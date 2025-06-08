@@ -5,10 +5,9 @@ import uuid
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from ...domain.accounts import UserAccount, Account
-from ...domain.balance import Balance, BalanceHistory
-from ...infrastructure.db import get_async_session
-from ...domain.users import User
+from ..domain.accounts import UserAccount, Account
+from ..domain.balance import Balance, BalanceHistory
+from ..infrastructure.db import get_async_session
 
 
 class BalanceService:

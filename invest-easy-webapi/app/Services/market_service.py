@@ -1,7 +1,7 @@
 from typing import Annotated, List
 from fastapi import Depends
 from pandas import DataFrame
-from ...infrastructure.futu_api_service import FutuApiService
+from ..infrastructure.futu_api_service import FutuApiService
 
 
 class MarketService:

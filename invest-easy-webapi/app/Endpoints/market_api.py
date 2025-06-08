@@ -2,7 +2,7 @@ from typing import Annotated, List
 from fastapi import APIRouter, Depends, Query
 from ..infrastructure.users import current_active_user
 from ..infrastructure.users import User
-from ..services.market_service.market_service import MarketService
+from ..services.market_service import MarketService
 
 
 router = APIRouter(

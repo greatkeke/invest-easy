@@ -8,7 +8,7 @@ from ..infrastructure.users import (
     UserManager,
     get_user_manager,
 )
-from ..services.balance_service.balance_service import BalanceService
+from ..services.balance_service import BalanceService
 
 
 class TransferRequest(BaseModel):
