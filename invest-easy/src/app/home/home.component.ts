@@ -41,8 +41,8 @@ export class HomeComponent implements OnInit {
     this.promotions[index].visible = false;
   }
 
-  navigateTo(route: string) {
-    this.router.navigate([route]);
+  navigateTo(route: string, queryParams?: Record<string, any>) {
+    this.router.navigate([route], {queryParams: queryParams});
   }
 
   navigateToAd(adType: string) {

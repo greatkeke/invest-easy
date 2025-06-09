@@ -4,7 +4,8 @@
   <div class="carousel-container">
     <ng-container *ngFor="let promo of promotions; let i = index">
       <p-card *ngIf="promo.visible" class="promo-card">
-        <button pButton icon="pi pi-times" class="p-button-rounded p-button-text close-btn" (click)="closePromotion(i)"></button>
+        <button pButton icon="pi pi-times" class="p-button-rounded p-button-text close-btn"
+          (click)="closePromotion(i)"></button>
         <div class="card-header">
           <h3>{{promo.title}}</h3>
         </div>
@@ -22,19 +23,19 @@
 <div class="quicksteps-section">
   <h5 i18n>QuickSteps</h5>
   <div class="quicksteps-grid">
-    <div class="quicksteps-card" (click)="navigateTo('transfer/record')">
-      <i class="pi pi-file"></i>
-      <span i18n>View eStatements & eAdvices</span>
-    </div>
-    
     <div class="quicksteps-card" (click)="navigateTo('transfer')">
       <i class="pi pi-money-bill"></i>
       <span i18n>Transfer to local payees / FPS</span>
     </div>
-    
-    <div class="quicksteps-card" (click)="navigateTo('transfer/out')">
+
+    <div class="quicksteps-card" (click)="navigateTo('transfer',{tab: 'out'})">
       <i class="pi pi-wallet"></i>
       <span i18n>Transfer to my local HSBC accounts</span>
+    </div>
+
+    <div class="quicksteps-card" (click)="navigateTo('transfer',{tab: 'record'})">
+      <i class="pi pi-file"></i>
+      <span i18n>View eStatements & eAdvices</span>
     </div>
   </div>
 </div>
@@ -42,7 +43,8 @@
 <div class="accounts-section">
   <div class="accounts-header">
     <h5 i18n>Your Account</h5>
-    <button pButton icon="{{showBalance ? 'pi pi-eye' : 'pi pi-eye-slash'}}" class="p-button-rounded p-button-text balance-toggle" (click)="toggleBalanceVisibility()"></button>
+    <button pButton icon="{{showBalance ? 'pi pi-eye' : 'pi pi-eye-slash'}}"
+      class="p-button-rounded p-button-text balance-toggle" (click)="toggleBalanceVisibility()"></button>
   </div>
   <div class="accounts-grid">
     <p-card (click)="navigateTo('asset-detail')">
