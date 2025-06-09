@@ -4,6 +4,8 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
 from .domain.users import User
+from .domain.instruments import Instrument
+from .domain.positions import Position
 from .infrastructure.db import create_tables
 from .infrastructure.users import fastapi_users, auth_backend, current_active_user
 from .infrastructure.schemas import UserRead, UserCreate, UserUpdate
