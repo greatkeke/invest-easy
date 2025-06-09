@@ -196,10 +196,9 @@
       </div>
     </div>
     <ng-template pTemplate="footer">
-      <p-button label="Cancel" variant="outlined" icon="pi pi-times" (onClick)="cancelPreview()"
-        styleClass="p-button-text"></p-button>
-      <p-button label="Confirm" variant="outlined" icon="pi pi-check" (onClick)="confirmOrder()"
-        styleClass="p-button-success"></p-button>
+      <p-button label="Cancel" variant="outlined" severity="secondary" icon="pi pi-times" (onClick)="cancelPreview()"></p-button>
+      <p-button *ngIf="tradeType === 'buy'" label="Buy" severity="danger" icon="pi pi-cart-plus" (onClick)="confirmOrder()"></p-button>
+      <p-button *ngIf="tradeType === 'sell'" label="Sell" severity="warn" icon="pi pi-shopping-bag" (onClick)="confirmOrder()"></p-button>
     </ng-template>
   </p-dialog>
 
