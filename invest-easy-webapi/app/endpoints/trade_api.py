@@ -21,7 +21,7 @@ class SubmitPositionRequest(BaseModel):
     account_id: uuid.UUID
     code: str
     price: float
-    amount: float
+    quantity: float
     stock_in: bool = True
 
 
@@ -42,7 +42,7 @@ async def trade_in(
             account_id=request.account_id,
             code=request.code,
             price=request.price,
-            amount=request.amount,
+            quantity=request.quantity,
             stock_in=request.stock_in
         )
         return {"success": True, "order": order}

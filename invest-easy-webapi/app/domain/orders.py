@@ -19,7 +19,7 @@ class Order(Base):
     user_account_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     instrument_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     position_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=True)
-    amount: Mapped[float] = mapped_column(nullable=False)
+    quantity: Mapped[float] = mapped_column(nullable=False)
     price: Mapped[float] = mapped_column(Float, nullable=False)
     trade_in: Mapped[Boolean] = mapped_column(Boolean, nullable=False, default=True)
     status: Mapped[OrderStatus] = mapped_column(SQLEnum(OrderStatus), nullable=False, default=OrderStatus.QUEUED)

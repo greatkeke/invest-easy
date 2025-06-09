@@ -185,7 +185,7 @@ export class TradeStocksComponent implements OnInit {
         account_id: this.orderForm.payFrom.value,
         code: 'HK.00700', // TODO: Make this dynamic
         price: this.orderForm.price,
-        amount: this.orderForm.quantity,
+        quantity: this.orderForm.quantity,
         stock_in: true // TODO: Add buy/sell toggle
       };
 

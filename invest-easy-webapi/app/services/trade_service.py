@@ -29,7 +29,7 @@ class TradeService:
         account_id: uuid.UUID,
         code: str,
         price: float,
-        amount: float,
+        quantity: float,
         stock_in: bool = True,
     ):
         try:
@@ -75,7 +75,7 @@ class TradeService:
                 position = Position(
                     instrument_id=instrument.id,
                     user_account_id=user_account.id,
-                    amount=0,
+                    quantity=0,
                     avg_price=0
                 )
                 self.session.add(position)
@@ -83,11 +83,11 @@ class TradeService:
 
             # Calculate new avg_price
             new_avg_price = (
-                (position.amount * position.avg_price + amount * price) / 
-                (position.amount + amount)
+                (position.quantity * position.avg_price + quantity * price) / 
+                (position.quantity + quantity)
             )
             position.avg_price = new_avg_price
-            position.amount += amount
+            position.quantity += quantity
             await self.session.flush()
 
 
@@ -96,7 +96,7 @@ class TradeService:
                 instrument_id=instrument.id,
                 user_account_id=user_account.id,
                 price=price,
-                amount=amount,
+                quantity=quantity,
                 trade_in=stock_in,
                 status=OrderStatus.FILLED,
                 position_id=position.id
@@ -108,7 +108,7 @@ class TradeService:
                 BalanceType.TRADE_BUY if stock_in else BalanceType.TRADE_SELL
             )
             transfer_success = await self.balance_service.transfer_in_amount(
-                user_id, account_id, price * amount, transfer_type
+                user_id, account_id, price * quantity, transfer_type
             )
             if not transfer_success:
                 raise ValueError("Balance transfer failed")

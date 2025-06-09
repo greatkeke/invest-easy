@@ -6,7 +6,7 @@ interface SubmitPositionRequest {
   account_id: string;
   code: string;
   price: number;
-  amount: number;
+  quantity: number;
   stock_in: boolean;
 }
 
