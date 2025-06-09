@@ -15,8 +15,8 @@ import { HeaderComponent } from '../shared/header/header.component';
 export class TradeComponent {
   constructor(private router: Router) {}
 
-  navigateTo(target: string) {
-    this.router.navigate([target])
+  navigateTo(target: string, queryParams?: Record<string, any>) {
+    this.router.navigate([target], { queryParams })
   }
 
   showMetrics = true;

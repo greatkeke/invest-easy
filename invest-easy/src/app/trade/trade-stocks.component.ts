@@ -65,7 +65,7 @@ export class TradeStocksComponent implements OnInit {
   tradeType = 'buy';
 
   ngOnInit() {
-    if (!!this.route.snapshot?.queryParamMap.get('trade-sell')) {
+    if (this.route.snapshot?.queryParamMap.get('trade') === 'sell') {
       this.tradeType = 'sell';
     }
     this.loadMarketData();
