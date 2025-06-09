@@ -22,7 +22,6 @@ class TradeRequest(BaseModel):
     code: str
     price: float
     quantity: float
-    stock_in: bool = True
 
 
 @router.get("/positions")
@@ -34,7 +33,7 @@ async def get_positions():
 async def trade_in(
     request: TradeRequest,
     user: User = Depends(current_active_user),
-    trade_service: TradeService = Depends(TradeService)
+    trade_service: TradeService = Depends(TradeService),
 ):
     try:
         order = await trade_service.trade_in(
@@ -55,7 +54,7 @@ async def trade_in(
 async def trade_out(
     request: TradeRequest,
     user: User = Depends(current_active_user),
-    trade_service: TradeService = Depends(TradeService)
+    trade_service: TradeService = Depends(TradeService),
 ):
     try:
         order = await trade_service.trade_out(

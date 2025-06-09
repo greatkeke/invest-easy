@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChartModule } from 'primeng/chart';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -16,6 +16,7 @@ import { MarketSnapshot } from '../market/market-snapshot.model';
 import { RTData } from '../market/rt-data.model';
 import { Account, AccountsService } from '../shared/api-services/accounts.service';
 import { TradeService } from '../shared/api-services/trade.service';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 interface ChartData {
   labels: string[];
@@ -40,7 +41,8 @@ interface ChartData {
     FormsModule,
     TopNavigationComponent,
     DialogModule,
-    ToastModule
+    ToastModule,
+    RadioButtonModule
   ],
   templateUrl: './trade-stocks.component.html',
   styleUrls: ['./trade-stocks.component.scss'],
@@ -53,13 +55,19 @@ export class TradeStocksComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private messageService: MessageService,
     private marketService: MarketService,
     private accountsService: AccountsService,
     private tradeService: TradeService
   ) { }
 
+  tradeType = 'buy';
+
   ngOnInit() {
+    if (!!this.route.snapshot.queryParamMap.get('trade-sell')) {
+      this.tradeType = 'sell';
+    }
     this.loadMarketData();
     this.loadAccounts();
   }
@@ -185,17 +193,24 @@ export class TradeStocksComponent implements OnInit {
         account_id: this.orderForm.payFrom.value,
         code: 'HK.00700', // TODO: Make this dynamic
         price: this.orderForm.price,
-        quantity: this.orderForm.quantity,
-        stock_in: true // TODO: Add buy/sell toggle
+        quantity: this.orderForm.quantity
       };
 
-      await this.tradeService.tradeIn(request);
-      
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Order Submitted',
-        detail: 'Your order has been placed successfully'
-      });
+      if (this.tradeType === 'buy') {
+        await this.tradeService.tradeStock(request);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Buy Order Submitted',
+          detail: 'Your buy order has been placed successfully'
+        });
+      } else {
+        await this.tradeService.tradeOut(request);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sell Order Submitted',
+          detail: 'Your sell order has been placed successfully'
+        });
+      }
       this.displayPreview = false;
     } catch (error) {
       this.messageService.add({

@@ -7,7 +7,6 @@ interface SubmitPositionRequest {
   code: string;
   price: number;
   quantity: number;
-  stock_in: boolean;
 }
 
 @Injectable({
@@ -17,10 +16,21 @@ export class TradeService {
 
   constructor(private http: HttpClient) {}
 
-  async tradeIn(request: SubmitPositionRequest) {
+  async tradeStock(request: SubmitPositionRequest) {
     try {
       const response = await firstValueFrom(
         this.http.post('/trade/in', request)
+      );
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async tradeOut(request: SubmitPositionRequest) {
+    try {
+      const response = await firstValueFrom(
+        this.http.post('/trade/out', request)
       );
       return response;
     } catch (error) {

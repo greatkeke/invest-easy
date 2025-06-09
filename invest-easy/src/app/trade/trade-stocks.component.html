@@ -14,15 +14,14 @@
         <h2 class="text-md font-bold">{{marketSnapshot.name || 'N/A'}}</h2>
         <div class="flex w-full justify-between">
           <span class="text-md">{{marketSnapshot.last_price | currency:'USD':'symbol':'1.2-2'}}</span>
-          <span *ngIf="marketSnapshot.prev_close_price" 
-                class="text-md"
-                [ngClass]="{
+          <span *ngIf="marketSnapshot.prev_close_price" class="text-md" [ngClass]="{
                   'text-green-500': marketSnapshot.last_price >= marketSnapshot.prev_close_price,
                   'text-red-500': marketSnapshot.last_price < marketSnapshot.prev_close_price
                 }">
             {{ (marketSnapshot.last_price - marketSnapshot.prev_close_price) >= 0 ? '+' : '' }}
             {{ (marketSnapshot.last_price - marketSnapshot.prev_close_price) | number:'1.2-2' }}
-            ({{ ((marketSnapshot.last_price - marketSnapshot.prev_close_price) / marketSnapshot.prev_close_price * 100) | number:'1.2-2' }}%)
+            ({{ ((marketSnapshot.last_price - marketSnapshot.prev_close_price) / marketSnapshot.prev_close_price * 100)
+            | number:'1.2-2' }}%)
           </span>
         </div>
       </div>
@@ -104,7 +103,20 @@
       <h2 class="text-sm text-gray-900 mb-4">Order Details</h2>
       <form class="space-y-4">
         <div>
-          <label class="block text-xs text-gray-700 mb-2">Order type</label>
+          <label class="block text-xs text-gray-700 mb-2">Trade type</label>
+          <div class="flex gap-4 mb-4">
+            <div class="flex items-center">
+              <p-radioButton name="tradeType" value="buy" [(ngModel)]="tradeType" inputId="buy"></p-radioButton>
+              <label for="buy" class="ml-2">Buy</label>
+            </div>
+            <div class="flex items-center">
+              <p-radioButton name="tradeType" value="sell" [(ngModel)]="tradeType" inputId="sell"></p-radioButton>
+              <label for="sell" class="ml-2">Sell</label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs text-gray-700 mb-2">Order Type</label>
           <p-select [options]="orderTypes" [(ngModel)]="orderForm.type" name="type" optionLabel="label"
             [showClear]="false" placeholder="Select order type" size="small"></p-select>
         </div>
