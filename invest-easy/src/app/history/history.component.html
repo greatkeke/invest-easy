@@ -4,7 +4,14 @@
         <div *ngFor="let record of records"
             class="p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
             <div class="flex justify-between items-center">
-                <span class="font-medium">Transfered {{ record.transfer_in ? 'in' : 'out' }}</span>
+                <span class="font-medium">
+                    <ng-container [ngSwitch]="record.type">
+                        <span *ngSwitchCase="BalanceType.TRANSFER_IN">Transfer In</span>
+                        <span *ngSwitchCase="BalanceType.TRANSFER_OUT">Transfer Out</span>
+                        <span *ngSwitchCase="BalanceType.TRADE_BUY">Trade Buy</span>
+                        <span *ngSwitchCase="BalanceType.TRADE_SELL">Trade Sell</span>
+                    </ng-container>
+                </span>
                 <span class="text-primary-500 font-semibold">{{ record.amount | currency }} {{record.ccy}}</span>
             </div>
             <div class="flex justify-between text-sm text-gray-500 mt-1">

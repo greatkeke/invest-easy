@@ -9,6 +9,7 @@ from ..infrastructure.users import (
     get_user_manager,
 )
 from ..services.balance_service import BalanceService
+from ..domain.balance import BalanceType
 
 
 class TransferRequest(BaseModel):
@@ -73,7 +74,7 @@ async def transfer_out_amount(
         transfer_user_id=current_user.id,
         account_id=request.account_id,
         amount=request.amount,
-        transfer_in=False,
+        type=BalanceType.TRANSFER_OUT
     )
 
     if not success:

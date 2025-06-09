@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { HttpClient } from '@angular/common/http';
+import { BalanceType } from '../shared/models/balance-types';
 
 interface Record {
   id: string;
   ccy: string;
   created_at: Date;
-  transfer_in: boolean;
+  type: BalanceType;
   amount: number;
   balanceId: string;
   account_name: string;
@@ -23,6 +24,7 @@ interface Record {
 })
 
 export class HistoryComponent {
+  BalanceType = BalanceType;
   @Input() RecordChanges: any;
   
   ngOnChanges(changes: SimpleChanges) {
