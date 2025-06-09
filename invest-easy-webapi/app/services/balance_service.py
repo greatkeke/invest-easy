@@ -6,7 +6,7 @@ from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..domain.accounts import UserAccount, Account
-from ..domain.balance import Balance, BalanceHistory
+from ..domain.balance import Balance, BalanceHistory, BalanceType
 from ..infrastructure.db import get_async_session
 
 
@@ -19,7 +19,7 @@ class BalanceService:
         transfer_user_id: uuid.UUID,
         account_id: uuid.UUID,
         amount: float,
-        transfer_in=True,
+        type: BalanceType = BalanceType.TRANSFER_IN,
     ):
         try:
             user_account = await self.session.scalars(
@@ -66,7 +66,9 @@ class BalanceService:
                 self.session.add(existing_balance)
                 await self.session.flush()
 
-            if transfer_in:
+            is_increment = type in [BalanceType.TRANSFER_IN, BalanceType.TRADE_SELL]
+            
+            if is_increment:
                 existing_balance.balance += amount
             else:
                 if existing_balance.balance >= amount:
@@ -79,7 +81,8 @@ class BalanceService:
                 balance_id=existing_balance.id,
                 amount=amount,
                 ccy=account.ccy,
-                transfer_in=transfer_in,
+                type=type,
+                is_increment=is_increment,
                 created_at=datetime.now(),
             )
             self.session.add(history)
