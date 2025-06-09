@@ -4,9 +4,8 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyAccessTokenDatabase
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
-from ..domain.users import Base, User, AccessToken
-from ..domain.accounts import Base as BaseAccount
-from ..domain.balance import Base as BaseBlance
+from ..domain.users import User, AccessToken
+from ..domain.base_domain import Base
 
 DATABASE_URL = f"sqlite+aiosqlite:///./db/easy.db"
 engine = create_async_engine(DATABASE_URL)
@@ -17,8 +16,6 @@ async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        await conn.run_sync(BaseAccount.metadata.create_all)
-        await conn.run_sync(BaseBlance.metadata.create_all)
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:

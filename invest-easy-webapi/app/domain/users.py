@@ -1,16 +1,9 @@
 # Database setup
 from sqlalchemy import String
-from sqlalchemy.orm import DeclarativeBase, mapped_column
-from fastapi_users_db_sqlalchemy.access_token import (
-    SQLAlchemyBaseAccessTokenTableUUID,
-)
-from fastapi_users_db_sqlalchemy import (
-    SQLAlchemyBaseUserTableUUID,
-)
-
-
-class Base(DeclarativeBase):
-    pass
+from sqlalchemy.orm import mapped_column
+from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyBaseAccessTokenTableUUID
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTableUUID
+from .base_domain import Base
 
 
 # User model
