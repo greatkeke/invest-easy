@@ -37,7 +37,7 @@ async def trade_in(
     trade_service: TradeService = Depends(TradeService)
 ):
     try:
-        position = await trade_service.trade_in(
+        order = await trade_service.trade_in(
             user_id=user.id,
             account_id=request.account_id,
             code=request.code,
@@ -45,7 +45,7 @@ async def trade_in(
             amount=request.amount,
             stock_in=request.stock_in
         )
-        return {"success": True, "position_id": str(position.id)}
+        return {"success": True, "order": order}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:

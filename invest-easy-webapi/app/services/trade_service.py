@@ -54,10 +54,10 @@ class TradeService:
             if not instrument:
                 # Get market data to create instrument
                 market_data = self.market_service.get_market_snapshot([code])
-                if not market_data or code not in market_data:
+                if not market_data or market_data.__len__() <= 0:
                     raise ValueError(f"No such instrument found: {code}")
                 else:
-                    instrument = Instrument(name=market_data[code]["name"], code=code)
+                    instrument = Instrument(name=market_data[0]["name"], code=code)
                 self.session.add(instrument)
                 await self.session.flush()
 
@@ -97,7 +97,7 @@ class TradeService:
                 user_account_id=user_account.id,
                 price=price,
                 amount=amount,
-                stock_in=stock_in,
+                trade_in=stock_in,
                 status=OrderStatus.FILLED,
                 position_id=position.id
             )
