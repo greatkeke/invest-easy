@@ -15,6 +15,7 @@ import { MarketService } from '../market/market.service';
 import { MarketSnapshot } from '../market/market-snapshot.model';
 import { RTData } from '../market/rt-data.model';
 import { Account, AccountsService } from '../shared/api-services/accounts.service';
+import { TradeService } from '../shared/api-services/trade.service';
 
 interface ChartData {
   labels: string[];
@@ -54,7 +55,8 @@ export class TradeStocksComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private marketService: MarketService,
-    private accountsService: AccountsService
+    private accountsService: AccountsService,
+    private tradeService: TradeService
   ) { }
 
   ngOnInit() {
@@ -156,7 +158,7 @@ export class TradeStocksComponent implements OnInit {
     price: 0,
     quantity: 100,
     goodUntil: new Date(),
-    payFrom: this.accounts.length > 0 ? this.accounts[0] : { label: '' }
+    payFrom: this.accounts.length > 0 ? this.accounts[0] : { label: '', value: '' }
   };
 
   // Calculate estimated total
@@ -177,14 +179,31 @@ export class TradeStocksComponent implements OnInit {
     this.displayPreview = true;
   }
 
-  confirmOrder() {
-    // TODO: Implement actual order submission
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Order Submitted',
-      detail: 'Your order has been placed successfully'
-    });
-    this.displayPreview = false;
+  async confirmOrder() {
+    try {
+      const request = {
+        account_id: this.orderForm.payFrom.value,
+        code: 'HK.00700', // TODO: Make this dynamic
+        price: this.orderForm.price,
+        amount: this.orderForm.quantity,
+        stock_in: true // TODO: Add buy/sell toggle
+      };
+
+      await this.tradeService.tradeIn(request);
+      
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Order Submitted',
+        detail: 'Your order has been placed successfully'
+      });
+      this.displayPreview = false;
+    } catch (error) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Order Failed',
+        detail: error instanceof Error ? error.message : 'Failed to submit order'
+      });
+    }
   }
 
   cancelPreview() {
