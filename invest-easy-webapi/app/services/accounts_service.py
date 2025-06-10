@@ -26,7 +26,7 @@ class AccountService:
         )
         return [{"id": str(row[0]), "name": row[1]} for row in result.all()]
 
-    async def get_user_accounts_balances(self, user: User):
+    async def get_user_accounts_balances(self, user: User, is_overview: bool = False):
         # Get accounts
         result = await self.session.execute(
             select(Account, Balance)
@@ -44,7 +44,11 @@ class AccountService:
                     Balance.user_account_id == UserAccount.id, Balance.is_active == True
                 ),
             )
-            .where(Account.is_overview == False, Account.is_active == True)
+            .where(
+                Account.is_overview == is_overview,
+                Balance.is_overview == is_overview,
+                Account.is_active == True,
+            )
         )
         accounts = [
             {

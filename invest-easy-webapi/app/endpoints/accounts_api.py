@@ -24,6 +24,7 @@ async def get_user_accounts_endpoint(
 async def get_user_accounts_balances(
     user: User = Depends(current_active_user),
     accountSvc: AccountService = Depends(AccountService),
+    is_overview: bool = False,
 ):
-    accounts = await accountSvc.get_user_accounts_balances(user)
+    accounts = await accountSvc.get_user_accounts_balances(user, is_overview)
     return accounts
