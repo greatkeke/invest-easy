@@ -3,6 +3,14 @@ export interface Account {
   label: string;
 }
 
+export interface AccountBalance {
+  id: string;
+  name: string;
+  balance_id: string;
+  balance: number;
+  ccy: string;
+}
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
@@ -20,6 +28,15 @@ export class AccountsService {
         label: account.name,
         value: account.id
       } as Account));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async fetchAccountBalances(): Promise<AccountBalance[]> {
+    try {
+      const balances = await lastValueFrom(this.http.get<AccountBalance[]>('/accounts/balances'));
+      return balances;
     } catch (error) {
       throw error;
     }
