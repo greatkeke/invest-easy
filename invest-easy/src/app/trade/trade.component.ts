@@ -26,7 +26,6 @@ export class TradeComponent {
     try {
       this.overviewAccount = await this.accountSvc.fetchOverviewAccountBalances();
       this.positions = await this.positionSvc.getPositions();
-      console.log(this.positions)
     } catch (error) {
       console.error('Failed to load data', error);
     }
