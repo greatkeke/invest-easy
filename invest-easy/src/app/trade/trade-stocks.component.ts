@@ -17,6 +17,7 @@ import { RTData } from '../market/rt-data.model';
 import { Account, AccountsService } from '../shared/api-services/accounts.service';
 import { TradeService } from '../shared/api-services/trade.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface ChartData {
   labels: string[];
@@ -216,7 +217,7 @@ export class TradeStocksComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'Order Failed',
-        detail: error instanceof Error ? error.message : 'Failed to submit order'
+        detail: error instanceof HttpErrorResponse ? error.error.detail : 'Failed to submit order'
       });
     }
   }

@@ -55,7 +55,7 @@ export class HistoryComponent {
 
   loadRecords() {
     this.isLoading = true;
-    this.http.get(`/transfer/records?pageSize=${this.pageSize}&pageIndex=${this.currentPage}`)
+    this.http.get(`/balance/transfer/records?pageSize=${this.pageSize}&pageIndex=${this.currentPage}`)
       .subscribe({
         next: (response: any) => {
           const newRecords = response.records;

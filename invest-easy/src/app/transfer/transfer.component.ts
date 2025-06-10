@@ -124,7 +124,7 @@ export class TransferComponent implements OnInit {
 
     this.isLoading = true;
     try {
-      await lastValueFrom(this.http.post('/transfer/in', {
+      await lastValueFrom(this.http.post('/balance/transfer/in', {
         account_id: this.inForm.toAccount,
         amount: this.inForm.amount,
         transfer_in: true
@@ -157,7 +157,7 @@ export class TransferComponent implements OnInit {
 
     this.isLoading = true;
     try {
-      await lastValueFrom(this.http.post('/transfer/out', {
+      await lastValueFrom(this.http.post('/balance/transfer/out', {
         account_id: this.outForm.fromAccount,
         amount: this.outForm.amount,
         password: this.outForm.password

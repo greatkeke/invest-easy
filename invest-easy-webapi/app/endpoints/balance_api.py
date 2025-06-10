@@ -20,19 +20,19 @@ class TransferRequest(BaseModel):
 
 
 router = APIRouter(
-    prefix="/transfer",
+    prefix="/balance",
     tags=["balance"],
     dependencies=[Depends(current_active_user)],
     responses={404: {"description": "Not found"}},
 )
 
 
-@router.get("/")
+@router.get("/detail")
 def get():
     return {"transfer": 1}
 
 
-@router.post("/in")
+@router.post("/transfer/in")
 async def transfer_amount(
     request: TransferRequest,
     current_user: Annotated[User, Depends(current_active_user)],
@@ -50,7 +50,7 @@ async def transfer_amount(
     return {"status": success, "message": "Transfer completed"}
 
 
-@router.post("/out")
+@router.post("/transfer/out")
 async def transfer_out_amount(
     request: TransferRequest,
     current_user: Annotated[User, Depends(current_active_user)],
@@ -83,7 +83,7 @@ async def transfer_out_amount(
     return {"status": success, "message": "Transfer completed"}
 
 
-@router.get("/records")
+@router.get("/transfer/records")
 async def get_records(
     current_user: Annotated[User, Depends(current_active_user)],
     svc: Annotated[BalanceService, Depends(BalanceService)],
