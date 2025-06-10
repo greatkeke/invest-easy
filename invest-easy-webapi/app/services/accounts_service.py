@@ -16,11 +16,13 @@ class AccountService:
     async def get_user_accounts(self, user: User):
         result = await self.session.execute(
             select(Account.id, Account.name)
-            .join(
-                UserAccount,
-                UserAccount.account_id == Account.id and UserAccount.is_active == True,
+            .join(UserAccount, UserAccount.account_id == Account.id)
+            .where(
+                UserAccount.user_id == user.id,
+                UserAccount.is_active == True,
+                Account.is_virtual == False,
+                Account.is_active == True,
             )
-            .where(UserAccount.user_id == user.id and Account.is_active == True)
         )
         return [{"id": str(row[0]), "name": row[1]} for row in result.all()]
 
@@ -29,23 +31,20 @@ class AccountService:
         result = await self.session.execute(
             select(Account, Balance)
             .outerjoin(
-                UserAccount, 
+                UserAccount,
                 and_(
                     UserAccount.account_id == Account.id,
                     UserAccount.user_id == user.id,
-                    UserAccount.is_active == True
-                )
+                    UserAccount.is_active == True,
+                ),
             )
             .outerjoin(
                 Balance,
                 and_(
-                    Balance.user_account_id == UserAccount.id,
-                    Balance.is_active == True
-                )
+                    Balance.user_account_id == UserAccount.id, Balance.is_active == True
+                ),
             )
-            .where(
-                Account.is_active == True
-            )
+            .where(Account.is_virtual == False, Account.is_active == True)
         )
         accounts = [
             {

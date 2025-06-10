@@ -12,6 +12,7 @@ class Account(Base):
     id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = mapped_column(String, nullable=False)
     ccy = mapped_column(String(3), nullable=False, default=text("HKD"))
+    is_virtual = mapped_column(Boolean, nullable=False, default=False)
 
 
 class UserAccount(Base):
