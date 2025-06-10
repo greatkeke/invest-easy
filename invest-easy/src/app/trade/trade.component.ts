@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../shared/header/header.component';
+import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
 
 @Component({
   selector: 'app-trade',
@@ -13,30 +14,25 @@ import { HeaderComponent } from '../shared/header/header.component';
   styleUrls: ['./trade.component.scss']
 })
 export class TradeComponent {
-  constructor(private router: Router) {}
+  overviewAccount: AccountBalance | undefined;
+  constructor(private router: Router, private accountSvc: AccountsService) { }
+
+  async ngOnInit() {
+    try {
+      this.overviewAccount = await this.accountSvc.fetchOverviewAccountBalances();
+    } catch (error) {
+
+    }
+  }
 
   navigateTo(target: string, queryParams?: Record<string, any>) {
     this.router.navigate([target], { queryParams })
   }
 
   showMetrics = true;
-  totalAssets = 365013.73; // Will be formatted as $125K
-  todayPL = 53.94; // Will be formatted as $2.45K 
-  marketValue = 23410.78; // Will be formatted as $118K
-  positionPL = 120.34; // Will be formatted as $7.5K
-  maxWithdrawable = 25673.73; // Will be formatted as $85K
 
-  formatCurrency(value: number): string {
-    if (value >= 1000000) {
-      return `$${(value/1000000).toFixed(1)}M`;
-    }
-    if (value >= 1000) {
-      return `$${(value/1000).toFixed(1)}K`;
-    }
-    return `$${value}`;
-  }
-
-  toggleMetrics() {
+  toggleMetrics(event: Event) {
+    event.stopPropagation();
     this.showMetrics = !this.showMetrics;
   }
 

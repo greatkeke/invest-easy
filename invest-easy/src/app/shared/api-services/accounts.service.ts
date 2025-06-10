@@ -41,4 +41,19 @@ export class AccountsService {
       throw error;
     }
   }
+
+  async fetchOverviewAccountBalances(): Promise<AccountBalance> {
+    try {
+      const result = await lastValueFrom(
+        this.http.get<AccountBalance[]>('/accounts/balances', {
+          params: { is_overview: 'true' }
+        })
+      );
+      if (result.length != 1)
+        throw Error('No overview account');
+      return result[0];
+    } catch (error) {
+      throw error;
+    }
+  }
 }
