@@ -1,9 +1,6 @@
 from fastapi import APIRouter, Depends
 from ..infrastructure.users import current_active_user, User
-from ..infrastructure.db import get_async_session
-from ..services.accounts_service import get_user_accounts
-from sqlalchemy.ext.asyncio import AsyncSession
-
+from ..services.accounts_service import AccountService
 
 
 router = APIRouter(
@@ -17,7 +14,16 @@ router = APIRouter(
 @router.get("/")
 async def get_user_accounts_endpoint(
     user: User = Depends(current_active_user),
-    session: AsyncSession = Depends(get_async_session),
+    accountSvc: AccountService = Depends(AccountService),
 ):
-    accounts = await get_user_accounts(session, user)
+    accounts = await accountSvc.get_user_accounts(user)
+    return accounts
+
+
+@router.get("/balances")
+async def get_user_accounts_balances(
+    user: User = Depends(current_active_user),
+    accountSvc: AccountService = Depends(AccountService),
+):
+    accounts = await accountSvc.get_user_accounts_balances(user)
     return accounts
