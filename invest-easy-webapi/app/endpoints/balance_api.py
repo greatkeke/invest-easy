@@ -28,8 +28,16 @@ router = APIRouter(
 
 
 @router.get("/detail")
-def get():
-    return {"transfer": 1}
+async def get_balance_detail(
+    current_user: Annotated[User, Depends(current_active_user)],
+    svc: Annotated[BalanceService, Depends(BalanceService)],
+    account_id: uuid.UUID | None = None,
+):
+    balances = await svc.get_balances(
+        user_id=current_user.id,
+        account_id=account_id
+    )
+    return {"balances": balances}
 
 
 @router.post("/transfer/in")

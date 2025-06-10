@@ -67,7 +67,7 @@ class BalanceService:
                 await self.session.flush()
 
             is_increment = type in [BalanceType.TRANSFER_IN, BalanceType.TRADE_SELL]
-            
+
             if is_increment:
                 existing_balance.balance += amount
             else:
@@ -109,3 +109,46 @@ class BalanceService:
         return [
             {"record": record[0], "account_name": record[1]} for record in records.all()
         ]
+
+    async def get_balances(
+        self, user_id: uuid.UUID, account_id: uuid.UUID | None = None
+    ):
+        if account_id:
+            # Get specific account balance
+            user_account = await self.session.scalars(
+                select(UserAccount).where(
+                    UserAccount.user_id == user_id,
+                    UserAccount.account_id == account_id,
+                    UserAccount.is_active == True,
+                )
+            )
+            user_account = user_account.first()
+            if not user_account:
+                return []
+
+            balances = await self.session.scalars(
+                select(Balance).where(
+                    Balance.user_account_id == user_account.id,
+                    Balance.is_active == True,
+                )
+            )
+            return [balance.__dict__ for balance in balances.all()]
+        else:
+            # Batch fetch all accounts and balances for user
+            user_accounts = await self.session.scalars(
+                select(UserAccount).where(
+                    UserAccount.user_id == user_id, UserAccount.is_active == True
+                )
+            )
+            user_accounts = user_accounts.all()
+            if not user_accounts:
+                return []
+
+            # Get all balances for these accounts in one query
+            account_ids = [ua.id for ua in user_accounts]
+            balances = await self.session.scalars(
+                select(Balance).where(Balance.user_account_id.in_(account_ids))
+            )
+
+            # Return flattened list of all balances
+            return balances.all()
