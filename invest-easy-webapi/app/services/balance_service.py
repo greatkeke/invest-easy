@@ -8,11 +8,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..domain.accounts import UserAccount, Account
 from ..domain.balance import Balance, BalanceHistory, BalanceType
 from ..infrastructure.db import get_async_session
+from ..infrastructure.fxrate_service import FxRateService
 
 
 class BalanceService:
-    def __init__(self, session: Annotated[AsyncSession, Depends(get_async_session)]):
+    def __init__(
+        self,
+        session: Annotated[AsyncSession, Depends(get_async_session)],
+        fxSvc: Annotated[FxRateService, Depends(FxRateService)],
+    ):
         self.session = session
+        self.fxSvc = fxSvc
 
     async def transfer_in_amount(
         self,
@@ -50,6 +56,24 @@ class BalanceService:
                 logging.error(f"No account found by: {account_id}.")
                 raise ValueError("No account found.")
 
+            # overview balance
+            overview_balance = await self.session.scalars(
+                select(Balance)
+                .join(UserAccount, UserAccount.id == Balance.user_account_id)
+                .join(Account, UserAccount.account_id == Account.id)
+                .where(
+                    Account.is_overview == True,
+                    Account.is_active == True,
+                    UserAccount.user_id == transfer_user_id,
+                    UserAccount.is_active == True,
+                    Balance.is_overview == True,
+                    Balance.is_active == True,
+                )
+            )
+            overview_balance = overview_balance.first()
+            if not overview_balance:
+                raise ValueError("No overview account/balance found")
+            
             # Update balance
             existing_balance = await self.session.scalars(
                 select(Balance).where(
@@ -68,11 +92,16 @@ class BalanceService:
 
             is_increment = type in [BalanceType.TRANSFER_IN, BalanceType.TRADE_SELL]
 
+            base_fxrate = self.fxSvc.get_fxrate_by_ccy(existing_balance.ccy)
+            converted_amount = amount * base_fxrate
+
             if is_increment:
                 existing_balance.balance += amount
+                overview_balance.balance += converted_amount
             else:
                 if existing_balance.balance >= amount:
                     existing_balance.balance -= amount
+                    overview_balance.balance -= converted_amount
                 else:
                     raise ValueError("No such amount balance left.")
 
