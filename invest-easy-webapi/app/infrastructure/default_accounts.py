@@ -13,28 +13,28 @@ async def create_default_account(
     account_ov = Account(
         name=f"{username} - overview account",
         ccy="HKD",
-        is_virtual=True,
+        is_overview=True,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
     account_hkd = Account(
         name=f"{username} - HKD account",
         ccy="HKD",
-        is_virtual=False,
+        is_overview=False,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
     account_usd = Account(
         name=f"{username} - USD account",
         ccy="USD",
-        is_virtual=False,
+        is_overview=False,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
     account_cnh = Account(
         name=f"{username} - CNH account",
         ccy="CNH",
-        is_virtual=False,
+        is_overview=False,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -59,7 +59,7 @@ async def create_default_account(
         user_account_id=user_account_ov.id,
         balance=0.0,
         ccy="HKD",
-        is_virtual=True,
+        is_overview=True,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -67,7 +67,7 @@ async def create_default_account(
         user_account_id=user_account_hkd.id,
         balance=0.0,
         ccy="HKD",
-        is_virtual=False,
+        is_overview=False,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -75,7 +75,7 @@ async def create_default_account(
         user_account_id=user_account_usd.id,
         balance=0.0,
         ccy="USD",
-        is_virtual=False,
+        is_overview=False,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -83,7 +83,7 @@ async def create_default_account(
         user_account_id=user_account_cnh.id,
         balance=0.0,
         ccy="CNH",
-        is_virtual=False,
+        is_overview=False,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )

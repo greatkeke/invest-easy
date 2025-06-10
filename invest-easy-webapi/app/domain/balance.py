@@ -25,7 +25,7 @@ class Balance(Base):
     user_account_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     balance = mapped_column(Float, nullable=False, default=0.00)
     ccy = mapped_column(String(3), nullable=False, default="HKD")
-    is_virtual = mapped_column(Boolean, nullable=False, default=False)
+    is_overview = mapped_column(Boolean, nullable=False, default=False)
 
 
 class BalanceHistory(Base):

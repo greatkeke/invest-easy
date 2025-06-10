@@ -20,7 +20,7 @@ class AccountService:
             .where(
                 UserAccount.user_id == user.id,
                 UserAccount.is_active == True,
-                Account.is_virtual == False,
+                Account.is_overview == False,
                 Account.is_active == True,
             )
         )
@@ -44,7 +44,7 @@ class AccountService:
                     Balance.user_account_id == UserAccount.id, Balance.is_active == True
                 ),
             )
-            .where(Account.is_virtual == False, Account.is_active == True)
+            .where(Account.is_overview == False, Account.is_active == True)
         )
         accounts = [
             {
