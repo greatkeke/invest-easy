@@ -9,7 +9,7 @@ from .domain.positions import Position
 from .infrastructure.db import create_tables
 from .infrastructure.users import fastapi_users, auth_backend, current_active_user
 from .infrastructure.schemas import UserRead, UserCreate, UserUpdate
-from .endpoints import balance_api, accounts_api, market_api, trade_api
+from .endpoints import balance_api, accounts_api, market_api, trade_api, position_api
 
 
 @asynccontextmanager
@@ -42,6 +42,7 @@ app.include_router(accounts_api.router)
 app.include_router(balance_api.router)
 app.include_router(market_api.router)
 app.include_router(trade_api.router)
+app.include_router(position_api.router)
 
 
 app.add_middleware(
