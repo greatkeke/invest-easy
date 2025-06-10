@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../shared/header/header.component';
 import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
+import { Position, PositionService } from '../shared/api-services/position.service';
 
 @Component({
   selector: 'app-trade',
@@ -15,13 +16,19 @@ import { AccountBalance, AccountsService } from '../shared/api-services/accounts
 })
 export class TradeComponent {
   overviewAccount: AccountBalance | undefined;
-  constructor(private router: Router, private accountSvc: AccountsService) { }
+  constructor(
+    private router: Router, 
+    private accountSvc: AccountsService,
+    private positionSvc: PositionService
+  ) { }
 
   async ngOnInit() {
     try {
       this.overviewAccount = await this.accountSvc.fetchOverviewAccountBalances();
+      this.positions = await this.positionSvc.getPositions();
+      console.log(this.positions)
     } catch (error) {
-
+      console.error('Failed to load data', error);
     }
   }
 
@@ -36,36 +43,5 @@ export class TradeComponent {
     this.showMetrics = !this.showMetrics;
   }
 
-  positions = [
-    {
-      symbol: 'QQQ',
-      marketValue: 45000,
-      quantity: 150,
-      price: 300,
-      cost: 280,
-      todayPL: 1200,
-      pl: 46.78,
-      portfolioPercent: 0.36
-    },
-    {
-      symbol: 'HSTI',
-      marketValue: 38000,
-      quantity: 200,
-      price: 190,
-      cost: 175,
-      todayPL: 850,
-      pl: -30.12,
-      portfolioPercent: 0.30
-    },
-    {
-      symbol: 'FoundBonds',
-      marketValue: 35000,
-      quantity: 25,
-      price: 1400,
-      cost: 1350,
-      todayPL: 400,
-      pl: 5.44,
-      portfolioPercent: 0.28
-    }
-  ];
+  positions: Position[] = [];
 }

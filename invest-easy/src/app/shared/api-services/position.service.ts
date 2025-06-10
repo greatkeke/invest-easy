@@ -1,0 +1,46 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+
+export interface Position {
+  id: string;
+  quantity: number;
+  avg_price: number;
+  instrument_code: string;
+  instrument_name: string;
+  marketValue: number;
+  price: number;
+  cost: number;
+  todayPL: number;
+  pl: number;
+  portfolioPercent: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PositionService {
+  constructor(private http: HttpClient) {}
+
+  async getPositions(): Promise<Position[]> {
+    try {
+      const positions = await firstValueFrom(
+        this.http.get<Position[]>('/positions/')
+      );
+      
+      // Calculate derived fields for frontend display
+      return positions.map(p => ({
+        ...p,
+        marketValue: p.quantity * (p.price || p.avg_price),
+        price: p.price || p.avg_price,
+        cost: p.avg_price,
+        todayPL: 0, // Will need real calculation
+        pl: 0, // Will need real calculation
+        portfolioPercent: 0 // Will need real calculation
+      }));
+    } catch (error) {
+      console.error('Failed to fetch positions', error);
+      throw error;
+    }
+  }
+}

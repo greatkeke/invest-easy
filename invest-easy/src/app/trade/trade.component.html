@@ -49,7 +49,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let position of positions" (click)="navigateTo('/trade-stocks')">
-          <td class="text-sm">{{ position.symbol }}</td>
+          <td class="text-sm">{{ position.instrument_name }}</td>
           <td class="text-sm">{{ position.marketValue | currency }} / {{ position.quantity }}</td>
           <td class="text-sm">{{ position.price | currency }} / {{ position.cost | currency }}</td>
           <td class="text-sm" [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">{{
