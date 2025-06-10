@@ -1,5 +1,5 @@
 <div class="min-h-screen">
-  <app-top-navigation title="My assets" (back)="goBack()" (refresh)="refreshData()">
+  <app-top-navigation title="My Assets" (back)="goBack()" (refresh)="refreshData()">
   </app-top-navigation>
 
   <div *ngIf="isLoading" class="fixed inset-0 bg-opacity-80 flex items-center justify-center z-50">
@@ -7,52 +7,32 @@
     </p-progressSpinner>
   </div>
 
-  <div *ngIf="!isLoading">
-    <!-- Total Assets Card -->
-    <div class="p-4">
-      <div class="rounded-lg shadow p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-md font-medium">Total Assets</h2>
-          <span class="text-md font-bold">$365,013.73</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <h2 class="text-sm font-medium ">Today's P/L</h2>
-          <span class="text-sm font-bold ">+$53.94</span>
-        </div>
-      </div>
+  <!-- Account Balances Accordion -->
+  <div class="p-4">
+    <div class="rounded-lg shadow p-6">
+      <h2 class="text-md font-medium mb-4">Account Balances</h2>
+      <p-accordion [multiple]="true" [(value)]="expand_id" class="w-full">
+        <p-accordion-panel *ngFor="let account of accountBalances" [value]="account.id">
+          <p-accordion-header>{{account.name}}</p-accordion-header>
+          <p-accordion-content>
+            <div class="grid grid-cols-2 gap-4 p-3">
+              <div class="text-gray-600">Balance:</div>
+              <div class="text-right">
+                {{account.balance ? (account.balance | number:'1.2-2') + ' ' + account.ccy : 'N/A'}}
+              </div>
+            </div>
+          </p-accordion-content>
+        </p-accordion-panel>
+      </p-accordion>
     </div>
+  </div>
 
-    <!-- Asset Groups Card -->
-    <div class="p-4">
-      <div class="rounded-lg shadow p-6">
-        <h2 class="text-md font-medium  mb-4">Asset Groups</h2>
-        <div class="space-y-4">
-          <div class="flex justify-between">
-            <span class="text-sm">Available Assets</span>
-            <span class="text-sm font-medium">$2,5673.73</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-sm">Stocks</span>
-            <span class="text-sm font-medium">$2,3410.78</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-sm">Fund</span>
-            <span class="text-sm font-medium">$298,005.67</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-sm">Bonds</span>
-            <span class="text-sm font-medium">$864.32</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="p-4">
-      <div class="rounded-lg shadow p-6">
-        <h2 class="text-md font-medium  mb-4">Record History</h2>
-        <div class="space-y-4">
-          <app-history></app-history>
-        </div>
+  <div class="p-4">
+    <div class="rounded-lg shadow p-6">
+      <h2 class="text-md font-medium mb-4">Record History</h2>
+      <div class="space-y-4">
+        <app-history></app-history>
       </div>
     </div>
   </div>
+</div>
