@@ -1,26 +1,33 @@
-# Use official Python image
-FROM python:3.13.2
+# Build stage
+FROM python:3.13.2-alpine as builder
 
-# Set environment variables
+WORKDIR /install
+COPY requirements.txt .
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
+    && pip install --prefix=/install --no-cache-dir --no-warn-script-location -r requirements.txt \
+    && apk del .build-deps
+
+# Runtime stage
+FROM python:3.13.2-alpine
+
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PATH="/usr/local/bin:$PATH"
 
-# Set working directory
 WORKDIR /invest-easy-webapi
 
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy installed packages to Python's standard location
+COPY --from=builder /install /usr/local
 
-# Copy application code
-COPY . .
+# Copy application code to working directory
+COPY ./app ./app
+COPY ./db ./db
+COPY main.py .
 
-# Add volume for database persistence
+# Create volumes
 VOLUME /invest-easy-webapi/db
 VOLUME /invest-easy-webapi/env
 
-# Expose the configured port
 EXPOSE 10008
 
-# Run the application
 CMD ["uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "10008"]

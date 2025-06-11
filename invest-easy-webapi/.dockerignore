@@ -1,0 +1,8 @@
+# Ignore everything
+*
+
+# Allow specific files and directories
+!app/
+!db/
+!main.py
+!requirements.txt
