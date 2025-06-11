@@ -90,17 +90,19 @@ export class MarketComponent implements OnInit {
       return;
     }
 
-    const query = this.searchQuery.toLowerCase();
-    this.searchResults = [
-      ...this.indices.filter(item =>
-        item.name.toLowerCase().includes(query) ||
-        item.symbol.toLowerCase().includes(query)
-      ),
-      ...this.watchlist.filter(item =>
-        item.name.toLowerCase().includes(query) ||
-        item.symbol.toLowerCase().includes(query)
-      )
-    ];
+    this.loading = true;
+    this.marketService.searchSecurities(this.searchQuery).subscribe({
+      next: (response) => {
+        this.searchResults = response.map((item: any) => ({
+          code: item.code,
+          name: item.name
+        }));
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
   }
 
   clearSearch(): void {

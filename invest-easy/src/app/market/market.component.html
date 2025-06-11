@@ -13,16 +13,10 @@
   </div>
 
   <p-listbox [options]="searchResults" *ngIf="searchResults.length > 0" class="search-results"
-    (onClick)="navigateToResult($event.option.symbol)" [listStyle]="{'max-height':'15rem'}">
+    (onClick)="navigateToResult($event.option.code)" [listStyle]="{'max-height':'15rem'}">
     <ng-template let-result pTemplate="item">
       <div class="result-item">
-        <div>{{result.name}} ({{result.symbol}})</div>
-        <div class="result-details">
-          <span class="price">{{result.price | number:'1.2-2'}}</span>
-          <span class="change" [class.positive]="result.change > 0" [class.negative]="result.change < 0">
-            {{result.change > 0 ? '+' : ''}}{{result.change | number:'1.2-2'}} ({{result.percent}}%)
-          </span>
-        </div>
+        <div>{{result.name}} ({{result.code}})</div>
       </div>
     </ng-template>
   </p-listbox>

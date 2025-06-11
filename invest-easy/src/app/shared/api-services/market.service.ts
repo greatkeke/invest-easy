@@ -17,7 +17,6 @@ import { RTData } from './rt-data.model';
 })
 export class MarketService {
   private apiUrl = 'https://push2.eastmoney.com/api/qt/ulist.np/get';
-  private snapshotUrl = '/market/snapshot';
 
   constructor(private http: HttpClient) { }
 
@@ -32,10 +31,14 @@ export class MarketService {
   }
 
   getMarketSnapshot(codes: string[]): Observable<MarketSnapshot[]> {
-    return this.http.post<MarketSnapshot[]>(this.snapshotUrl, codes);
+    return this.http.post<MarketSnapshot[]>('/market/snapshot', codes);
   }
 
   getRTData(code: string): Observable<any[]> {
     return this.http.get<RTData[]>('/market/rt-data', { params: { code } });
+  }
+
+  searchSecurities(query: string): Observable<any[]> {
+    return this.http.get<any[]>('/market/search', { params: { query } });
   }
 }
