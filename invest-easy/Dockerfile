@@ -12,7 +12,7 @@ RUN npm ci && \
 
 # Copy only necessary source files
 COPY src/ src/
-COPY angular.json tsconfig.* ngsw-config.json ./
+COPY angular.json tsconfig.* ngsw-config.json .postcssrc.json ./
 
 # Build both client and server
 RUN npm run build && \
