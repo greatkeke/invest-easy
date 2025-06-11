@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MarketService } from './market.service';
+import { MarketService } from '../shared/api-services/market.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MarketTemperatureService } from './market-temperature.service';
+import { MarketTemperatureService } from '../shared/api-services/market-temperature.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
