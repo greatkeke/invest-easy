@@ -4,6 +4,7 @@ import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../shared/header/header.component';
+import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
 
 @Component({
   selector: 'app-home',
@@ -23,18 +24,23 @@ export class HomeComponent implements OnInit {
   ];
 
   showBalance = true;
-  account = { id: '190108', balance: 365013.73, currency: 'HKD' };
+  account: AccountBalance | undefined;
 
   toggleBalanceVisibility() {
     this.showBalance = !this.showBalance;
   }
 
   constructor(
-    private router: Router
+    private router: Router,
+    private accountSvc: AccountsService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.fetchOverviewAccount();
+  }
 
+  async fetchOverviewAccount() {
+    this.account = await this.accountSvc.fetchOverviewAccountBalances();
   }
 
   closePromotion(index: number) {
@@ -42,7 +48,7 @@ export class HomeComponent implements OnInit {
   }
 
   navigateTo(route: string, queryParams?: Record<string, any>) {
-    this.router.navigate([route], {queryParams: queryParams});
+    this.router.navigate([route], { queryParams: queryParams });
   }
 
   navigateToAd(adType: string) {

@@ -46,14 +46,14 @@
     <button pButton icon="{{showBalance ? 'pi pi-eye' : 'pi pi-eye-slash'}}"
       class="p-button-rounded p-button-text balance-toggle" (click)="toggleBalanceVisibility()"></button>
   </div>
-  <div class="accounts-grid">
+  <div class="accounts-grid" *ngIf="account">
     <p-card (click)="navigateTo('asset-detail')">
       <div class="card-header">
-        <h3 class="text-sm">Account #{{account.id}}</h3>
+        <h3 class="text-sm">{{account.name}}</h3>
       </div>
       <div class="card-content">
         <div class="balance text-lg text-right" *ngIf="showBalance">
-          {{account.balance | currency:account.currency}}
+          {{account.balance | currency:account.ccy}}
         </div>
         <div class="balance-hidden text-right" *ngIf="!showBalance">
           ••••••
