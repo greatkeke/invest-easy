@@ -1,16 +1,15 @@
 # Database setup
 from collections.abc import AsyncGenerator
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any, Hashable
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy import Column, String, JSON, DateTime
+from sqlalchemy import Column, String, JSON
 from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyAccessTokenDatabase
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from ..domain.users import User, AccessToken
 from ..domain.base_domain import Base
 from sqlalchemy import update
-import json
 
 
 class StockBasicInfoCache(Base):
@@ -80,14 +79,12 @@ async def update_stock_basicinfo_cache(
         StockBasicInfoCache, {"market": market, "stock_type": stock_type}
     )
 
-    json_str = json.dumps(data)
-
     if cache is None:
         # If no existing entry, create new one
         cache = StockBasicInfoCache(
             market=market,
             stock_type=stock_type,
-            data=json_str,
+            data=data,
             created_at=datetime.now(),
             updated_at=datetime.now(),
             is_active=True,
@@ -101,7 +98,7 @@ async def update_stock_basicinfo_cache(
             update(StockBasicInfoCache)
             .where(StockBasicInfoCache.market == market)
             .where(StockBasicInfoCache.stock_type == stock_type)
-            .values(data=json_str, created_at=datetime.now(), updated_at=datetime.now())
+            .values(data=data, created_at=datetime.now(), updated_at=datetime.now())
         )
         await session.execute(stmt)
         await session.commit()

@@ -3,7 +3,6 @@ from fastapi import Depends
 import numpy as np
 from contextlib import contextmanager
 from typing import Annotated, List, Dict, Any, Generator
-from datetime import datetime
 import futu as ft
 from futu import OpenQuoteContext, RET_OK, SubType
 from pandas import DataFrame
