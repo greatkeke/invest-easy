@@ -111,7 +111,7 @@ export class MarketComponent implements OnInit {
   }
 
   navigateToResult(symbol: string): void {
-    this.router.navigate(['instrument',symbol]);
+    this.router.navigate(['/trade-stocks', { code: symbol }]);
   }
 
   private getMarketName(symbol: string): string {

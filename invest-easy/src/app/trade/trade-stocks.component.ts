@@ -64,12 +64,21 @@ export class TradeStocksComponent implements OnInit {
   ) { }
 
   tradeType = 'buy';
+  security_code: string | null = '';
 
   ngOnInit() {
-    if (this.route.snapshot?.queryParamMap.get('trade') === 'sell') {
+    let queryMap = this.route.snapshot?.queryParamMap;
+    if (queryMap.get('trade') === 'sell') {
       this.tradeType = 'sell';
     }
-    this.loadMarketData();
+    this.security_code = this.route.snapshot?.params["code"];
+    console.log(this.security_code);
+    if (!!!this.security_code) {
+      // pop select dialog
+    } else {
+      this.loadMarketData(this.security_code);
+      this.loadRTData(this.security_code);
+    }
     this.loadAccounts();
   }
 
@@ -89,15 +98,14 @@ export class TradeStocksComponent implements OnInit {
     }
   }
 
-  loadMarketData() {
+  loadMarketData(code: string) {
     this.loading = true;
-    this.marketService.getMarketSnapshot(['HK.00700']).subscribe({
+    this.marketService.getMarketSnapshot([code]).subscribe({
       next: (snapshots) => {
         if (snapshots && snapshots.length > 0) {
           this.marketSnapshot = snapshots[0];
           this.orderForm.price = this.marketSnapshot.last_price;
         }
-        this.loadRTData();
       },
       error: (error) => {
         this.messageService.add({
@@ -110,8 +118,8 @@ export class TradeStocksComponent implements OnInit {
     });
   }
 
-  loadRTData() {
-    this.marketService.getRTData('HK.00700').subscribe({
+  loadRTData(code: string) {
+    this.marketService.getRTData(code).subscribe({
       next: (data: RTData[]) => {
         if (data && data.length > 0) {
           this.chartData = {
