@@ -53,4 +53,4 @@ async def search_stocks(
     Returns:
         List of dicts containing matching stocks
     """
-    return svc.search_stocks(query=query, market=market)
+    return await svc.search_stocks(query=query, market=market)

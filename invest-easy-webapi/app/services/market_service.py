@@ -27,7 +27,7 @@ class MarketService:
         data = self.futu_api_svc.get_rt_data(code=code)
         return data
 
-    def search_stocks(self, query: str, market: str = "HK"):
+    async def search_stocks(self, query: str, market: str = "HK"):
         """
         Search stocks by name or code
 
@@ -38,5 +38,5 @@ class MarketService:
         Returns:
             List of dicts containing matching stocks
         """
-        data = self.futu_api_svc.search_stocks(query=query, market=market)
+        data = await self.futu_api_svc.search_stocks(query=query, market=market)
         return data

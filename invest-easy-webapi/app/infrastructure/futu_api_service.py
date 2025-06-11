@@ -1,17 +1,28 @@
 import logging
+from fastapi import Depends
 import numpy as np
 from contextlib import contextmanager
-from typing import List, Dict, Any, Generator
+from typing import Annotated, List, Dict, Any, Generator
+from datetime import datetime
 import futu as ft
 from futu import OpenQuoteContext, RET_OK, SubType
 from pandas import DataFrame
 from ..config import settings
+from ..infrastructure.db import (
+    get_stock_basicinfo_cache,
+    update_stock_basicinfo_cache,
+    engine,
+)
+from sqlalchemy.ext.asyncio import AsyncSession
+from pandas import DataFrame
+from .db import get_async_session
 
 
 class FutuApiService:
-    def __init__(self):
+    def __init__(self, session: Annotated[AsyncSession, Depends(get_async_session)]):
         self._host = settings.futu_openD_host
         self._port = settings.futu_openD_port
+        self.session = session
 
     @contextmanager
     def _get_quote_ctx(self) -> Generator[OpenQuoteContext, None, None]:
@@ -82,7 +93,9 @@ class FutuApiService:
 
         with self._get_quote_ctx() as quote_ctx:
             # First subscribe to the stock data
-            ret_sub, _ = quote_ctx.subscribe([code], [SubType.RT_DATA], is_first_push=True, subscribe_push=True)
+            ret_sub, _ = quote_ctx.subscribe(
+                [code], [SubType.RT_DATA], is_first_push=True, subscribe_push=True
+            )
             if ret_sub != RET_OK:
                 error_msg = f"Failed to subscribe to {code}"
                 logging.error(error_msg)
@@ -109,10 +122,8 @@ class FutuApiService:
                 ]
             return []
 
-    def search_stocks(
-        self,
-        query: str,
-        market: str = "HK"
+    async def search_stocks(
+        self, query: str, market: str = "HK"
     ) -> List[Dict[str, Any]]:
         """
         Search stocks by name or code from Futu OpenD
@@ -131,29 +142,55 @@ class FutuApiService:
         if not query:
             raise ValueError("query cannot be empty")
 
-        with self._get_quote_ctx() as quote_ctx:
-            # Get all stocks in the market
-            ret, data = quote_ctx.get_stock_basicinfo(market, stock_type=ft.SecurityType.STOCK)
-            if ret != RET_OK:
-                error_msg = f"Futu API error: {data}"
-                logging.error(error_msg)
-                raise RuntimeError(error_msg)
+        # First try to get from cache
+        async with AsyncSession(engine) as session:
+            cache = await get_stock_basicinfo_cache(
+                session, market=market, stock_type=str(ft.SecurityType.STOCK)
+            )
 
-            if not isinstance(data, DataFrame):
-                return []
+            if cache is not None and cache.data is not None:
+                data = DataFrame.from_records(cache.data)
+            else:
+                # Get from API if no cache
+                with self._get_quote_ctx() as quote_ctx:
+                    ret, data = quote_ctx.get_stock_basicinfo(
+                        market, stock_type=ft.SecurityType.STOCK
+                    )
+                    if ret != RET_OK:
+                        error_msg = f"Futu API error: {data}"
+                        logging.error(error_msg)
+                        raise RuntimeError(error_msg)
 
-            # Filter stocks by name or code
-            query = query.lower()
-            filtered = data[
-                (data['code'].str.lower().str.contains(query)) |
-                (data['name'].str.lower().str.contains(query))
-            ][:10]
+                    # Update cache with new data
+                    # Convert DataFrame to dict format expected by cache
+                    if isinstance(data, DataFrame):
+                        records = data.to_dict(orient="records")
+                    else:
+                        records = []
 
-            records = filtered.to_dict("records")
-            return [
-                {
-                    str(k): None if (isinstance(v, float) and np.isnan(v)) else v
-                    for k, v in record.items()
-                }
-                for record in records
-            ]
+                    await update_stock_basicinfo_cache(
+                        session,
+                        market=market,
+                        stock_type=str(ft.SecurityType.STOCK),
+                        data=records,
+                    )
+                    data = data  # Keep original DataFrame for processing
+
+        if not isinstance(data, DataFrame):
+            return []
+
+        # Filter stocks by name or code
+        query = query.lower()
+        filtered = data[
+            (data["code"].str.lower().str.contains(query))
+            | (data["name"].str.lower().str.contains(query))
+        ][:10]
+
+        records = filtered.to_dict("records")
+        return [
+            {
+                str(k): None if (isinstance(v, float) and np.isnan(v)) else v
+                for k, v in record.items()
+            }
+            for record in records
+        ]
