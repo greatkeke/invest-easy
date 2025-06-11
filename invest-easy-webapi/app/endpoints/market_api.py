@@ -35,3 +35,22 @@ async def get_rt_data(
         List of dicts containing real-time tick data
     """
     return svc.get_rt_data(code=code)
+
+
+@router.get("/search")
+async def search_stocks(
+    svc: Annotated[MarketService, Depends(MarketService)],
+    query: str = Query(..., description="Stock name or code to search for"),
+    market: str = Query("HK", description="Market to search in (default: 'HK')"),
+):
+    """
+    Search stocks by name or code
+
+    Args:
+        query: Stock name or code to search for
+        market: Market to search in (default: 'HK')
+
+    Returns:
+        List of dicts containing matching stocks
+    """
+    return svc.search_stocks(query=query, market=market)

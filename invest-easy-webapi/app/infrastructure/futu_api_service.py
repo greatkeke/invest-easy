@@ -2,6 +2,7 @@ import logging
 import numpy as np
 from contextlib import contextmanager
 from typing import List, Dict, Any, Generator
+import futu as ft
 from futu import OpenQuoteContext, RET_OK, SubType
 from pandas import DataFrame
 from ..config import settings
@@ -107,3 +108,52 @@ class FutuApiService:
                     for record in records
                 ]
             return []
+
+    def search_stocks(
+        self,
+        query: str,
+        market: str = "HK"
+    ) -> List[Dict[str, Any]]:
+        """
+        Search stocks by name or code from Futu OpenD
+
+        Args:
+            query: Stock name or code to search for
+            market: Market to search in (default: 'HK')
+
+        Returns:
+            List of dicts containing matching stocks
+
+        Raises:
+            ValueError: If input parameters are invalid
+            RuntimeError: If Futu API call fails
+        """
+        if not query:
+            raise ValueError("query cannot be empty")
+
+        with self._get_quote_ctx() as quote_ctx:
+            # Get all stocks in the market
+            ret, data = quote_ctx.get_stock_basicinfo(market, stock_type=ft.SecurityType.STOCK)
+            if ret != RET_OK:
+                error_msg = f"Futu API error: {data}"
+                logging.error(error_msg)
+                raise RuntimeError(error_msg)
+
+            if not isinstance(data, DataFrame):
+                return []
+
+            # Filter stocks by name or code
+            query = query.lower()
+            filtered = data[
+                (data['code'].str.lower().str.contains(query)) |
+                (data['name'].str.lower().str.contains(query))
+            ][:10]
+
+            records = filtered.to_dict("records")
+            return [
+                {
+                    str(k): None if (isinstance(v, float) and np.isnan(v)) else v
+                    for k, v in record.items()
+                }
+                for record in records
+            ]

@@ -26,3 +26,17 @@ class MarketService:
         """
         data = self.futu_api_svc.get_rt_data(code=code)
         return data
+
+    def search_stocks(self, query: str, market: str = "HK"):
+        """
+        Search stocks by name or code
+
+        Args:
+            query: Stock name or code to search for
+            market: Market to search in (default: 'HK')
+
+        Returns:
+            List of dicts containing matching stocks
+        """
+        data = self.futu_api_svc.search_stocks(query=query, market=market)
+        return data
