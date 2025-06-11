@@ -4,6 +4,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { OrdersService, OrderResponse } from '../../shared/api-services/orders.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
@@ -17,11 +18,15 @@ export class OrdersComponent {
   loading = false;
   allLoaded = false;
 
-  constructor(private ordersService: OrdersService) {
+  constructor(private ordersService: OrdersService, private router: Router) {
   }
 
   ngOnInit() {
     this.loadOrders();
+  }
+
+  navigateTo(path: string, params?: Record<string, any>) {
+    this.router.navigate([path, params]);
   }
 
   loadOrders() {

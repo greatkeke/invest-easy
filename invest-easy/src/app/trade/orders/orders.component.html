@@ -24,7 +24,7 @@
     <ng-template #expandedrow let-order>
       <tr>
         <td colspan="4" class="button-container">
-          <p-button label="Quotes" size="small" variant="outlined" styleClass="mr-2"></p-button>
+          <p-button label="Quotes" size="small" variant="outlined" styleClass="mr-2" (click)="navigateTo('/trade-stocks',{code: order.code})"></p-button>
           <p-button label="Edit" size="small" variant="outlined" styleClass="mr-2"></p-button>
           <p-button label="Cancel" size="small" variant="outlined" styleClass="mr-2"></p-button>
           <p-button label="Details" size="small" variant="outlined" styleClass=""></p-button>

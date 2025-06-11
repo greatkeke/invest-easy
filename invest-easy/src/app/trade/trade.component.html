@@ -48,7 +48,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let position of positions" (click)="navigateTo('/trade-stocks')">
+        <tr *ngFor="let position of positions" (click)="navigateTo('/trade-stocks', {code: position.instrument_code})">
           <td class="text-sm">{{ position.instrument_name }}</td>
           <td class="text-sm">{{ position.marketValue | currency }} / {{ position.quantity }}</td>
           <td class="text-sm">{{ position.price | currency }} / {{ position.cost | currency }}</td>

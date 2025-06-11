@@ -31,8 +31,8 @@ export class TradeComponent {
     }
   }
 
-  navigateTo(target: string, queryParams?: Record<string, any>) {
-    this.router.navigate([target], { queryParams })
+  navigateTo(target: string, params?: Record<string, any>) {
+    this.router.navigate([target, params])
   }
 
   showMetrics = true;

@@ -43,6 +43,7 @@ export class OrdersService {
         id: response.order.id,
         status: response.order.status,
         name: response.instrument.name,
+        code: response.instrument.code,
         price: response.order.price,
         quantity: response.order.quantity,
         filled: response.order.quantity
