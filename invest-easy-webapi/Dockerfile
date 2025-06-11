@@ -21,7 +21,6 @@ COPY --from=builder /install /usr/local
 
 # Copy application code to working directory
 COPY ./app ./app
-COPY ./db ./db
 COPY main.py .
 
 # Create volumes
