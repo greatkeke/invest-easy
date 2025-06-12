@@ -10,9 +10,7 @@ COPY package.json package-lock.json ./
 RUN npm ci && \
     npm cache clean --force
 
-# Copy only necessary source files
-COPY src/ src/
-COPY angular.json tsconfig.* ngsw-config.json .postcssrc.json ./
+COPY . .
 
 # Build both client and server
 RUN npm run build && \
