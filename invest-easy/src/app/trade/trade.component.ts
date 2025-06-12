@@ -17,7 +17,7 @@ import { Position, PositionService } from '../shared/api-services/position.servi
 export class TradeComponent {
   overviewAccount: AccountBalance | undefined;
   constructor(
-    private router: Router, 
+    private router: Router,
     private accountSvc: AccountsService,
     private positionSvc: PositionService
   ) { }
@@ -32,7 +32,11 @@ export class TradeComponent {
   }
 
   navigateTo(target: string, params?: Record<string, any>) {
-    this.router.navigate([target, params])
+    if (!!!params) {
+      this.router.navigate([target])
+    } else {
+      this.router.navigate([target, params])
+    }
   }
 
   showMetrics = true;
