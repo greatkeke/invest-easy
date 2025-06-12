@@ -9,9 +9,10 @@
 
   <!-- Account Balances Accordion -->
   <div class="p-4">
-    <div class="rounded-lg shadow p-6">
+    <div class="">
       <h2 class="text-md font-medium mb-4">Account Balances</h2>
-      <p-accordion [multiple]="true" [(value)]="expand_id" class="w-full">
+      <p-accordion [multiple]="true" [(value)]="expand_id" class=""
+        styleClass="rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
         <p-accordion-panel *ngFor="let account of accountBalances" [value]="account.id">
           <p-accordion-header>{{account.name}}</p-accordion-header>
           <p-accordion-content>
@@ -25,10 +26,25 @@
         </p-accordion-panel>
       </p-accordion>
     </div>
+    <div class="pt-4">
+      <p class="font-bold">
+        Important Information
+      </p>
+      <p class="px-4">
+        <small>
+          1. For savings or current account, you can view transactions up to your last bank statement cut-off date.
+        </small>
+      </p>
+      <p class="px-4">
+        <small>
+          2. For passbook savings, you can view transactions than have not been printed on passbook.
+        </small>
+      </p>
+    </div>
   </div>
 
   <div class="p-4">
-    <div class="rounded-lg shadow p-6">
+    <div class="">
       <h2 class="text-md font-medium mb-4">Record History</h2>
       <div class="space-y-4">
         <app-history></app-history>
