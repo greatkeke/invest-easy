@@ -197,10 +197,19 @@ export class TradeStocksComponent implements OnInit {
   }
 
   async confirmOrder() {
+    if (!!!this.security_code) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Order Failed',
+        detail: 'Please select a security to trade'
+      });
+      return;
+    }
+
     try {
       const request = {
         account_id: this.orderForm.payFrom.value,
-        code: 'HK.00700', // TODO: Make this dynamic
+        code: this.security_code,
         price: this.orderForm.price,
         quantity: this.orderForm.quantity
       };
