@@ -40,13 +40,13 @@ transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
+    return JWTStrategy(secret=SECRET, lifetime_seconds=604800)  # 7 days
 
 
 def get_database_strategy(
     access_token_db: AccessTokenDatabase[AccessToken] = Depends(get_access_token_db),
 ) -> DatabaseStrategy:
-    return DatabaseStrategy(access_token_db, lifetime_seconds=3600)
+    return DatabaseStrategy(access_token_db, lifetime_seconds=604800)  # 7 days
 
 
 auth_backend = AuthenticationBackend(
