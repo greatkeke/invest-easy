@@ -2,6 +2,11 @@
   <app-top-navigation title="Trade stocks" (refresh)="refreshData()">
   </app-top-navigation>
 
+  <p-dialog header="Select Security" [(visible)]="dialogVisible" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{width: '50vw'}" [modal]="true">
+    <app-securities-query (resultSelected)="onSecuritySelected($event)"></app-securities-query>
+  </p-dialog>
+
   <div class="p-4 space-y-4">
     <!-- Loading indicator -->
     <div *ngIf="loading" class="rounded-lg shadow p-6 text-center">
@@ -196,9 +201,12 @@
       </div>
     </div>
     <ng-template pTemplate="footer">
-      <p-button label="Cancel" variant="outlined" severity="secondary" icon="pi pi-times" (onClick)="cancelPreview()"></p-button>
-      <p-button *ngIf="tradeType === 'buy'" label="Buy" severity="danger" icon="pi pi-cart-plus" (onClick)="confirmOrder()"></p-button>
-      <p-button *ngIf="tradeType === 'sell'" label="Sell" severity="warn" icon="pi pi-shopping-bag" (onClick)="confirmOrder()"></p-button>
+      <p-button label="Cancel" variant="outlined" severity="secondary" icon="pi pi-times"
+        (onClick)="cancelPreview()"></p-button>
+      <p-button *ngIf="tradeType === 'buy'" label="Buy" severity="danger" icon="pi pi-cart-plus"
+        (onClick)="confirmOrder()"></p-button>
+      <p-button *ngIf="tradeType === 'sell'" label="Sell" severity="warn" icon="pi pi-shopping-bag"
+        (onClick)="confirmOrder()"></p-button>
     </ng-template>
   </p-dialog>
 

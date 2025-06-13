@@ -18,6 +18,7 @@ import { Account, AccountsService } from '../shared/api-services/accounts.servic
 import { TradeService } from '../shared/api-services/trade.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SecuritiesQueryComponent } from '../securities-query/securities-query.component';
 
 interface ChartData {
   labels: string[];
@@ -43,7 +44,8 @@ interface ChartData {
     TopNavigationComponent,
     DialogModule,
     ToastModule,
-    RadioButtonModule
+    RadioButtonModule,
+    SecuritiesQueryComponent
   ],
   templateUrl: './trade-stocks.component.html',
   styleUrls: ['./trade-stocks.component.scss'],
@@ -64,7 +66,9 @@ export class TradeStocksComponent implements OnInit {
   ) { }
 
   tradeType = 'buy';
-  security_code: string | null = '';
+  security_code = '';
+
+  dialogVisible = false;
 
   ngOnInit() {
     let params = this.route.snapshot?.queryParams;
@@ -73,12 +77,23 @@ export class TradeStocksComponent implements OnInit {
     }
     this.security_code = params["code"];
     if (!!!this.security_code) {
-      // pop select dialog
-    } else {
+      this.showSecurityDialog();
+    } else if (this.security_code) {
       this.loadMarketData(this.security_code);
       this.loadRTData(this.security_code);
     }
     this.loadAccounts();
+  }
+
+  showSecurityDialog() {
+    this.dialogVisible = true;
+  }
+
+  onSecuritySelected(code: string) {
+    this.security_code = code;
+    this.dialogVisible = false;
+    this.loadMarketData(this.security_code);
+    this.loadRTData(this.security_code);
   }
 
   async loadAccounts() {
