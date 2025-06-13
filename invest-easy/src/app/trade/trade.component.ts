@@ -32,11 +32,7 @@ export class TradeComponent {
   }
 
   navigateTo(target: string, params?: Record<string, any>) {
-    if (!!!params) {
-      this.router.navigate([target])
-    } else {
-      this.router.navigate([target, params])
-    }
+    this.router.navigate([target], { queryParams: params })
   }
 
   showMetrics = true;

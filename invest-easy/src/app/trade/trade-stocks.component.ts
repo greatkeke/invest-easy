@@ -67,12 +67,11 @@ export class TradeStocksComponent implements OnInit {
   security_code: string | null = '';
 
   ngOnInit() {
-    let params = this.route.snapshot?.params;
+    let params = this.route.snapshot?.queryParams;
     if (params['trade'] === 'sell') {
       this.tradeType = 'sell';
     }
     this.security_code = params["code"];
-    console.log(this.security_code);
     if (!!!this.security_code) {
       // pop select dialog
     } else {

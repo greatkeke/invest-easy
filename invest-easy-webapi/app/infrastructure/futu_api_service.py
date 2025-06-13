@@ -7,14 +7,11 @@ import futu as ft
 from futu import OpenQuoteContext, RET_OK, SubType
 from pandas import DataFrame
 from ..config import settings
-from ..infrastructure.db import (
-    get_stock_basicinfo_cache,
-    update_stock_basicinfo_cache,
-    engine,
-)
 from sqlalchemy.ext.asyncio import AsyncSession
 from pandas import DataFrame
 from .db import get_async_session
+from ..domain.instruments import Instrument
+from sqlalchemy import select
 
 
 class FutuApiService:
@@ -121,75 +118,106 @@ class FutuApiService:
                 ]
             return []
 
-    async def search_stocks(
-        self, query: str, market: str = "HK"
-    ) -> List[Dict[str, Any]]:
+    async def initialize_all_markets_instruments(self) -> int:
         """
-        Search stocks by name or code from Futu OpenD
-
-        Args:
-            query: Stock name or code to search for
-            market: Market to search in (default: 'HK')
+        Initialize all markets instruments by generating Cartesian product of markets and types,
+        then calling initialize_a_market_instruments for each combination.
 
         Returns:
-            List of dicts containing matching stocks
+            Total number of instruments initialized across all markets/types
 
         Raises:
-            ValueError: If input parameters are invalid
             RuntimeError: If Futu API call fails
         """
-        if not query:
-            raise ValueError("query cannot be empty")
-
-        # First try to get from cache
-        async with AsyncSession(engine) as session:
-            cache = await get_stock_basicinfo_cache(
-                session, market=market, stock_type=str(ft.SecurityType.STOCK)
-            )
-
-            if cache is not None and cache.data is not None:
-                data = DataFrame.from_records(cache.data)
-            else:
-                # Get from API if no cache
-                with self._get_quote_ctx() as quote_ctx:
-                    ret, data = quote_ctx.get_stock_basicinfo(
-                        market, stock_type=ft.SecurityType.STOCK
-                    )
-                    if ret != RET_OK:
-                        error_msg = f"Futu API error: {data}"
-                        logging.error(error_msg)
-                        raise RuntimeError(error_msg)
-
-                    # Update cache with new data
-                    # Convert DataFrame to dict format expected by cache
-                    if isinstance(data, DataFrame):
-                        records = data.to_dict(orient="records")
-                    else:
-                        records = []
-
-                    await update_stock_basicinfo_cache(
-                        session,
-                        market=market,
-                        stock_type=str(ft.SecurityType.STOCK),
-                        data=records,
-                    )
-                    data = data  # Keep original DataFrame for processing
-
-        if not isinstance(data, DataFrame):
-            return []
-
-        # Filter stocks by name or code
-        query = query.lower()
-        filtered = data[
-            (data["code"].str.lower().str.contains(query))
-            | (data["name"].str.lower().str.contains(query))
-        ][:10]
-
-        records = filtered.to_dict("records")
-        return [
-            {
-                str(k): None if (isinstance(v, float) and np.isnan(v)) else v
-                for k, v in record.items()
-            }
-            for record in records
+        market_list = [ft.Market.HK, ft.Market.US, ft.Market.SH, ft.Market.SZ]
+        type_list = [
+            ft.SecurityType.STOCK,
+            ft.SecurityType.ETF,
+            ft.SecurityType.IDX,
         ]
+
+        total_count = 0
+        for market in market_list:
+            for security_type in type_list:
+                try:
+                    logging.info(
+                        f"Start to initialze instruments of {market} with {security_type}."
+                    )
+                    count = await self.initialize_a_market_instruments(
+                        market, security_type
+                    )
+                    logging.info(f"{count} instruments have been upserted.")
+                    total_count += count
+                except Exception as e:
+                    logging.error(
+                        f"Failed to initialize {market} {security_type}: {str(e)}"
+                    )
+                    continue
+
+        return total_count
+
+    async def initialize_a_market_instruments(self, market: str, type: str) -> int:
+        """
+        Initialize instruments for a market and store them in database.
+        Only inserts new instruments or updates existing ones if they have changed.
+
+        Args:
+            market: Market identifier (e.g. 'HK', 'US')
+            type: Security type (e.g. 'STOCK', 'ETF')
+
+        Returns:
+            Number of instruments inserted or updated
+
+        Raises:
+            RuntimeError: If Futu API call fails
+        """
+        with self._get_quote_ctx() as quote_ctx:
+            ret, data = quote_ctx.get_stock_basicinfo(market, stock_type=type)
+            if ret != RET_OK:
+                error_msg = f"Futu API error: {data}"
+                logging.error(error_msg)
+                raise RuntimeError(error_msg)
+
+            if not isinstance(data, DataFrame):
+                return 0
+
+            # Get existing instruments from database
+            existing_instruments = await self.session.execute(
+                select(Instrument).where(Instrument.code.in_(data["code"].tolist()))
+            )
+            existing_instruments = {i.code: i for i in existing_instruments.scalars()}
+
+            # Process API data
+            update_count = 0
+            insert_count = 0
+            record = None  # Initialize record variable
+            for record in data.to_dict("records"):
+                code = record.get("code")
+                existing = existing_instruments.get(code)
+
+                if existing:
+                    existing.upsert(record)
+                    update_count += 1
+                else:
+                    existing = Instrument()
+                    existing.upsert(record)
+                    self.session.add(existing)
+                    insert_count += 1
+
+            try:
+                await self.session.commit()
+                logging.info(
+                    f"Inserted {insert_count} new instruments, updated {update_count} existing instruments"
+                )
+            except Exception as e:
+                await self.session.rollback()
+                if record:
+                    record_details = "\n".join([f"{k}: {v}" for k, v in record.items()])
+                    logging.error(
+                        f"Failed to upsert record (code: {record.get('code', 'N/A')})\nException: str({e}) \nDetail:\n{record_details}"
+                    )
+                else:
+                    logging.error("Failed to upsert record: No record data available")
+                raise e
+            finally:
+                return insert_count + update_count

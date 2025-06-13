@@ -22,7 +22,15 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Client
   },
   {
+    path: 'trade',
+    renderMode: RenderMode.Client
+  },
+  {
+    path: 'trade-stocks',
+    renderMode: RenderMode.Client
+  },
+  {
     path: '**',
-    renderMode: RenderMode.Prerender
+    renderMode: RenderMode.Client
   }
 ];
