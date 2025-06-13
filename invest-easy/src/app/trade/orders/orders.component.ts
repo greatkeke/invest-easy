@@ -26,7 +26,7 @@ export class OrdersComponent {
   }
 
   navigateTo(path: string, params?: Record<string, any>) {
-    this.router.navigate([path, params]);
+    this.router.navigate([path], { queryParams: params });
   }
 
   loadOrders() {

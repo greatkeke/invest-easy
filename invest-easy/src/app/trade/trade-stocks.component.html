@@ -1,5 +1,5 @@
 <div class="min-h-screen">
-  <app-top-navigation title="Trade stocks" (refresh)="refreshData()">
+  <app-top-navigation title="Trade Stocks" (refresh)="refreshData()">
   </app-top-navigation>
 
   <p-dialog header="Select Security" [(visible)]="dialogVisible" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
@@ -142,7 +142,7 @@
         <div>
           <label class="block text-xs text-gray-700 mb-2">Good until</label>
           <p-datepicker [(ngModel)]="orderForm.goodUntil" name="goodUntil" [showIcon]="true" dateFormat="yy-mm-dd"
-            [minDate]="today" size="small" appendTo="body"></p-datepicker>
+            [minDate]="today" size="small" appendTo="body" readonlyInput></p-datepicker>
         </div>
 
         <div>

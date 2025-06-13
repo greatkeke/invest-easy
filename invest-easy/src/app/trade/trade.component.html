@@ -36,9 +36,10 @@
 
   <div class="dashboard positions-dashboard shadow-lg">
     <h3 class="text-md">Positions</h3>
-    <table>
-      <thead>
-        <tr class="">
+    <p-table [value]="positions" [rowHover]="true" [responsive]="true" styleClass="p-datatable-sm p-datatable-striped"
+      stripedRows>
+      <ng-template pTemplate="header">
+        <tr>
           <th class="text-sm">Symbol</th>
           <th class="text-sm">MV/Qty</th>
           <th class="text-sm">Price/Cost</th>
@@ -46,20 +47,22 @@
           <th class="text-sm">P/L</th>
           <th class="text-sm">% Portfolio</th>
         </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let position of positions" (click)="navigateTo('/trade-stocks', {code: position.instrument_code})">
+      </ng-template>
+      <ng-template pTemplate="body" let-position>
+        <tr (click)="navigateTo('/trade-stocks', {code: position.instrument_code})">
           <td class="text-sm">{{ position.instrument_name }}</td>
           <td class="text-sm">{{ position.marketValue | currency }} / {{ position.quantity }}</td>
           <td class="text-sm">{{ position.price | currency }} / {{ position.cost | currency }}</td>
-          <td class="text-sm" [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">{{
-            position.todayPL | currency }}</td>
-          <td class="text-sm" [class.positive]="position.pl > 0" [class.negative]="position.pl < 0">{{ position.pl |
-            currency }}</td>
+          <td class="text-sm" [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">
+            {{ position.todayPL | currency }}
+          </td>
+          <td class="text-sm" [class.positive]="position.pl > 0" [class.negative]="position.pl < 0">
+            {{ position.pl | currency }}
+          </td>
           <td class="text-sm">{{ position.portfolioPercent | percent }}</td>
         </tr>
-      </tbody>
-    </table>
+      </ng-template>
+    </p-table>
   </div>
 
   <div class="dashboard orders-dashboard shadow-lg">
