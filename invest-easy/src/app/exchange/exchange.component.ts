@@ -38,22 +38,22 @@ interface Account {
 })
 export class ExchangeComponent {
   currencies: Currency[] = [
-    { code: 'HKD', name: 'Hong Kong Dollar' },
-    { code: 'USD', name: 'US Dollar' },
-    { code: 'EUR', name: 'Euro' },
-    { code: 'GBP', name: 'British Pound' },
-    { code: 'JPY', name: 'Japanese Yen' },
-    { code: 'CNY', name: 'Chinese Yuan' }
+    { code: 'hk', name: 'Hong Kong Dollar' },
+    { code: 'us', name: 'US Dollar' },
+    { code: 'eu', name: 'Euro' },
+    { code: 'gb', name: 'British Pound' },
+    { code: 'jp', name: 'Japanese Yen' },
+    { code: 'cn', name: 'Chinese Yuan' }
   ];
 
   accounts: Account[] = [
-    { id: '1', name: 'Main Account', balance: 50000, currency: 'HKD' },
-    { id: '2', name: 'Savings Account', balance: 20000, currency: 'HKD' },
-    { id: '3', name: 'Investment Account', balance: 15000, currency: 'USD' }
+    { id: '1', name: 'Main Account', balance: 50000, currency: 'hk' },
+    { id: '2', name: 'Savings Account', balance: 20000, currency: 'hk' },
+    { id: '3', name: 'Investment Account', balance: 15000, currency: 'us' }
   ];
 
-  fromCurrency: string = 'HKD';
-  toCurrency: string = 'USD';
+  fromCurrency: string = 'hk';
+  toCurrency: string = 'us';
   fromAmount: number | null = null;
   toAmount: number | null = null;
   fromAccount: string = '1';

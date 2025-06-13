@@ -13,13 +13,13 @@
               name="fromCurrency">
               <ng-template pTemplate="selectedItem">
                 <div class="flex items-center gap-2">
-                  <i class="pi pi-flag-fill" [ngClass]="'pi-' + fromCurrency.toLowerCase()"></i>
+                  <i class="" [ngClass]="'fi fi-' + fromCurrency.toLowerCase()"></i>
                   <span>{{fromCurrency}}</span>
                 </div>
               </ng-template>
               <ng-template let-currency pTemplate="item">
                 <div class="flex items-center gap-2">
-                  <i class="pi pi-flag-fill" [ngClass]="'pi-' + currency.code.toLowerCase()"></i>
+                  <i class="" [ngClass]="'fi fi-' + currency.code.toLowerCase()"></i>
                   <span>{{currency.name}} ({{currency.code}})</span>
                 </div>
               </ng-template>
@@ -49,13 +49,13 @@
               name="toCurrency">
               <ng-template pTemplate="selectedItem">
                 <div class="flex items-center gap-2">
-                  <i class="pi pi-flag-fill" [ngClass]="'pi-' + toCurrency.toLowerCase()"></i>
+                  <i class="" [ngClass]="'fi fi-' + toCurrency.toLowerCase()"></i>
                   <span>{{toCurrency}}</span>
                 </div>
               </ng-template>
               <ng-template let-currency pTemplate="item">
                 <div class="flex items-center gap-2">
-                  <i class="pi pi-flag-fill" [ngClass]="'pi-' + currency.code.toLowerCase()"></i>
+                  <i class="" [ngClass]="'fi fi-' + currency.code.toLowerCase()"></i>
                   <span>{{currency.name}} ({{currency.code}})</span>
                 </div>
               </ng-template>
