@@ -41,16 +41,14 @@ async def get_rt_data(
 async def search_stocks(
     svc: Annotated[MarketService, Depends(MarketService)],
     query: str = Query(..., description="Stock name or code to search for"),
-    market: str = Query("HK", description="Market to search in (default: 'HK')"),
 ):
     """
     Search stocks by name or code
 
     Args:
         query: Stock name or code to search for
-        market: Market to search in (default: 'HK')
 
     Returns:
         List of dicts containing matching stocks
     """
-    return await svc.search_stocks(query=query, market=market)
+    return await svc.search_stocks(query=query)

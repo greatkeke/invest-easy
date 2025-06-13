@@ -118,64 +118,6 @@ class FutuApiService:
                 ]
             return []
 
-    async def search_stocks(
-        self, query: str, market: str = "HK", type: str = "STOCK"
-    ) -> List[Dict[str, Any]]:
-        """
-        Search stocks by name or code from Futu OpenD
-
-        Args:
-            query: Stock name or code to search for
-            market: Market to search in (default: 'HK')
-            type: Security Type (default: 'STOCK')
-
-        Returns:
-            List of dicts containing matching stocks
-
-        Raises:
-            ValueError: If input parameters are invalid
-            RuntimeError: If Futu API call fails
-        """
-        if not query:
-            raise ValueError("query cannot be empty")
-
-        with self._get_quote_ctx() as quote_ctx:
-            ret, data = quote_ctx.get_stock_basicinfo(
-                market, stock_type=ft.SecurityType.STOCK
-            )
-            if ret != RET_OK:
-                error_msg = f"Futu API error: {data}"
-                logging.error(error_msg)
-                raise RuntimeError(error_msg)
-
-            # Update cache with new data
-            # Convert DataFrame to dict format expected by cache
-            if isinstance(data, DataFrame):
-                records = data.to_dict(orient="records")
-            else:
-                records = []
-
-            data = data  # Keep original DataFrame for processing
-
-        if not isinstance(data, DataFrame):
-            return []
-
-        # Filter stocks by name or code
-        query = query.lower()
-        filtered = data[
-            (data["code"].str.lower().str.contains(query))
-            | (data["name"].str.lower().str.contains(query))
-        ][:10]
-
-        records = filtered.to_dict("records")
-        return [
-            {
-                str(k): None if (isinstance(v, float) and np.isnan(v)) else v
-                for k, v in record.items()
-            }
-            for record in records
-        ]
-
     async def initialize_all_markets_instruments(self) -> int:
         """
         Initialize all markets instruments by generating Cartesian product of markets and types,
