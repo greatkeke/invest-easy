@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MarketService } from '../shared/api-services/market.service';
+import { MarketTemperatureService } from '../shared/api-services/market-temperature.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MarketTemperatureService } from '../shared/api-services/market-temperature.service';
-import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
 import { CardModule } from 'primeng/card';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
 import { Router, RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
 import { HeaderComponent } from '../shared/header/header.component';
+import { SecuritiesQueryComponent } from '../securities-query/securities-query.component';
 
 @Component({
   selector: 'app-market',
@@ -22,14 +20,12 @@ import { HeaderComponent } from '../shared/header/header.component';
     CommonModule,
     FormsModule,
     HeaderComponent,
-    InputTextModule,
     ButtonModule,
     ListboxModule,
     CardModule,
     TabsModule,
-    IconFieldModule,
-    InputIconModule,
-    RouterModule
+    RouterModule,
+    SecuritiesQueryComponent
   ]
 })
 export class MarketComponent implements OnInit {
@@ -37,8 +33,6 @@ export class MarketComponent implements OnInit {
   watchlist: any[] = [];
   marketTemperature: any = null;
   loading = true;
-  searchQuery = '';
-  searchResults: any[] = [];
 
   constructor(private marketService: MarketService,
     private marketTempService: MarketTemperatureService,
@@ -56,7 +50,7 @@ export class MarketComponent implements OnInit {
 
   loadMarketData(): void {
     this.marketService.getMarketIndices().subscribe({
-      next: (response) => {
+      next: (response: {data: {diff: any[]}}) => {
         if (response.data && response.data.diff) {
           this.indices = response.data.diff.map((item: any) => ({
             name: this.getMarketName(item.f12),
@@ -82,32 +76,6 @@ export class MarketComponent implements OnInit {
       { symbol: '000858', name: 'Wuliangye Yibin', price: 152.80, change: -1.20, percent: '-0.78', volume: '12.8' },
       { symbol: '601318', name: 'Pingan', price: 48.90, change: 0.32, percent: '0.66', volume: '28.5' }
     ];
-  }
-
-  onSearch(): void {
-    if (!this.searchQuery.trim()) {
-      this.searchResults = [];
-      return;
-    }
-
-    this.loading = true;
-    this.marketService.searchSecurities(this.searchQuery).subscribe({
-      next: (response) => {
-        this.searchResults = response.map((item: any) => ({
-          code: item.code,
-          name: item.name
-        }));
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
-  }
-
-  clearSearch(): void {
-    this.searchQuery = '';
-    this.searchResults = [];
   }
 
   navigateToResult(symbol: string): void {

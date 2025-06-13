@@ -1,25 +1,7 @@
 <app-header title="Market" bg_img="global-markets-banner.jpg"></app-header>
 
-<div class="search-section">
-  <div class="search-input-container">
-    <p-iconfield class="full-width">
-      <p-inputicon styleClass="pi pi-search" />
-      <input type="text" class="w-full" pInputText [(ngModel)]="searchQuery" (input)="onSearch()"
-        placeholder="Search stocks or indices..." i18n-placeholder />
-    </p-iconfield>
-    <p-button *ngIf="searchResults.length > 0" icon="pi pi-times" (click)="clearSearch()" variant="outlined"
-      severity="secondary">
-    </p-button>
-  </div>
-
-  <p-listbox [options]="searchResults" *ngIf="searchResults.length > 0" class="search-results"
-    (onClick)="navigateToResult($event.option.code)" [listStyle]="{'max-height':'15rem'}">
-    <ng-template let-result pTemplate="item">
-      <div class="result-item">
-        <div>{{result.name}} ({{result.code}})</div>
-      </div>
-    </ng-template>
-  </p-listbox>
+<div class="p-4 pb-0">
+  <app-securities-query (resultSelected)="navigateToResult($event)"></app-securities-query>
 </div>
 
 <div class="temperature-section" *ngIf="marketTemperature">
@@ -74,7 +56,7 @@
     <p-tabpanel [value]="1">
       <div class="cards-container">
         @for (stock of watchlist; track stock.symbol) {
-        <p-card styleClass="p-2"  (click)="navigateToResult(stock.symbol)">
+        <p-card styleClass="p-2" (click)="navigateToResult(stock.symbol)">
           <ng-template #title>{{stock.name}}</ng-template>
           <ng-template #subtitle>{{stock.symbol}}</ng-template>
           <div class="card-content">
