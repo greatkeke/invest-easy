@@ -20,4 +20,8 @@ export class WatchlistService {
   getWatchlist(): Observable<WatchlistItem[]> {
     return this.http.get<WatchlistItem[]>('/watchlist/list');
   }
+
+  addToWatchlist(symbol: string): Observable<any> {
+    return this.http.post('/watchlist/add', { code: symbol });
+  }
 }

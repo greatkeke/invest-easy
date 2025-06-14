@@ -16,6 +16,7 @@ import { MarketSnapshot } from '../shared/api-services/market-snapshot.model';
 import { RTData } from '../shared/api-services/rt-data.model';
 import { Account, AccountsService } from '../shared/api-services/accounts.service';
 import { TradeService } from '../shared/api-services/trade.service';
+import { WatchlistService } from '../shared/api-services/watchlist.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SecuritiesQueryComponent } from '../securities-query/securities-query.component';
@@ -62,7 +63,8 @@ export class TradeStocksComponent implements OnInit {
     private messageService: MessageService,
     private marketService: MarketService,
     private accountsService: AccountsService,
-    private tradeService: TradeService
+    private tradeService: TradeService,
+    private watchlistService: WatchlistService
   ) { }
 
   tradeType = 'buy';
@@ -255,5 +257,26 @@ export class TradeStocksComponent implements OnInit {
 
   cancelPreview() {
     this.displayPreview = false;
+  }
+
+  async addToWatchlist() {
+    if (!this.security_code || !this.marketSnapshot) {
+      return;
+    }
+
+    try {
+      await this.watchlistService.addToWatchlist(this.security_code).toPromise();
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Added to Watchlist',
+        detail: `${this.marketSnapshot.name} has been added to your watchlist`
+      });
+    } catch (error) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to add to watchlist'
+      });
+    }
   }
 }

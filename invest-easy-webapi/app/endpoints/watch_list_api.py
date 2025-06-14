@@ -1,8 +1,15 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from ..infrastructure.users import current_active_user
 from ..infrastructure.users import User
 from ..services.watchlist_service import WatchlistService
+
+
+class WatchlistItemRequest(BaseModel):
+    code: str
+    tags: str | None = None
+    notes: str | None = None
 
 
 router = APIRouter(
@@ -17,15 +24,13 @@ router = APIRouter(
 async def add_to_watchlist(
     svc: Annotated[WatchlistService, Depends(WatchlistService)],
     user: Annotated[User, Depends(current_active_user)],
-    instrument_id: str,
-    tags: str | None = None,
-    notes: str | None = None,
+    item: WatchlistItemRequest,
 ):
     """
     Add an instrument to user's watchlist
 
     Args:
-        instrument_id: Instrument ID to add
+        code: Instrument code to add
         tags: Optional tags (comma separated)
         notes: Optional notes
 
@@ -34,7 +39,7 @@ async def add_to_watchlist(
     """
     try:
         return await svc.add_to_watchlist(
-            user_id=str(user.id), instrument_id=instrument_id, tags=tags, notes=notes
+            user_id=user.id, code=item.code, tags=item.tags, notes=item.notes
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

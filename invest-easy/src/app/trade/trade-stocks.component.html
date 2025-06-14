@@ -16,7 +16,11 @@
     <!-- Price Card -->
     <div *ngIf="!loading && marketSnapshot" class="rounded-lg shadow p-6">
       <div class="flex flex-col justify-between items-start mb-4">
-        <h2 class="text-md font-bold">{{marketSnapshot.name || 'N/A'}}</h2>
+        <div class="w-full flex items-center gap-2 justify-between">
+          <h2 class="text-md font-bold mb-2">{{marketSnapshot.name || 'N/A'}}</h2>
+          <p-button icon="pi pi-heart" styleClass="p-button-rounded p-button-text p-button-sm" 
+            (click)="addToWatchlist()" [disabled]="!marketSnapshot"></p-button>
+        </div>
         <div class="flex w-full justify-between">
           <span class="text-md">{{marketSnapshot.last_price | currency:'USD':'symbol':'1.2-2'}}</span>
           <span *ngIf="marketSnapshot.prev_close_price" class="text-md" [ngClass]="{

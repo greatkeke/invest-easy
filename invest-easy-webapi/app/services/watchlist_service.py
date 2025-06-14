@@ -17,8 +17,8 @@ class WatchlistService:
 
     async def add_to_watchlist(
         self,
-        user_id: str,
-        instrument_id: str,
+        user_id: uuid.UUID,
+        code: str,
         tags: str | None = None,
         notes: str | None = None,
     ):
@@ -27,13 +27,21 @@ class WatchlistService:
 
         Args:
             user_id: User ID
-            instrument_id: Instrument ID to add
+            code: Instrument code to add
             tags: Optional tags (comma separated)
             notes: Optional notes
 
         Returns:
             The created WatchedInstrument record
         """
+        instrument_id = await self.session.scalars(
+            select(Instrument.id).where(
+                Instrument.code == code, Instrument.is_active == True
+            )
+        )
+        instrument_id = instrument_id.one_or_none()
+        if not instrument_id:
+            raise ValueError(f"No such instrument found: {code}")
         watched = WatchList.add_to_watchlist(user_id, instrument_id, tags, notes)
         self.session.add(watched)
         await self.session.commit()
