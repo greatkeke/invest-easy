@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MarketService } from '../shared/api-services/market.service';
+import { WatchlistService } from '../shared/api-services/watchlist.service';
 import { MarketSnapshot } from '../shared/api-services/market-snapshot.model';
 import { MarketTemperatureService } from '../shared/api-services/market-temperature.service';
 import { CommonModule } from '@angular/common';
@@ -36,6 +37,7 @@ export class MarketComponent implements OnInit {
   loading = true;
 
   constructor(private marketService: MarketService,
+    private watchlistService: WatchlistService,
     private marketTempService: MarketTemperatureService,
     private router: Router) { }
 
@@ -68,13 +70,14 @@ export class MarketComponent implements OnInit {
   }
 
   loadWatchlist(): void {
-    // TODO: Implement watchlist data loading
-    // Mock data for now
-    this.watchlist = [
-      { symbol: '600036', name: 'CM Bank', price: 35.20, change: 0.45, percent: '1.29', volume: '45.2' },
-      { symbol: '000858', name: 'Wuliangye Yibin', price: 152.80, change: -1.20, percent: '-0.78', volume: '12.8' },
-      { symbol: '601318', name: 'Pingan', price: 48.90, change: 0.32, percent: '0.66', volume: '28.5' }
-    ];
+    this.watchlistService.getWatchlist().subscribe({
+      next: (data) => {
+        this.watchlist = data;
+      },
+      error: (err) => {
+        console.error('Failed to load watchlist:', err);
+      }
+    });
   }
 
   navigateToResult(symbol: string): void {

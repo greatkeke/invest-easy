@@ -75,7 +75,7 @@ async def get_watchlist(
         List of watched instruments
     """
     try:
-        return await svc.get_watchlist(user_id=str(user.id))
+        return await svc.get_watchlist(user_id=user.id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

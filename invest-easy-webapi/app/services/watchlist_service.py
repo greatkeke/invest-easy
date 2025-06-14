@@ -1,8 +1,11 @@
 from typing import Annotated
+import uuid
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..infrastructure.db import get_async_session
 from ..domain.watch_list import WatchList
+from sqlalchemy import select
+from ..domain.instruments import Instrument
 
 
 class WatchlistService:
@@ -56,7 +59,7 @@ class WatchlistService:
             watched.remove_from_watchlist()
             await self.session.commit()
 
-    async def get_watchlist(self, user_id: str):
+    async def get_watchlist(self, user_id: uuid.UUID):
         """
         Get user's watchlist
 
@@ -66,9 +69,23 @@ class WatchlistService:
         Returns:
             List of watched instruments
         """
-        list = await self.session.scalars(WatchList.get_watch_list_stmp(user_id))
-        list = list.all()
-        return list
+        list = await self.session.scalars(
+            select(WatchList, Instrument)
+            .join(Instrument, Instrument.id == WatchList.instrument_id)
+            .where(
+                WatchList.user_id == user_id,
+                WatchList.is_active == True,
+                Instrument.is_active == True,
+            )
+        )
+        return [
+            {
+                "code": instrument.code,
+                "name": instrument.name,
+                "notes": watch.notes,
+            }
+            for watch, instrument in list.all()
+        ]
 
     async def is_watched(self, user_id: str, instrument_id: str):
         """
