@@ -9,10 +9,12 @@ class Instrument(Base):
     __tablename__ = "instruments"
 
     id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    code = mapped_column(String, nullable=False)
-    name = mapped_column(String, nullable=False)
+    code = mapped_column(String, nullable=False, index=True)
+    name = mapped_column(String, nullable=False, index=True)
     lot_size = mapped_column(Integer)
-    stock_type = mapped_column(String, nullable=True, default='None')  # Stores SecurityType value
+    stock_type = mapped_column(
+        String, nullable=True, default="None"
+    )  # Stores SecurityType value
     stock_child_type = mapped_column(String)  # Stores WrtType value, nullable
     stock_owner = mapped_column(String)  # Nullable
     option_type = mapped_column(String)  # Stores OptionType value, nullable
@@ -25,7 +27,10 @@ class Instrument(Base):
     index_option_type = mapped_column(String)  # Nullable
     main_contract = mapped_column(Boolean, default=False)
     last_trade_time = mapped_column(DateTime)  # Nullable
-    exchange_type = mapped_column(String, nullable=True, default='None')  # Stores ExchType value
+    exchange_type = mapped_column(
+        String, nullable=True, default="None"
+    )  # Stores ExchType value
+    updated_at = mapped_column(DateTime, default=datetime.now(), index=True)
 
     def _format_value(self, field, value):
         datetime_fields = {"strike_time", "listing_date", "last_trade_time"}
@@ -40,7 +45,11 @@ class Instrument(Base):
         return value
 
     def upsert(self, record: dict):
+        any_changed = False
         for field, value in record.items():
             value = self._format_value(field, value)
             if hasattr(self, field) and getattr(self, field) != value:
                 setattr(self, field, value)
+                any_changed = True
+        if any_changed:
+            self.updated_at = datetime.now()

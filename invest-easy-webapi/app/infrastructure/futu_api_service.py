@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import logging
 from fastapi import Depends
 import numpy as np
@@ -11,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from pandas import DataFrame
 from .db import get_async_session
 from ..domain.instruments import Instrument
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 
 class FutuApiService:
@@ -129,6 +130,24 @@ class FutuApiService:
         Raises:
             RuntimeError: If Futu API call fails
         """
+        # Check last update time
+        latest_update = (
+            await self.session.execute(select(func.max(Instrument.updated_at)))
+        ).scalar_one_or_none()
+
+        if latest_update is None:
+            logging.info("No instruments found in database")
+        else:
+            # Ensure latest_update is a datetime object
+            latest_update_dt = (
+                latest_update
+                if isinstance(latest_update, datetime)
+                else latest_update.to_datetime()
+            )
+            if (datetime.now() - latest_update_dt) < timedelta(days=7):
+                logging.info("Instruments are up-to-date")
+                return 0
+
         market_list = [ft.Market.HK, ft.Market.US, ft.Market.SH, ft.Market.SZ]
         type_list = [
             ft.SecurityType.STOCK,
