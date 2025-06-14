@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MarketService } from '../shared/api-services/market.service';
+import { MarketSnapshot } from '../shared/api-services/market-snapshot.model';
 import { MarketTemperatureService } from '../shared/api-services/market-temperature.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -50,16 +51,14 @@ export class MarketComponent implements OnInit {
 
   loadMarketData(): void {
     this.marketService.getMarketIndices().subscribe({
-      next: (response: {data: {diff: any[]}}) => {
-        if (response.data && response.data.diff) {
-          this.indices = response.data.diff.map((item: any) => ({
-            name: this.getMarketName(item.f12),
-            symbol: item.f12,
-            price: item.f2,
-            change: item.f4,
-            percent: item.f3
-          }));
-        }
+      next: (snapshots: MarketSnapshot[]) => {
+        this.indices = snapshots.map(snapshot => ({
+          name: snapshot.name,
+          symbol: snapshot.code,
+          price: snapshot.last_price,
+          change: snapshot.last_price - snapshot.prev_close_price,
+          percent: ((snapshot.last_price - snapshot.prev_close_price) / snapshot.prev_close_price * 100).toFixed(2)
+        }));
         this.loading = false;
       },
       error: () => {
@@ -80,20 +79,5 @@ export class MarketComponent implements OnInit {
 
   navigateToResult(symbol: string): void {
     this.router.navigate(['/trade-stocks'], { queryParams: { code: symbol } });
-  }
-
-  private getMarketName(symbol: string): string {
-    const names: Record<string, string> = {
-      '000001': 'SSE Composite Index',
-      '399001': 'Shenzhen Component Index',
-      'HSI': 'Hang Seng Index',
-      'DJIA': 'Dow Jones Industrial Average',
-      'NDX': 'Nasdaq Composite Index',
-      'SPX': 'S&P 500 Index',
-      '600036': 'CM Bank',
-      '000858': 'Wuliangye Yibin',
-      '601318': 'Pingan'
-    };
-    return names[symbol] || symbol;
   }
 }

@@ -20,14 +20,9 @@ export class MarketService {
 
   constructor(private http: HttpClient) { }
 
-  getMarketIndices(): Observable<any> {
-    const params = {
-      fltt: '2',
-      secids: '1.000001,0.399001,100.HSI,100.DJIA,100.NDX,100.SPX',
-      fields: 'f2,f3,f4,f12,f14',
-      _: Date.now()
-    };
-    return this.http.get(this.apiUrl, { params });
+  getMarketIndices(): Observable<MarketSnapshot[]> {
+    const codes = ['HK.800000', 'HK.03032', 'SH.000001', 'SZ.399001', 'SZ.399006'];
+    return this.getMarketSnapshot(codes);
   }
 
   getMarketSnapshot(codes: string[]): Observable<MarketSnapshot[]> {
