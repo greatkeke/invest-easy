@@ -37,7 +37,7 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
   
   // Clone request with new URL and auth header
   const apiReq = req.clone({
-    url: `${baseUrl}/${path}`,
+    url: `${baseUrl}/api/${path}`,
     headers: token ? req.headers.set('Authorization', `Bearer ${token}`) : req.headers
   });
 

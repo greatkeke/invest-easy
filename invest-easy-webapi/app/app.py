@@ -34,26 +34,26 @@ app = FastAPI(lifespan=lifespan)
 # Include routers
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
-    prefix="/auth/jwt",
+    prefix="/api/auth/jwt",
     tags=["auth"],
 )
 app.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
+    prefix="/api/auth",
     tags=["auth"],
 )
 app.include_router(
     fastapi_users.get_users_router(UserRead, UserUpdate),
-    prefix="/users",
+    prefix="/api/users",
     tags=["users"],
 )
 
-app.include_router(accounts_api.router)
-app.include_router(balance_api.router)
-app.include_router(market_api.router)
-app.include_router(trade_api.router)
-app.include_router(position_api.router)
-app.include_router(orders_api.router)
+app.include_router(accounts_api.router, prefix="/api")
+app.include_router(balance_api.router, prefix="/api")
+app.include_router(market_api.router, prefix="/api")
+app.include_router(trade_api.router, prefix="/api")
+app.include_router(position_api.router, prefix="/api")
+app.include_router(orders_api.router, prefix="/api")
 
 
 app.add_middleware(
@@ -70,6 +70,6 @@ def read_root():
     return {"health": "ok"}
 
 
-@app.get("/authenticated-user/name")
+@app.get("/api/authenticated-user/name")
 async def authenticated_route(user: Annotated[User, Depends(current_active_user)]):
     return {"username": user.username}
