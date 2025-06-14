@@ -77,7 +77,7 @@ class WatchlistService:
         Returns:
             List of watched instruments
         """
-        list = await self.session.scalars(
+        result = await self.session.execute(
             select(WatchList, Instrument)
             .join(Instrument, Instrument.id == WatchList.instrument_id)
             .where(
@@ -92,7 +92,7 @@ class WatchlistService:
                 "name": instrument.name,
                 "notes": watch.notes,
             }
-            for watch, instrument in list.all()
+            for watch, instrument in result.all()
         ]
 
     async def is_watched(self, user_id: str, instrument_id: str):

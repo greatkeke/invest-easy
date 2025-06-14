@@ -16,8 +16,6 @@ import { RTData } from './rt-data.model';
   providedIn: 'root'
 })
 export class MarketService {
-  private apiUrl = 'https://push2.eastmoney.com/api/qt/ulist.np/get';
-
   constructor(private http: HttpClient) { }
 
   getMarketIndices(): Observable<MarketSnapshot[]> {
