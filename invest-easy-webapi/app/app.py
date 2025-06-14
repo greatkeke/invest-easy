@@ -10,7 +10,7 @@ from .infrastructure.db import create_tables, get_async_session
 from .infrastructure.users import fastapi_users, auth_backend, current_active_user
 from .infrastructure.schemas import UserRead, UserCreate, UserUpdate
 from .infrastructure.futu_api_service import FutuApiService
-from .endpoints import balance_api, accounts_api, market_api, trade_api, position_api, orders_api
+from .endpoints import balance_api, accounts_api, market_api, trade_api, position_api, orders_api, watch_list_api
 
 
 @asynccontextmanager
@@ -54,6 +54,7 @@ app.include_router(market_api.router, prefix="/api")
 app.include_router(trade_api.router, prefix="/api")
 app.include_router(position_api.router, prefix="/api")
 app.include_router(orders_api.router, prefix="/api")
+app.include_router(watch_list_api.router, prefix="/api")
 
 
 app.add_middleware(
