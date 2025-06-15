@@ -1,12 +1,9 @@
-from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 import uuid
 from ..infrastructure.users import current_active_user
 from ..infrastructure.users import User
-from ..services.market_service import MarketService
 from ..services.trade_service import TradeService
-from ..infrastructure.db import get_async_session
 
 
 router = APIRouter(

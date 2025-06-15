@@ -36,7 +36,7 @@ async def get_user_manager(
 SECRET = "SECRET"
 
 # Authentication setup
-transport = BearerTransport(tokenUrl="auth/jwt/login")
+transport = BearerTransport(tokenUrl="/api/auth/jwt/login")
 
 
 def get_jwt_strategy() -> JWTStrategy:
