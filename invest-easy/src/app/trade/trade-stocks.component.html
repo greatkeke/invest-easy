@@ -18,7 +18,8 @@
       <div class="flex flex-col justify-between items-start mb-4">
         <div class="w-full flex items-center gap-2 justify-between">
           <h2 class="text-md font-bold mb-2">{{marketSnapshot.name || 'N/A'}}</h2>
-          <p-button icon="pi pi-heart" styleClass="p-button-rounded p-button-text p-button-sm" 
+          <p-button [icon]="isWatched ? 'pi pi-heart-fill' : 'pi pi-heart'" 
+            [styleClass]="isWatched ? 'p-button-rounded p-button-text p-button-sm p-button-danger' : 'p-button-rounded p-button-text p-button-sm'"
             (click)="addToWatchlist()" [disabled]="!marketSnapshot"></p-button>
         </div>
         <div class="flex w-full justify-between">

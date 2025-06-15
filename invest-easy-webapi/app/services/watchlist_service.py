@@ -42,6 +42,18 @@ class WatchlistService:
         instrument_id = instrument_id.one_or_none()
         if not instrument_id:
             raise ValueError(f"No such instrument found: {code}")
+
+        existing = await self.session.scalars(
+            select(WatchList).where(
+                WatchList.user_id == user_id,
+                WatchList.instrument_id == instrument_id,
+                WatchList.is_active == True,
+            )
+        )
+        existing = existing.one_or_none()
+        if existing:
+            return existing
+
         watched = WatchList.add_to_watchlist(user_id, instrument_id, tags, notes)
         self.session.add(watched)
         await self.session.commit()
@@ -95,19 +107,26 @@ class WatchlistService:
             for watch, instrument in result.all()
         ]
 
-    async def is_watched(self, user_id: str, instrument_id: str):
+    async def is_watched(self, user_id: uuid.UUID, instrument_code: str):
         """
         Check if instrument is in user's watchlist
 
         Args:
             user_id: User ID
-            instrument_id: Instrument ID to check
+            instrument_code: Instrument code to check
 
         Returns:
             bool: True if watched, False otherwise
         """
         watched = await self.session.scalars(
-            WatchList.get_watch_list_stmp(user_id, instrument_id)
+            select(WatchList)
+            .join(Instrument, WatchList.instrument_id == Instrument.id)
+            .where(
+                Instrument.code == instrument_code,
+                Instrument.is_active == True,
+                WatchList.user_id == user_id,
+                WatchList.is_active == True,
+            )
         )
         watched = watched.one_or_none()
         return True if watched else False

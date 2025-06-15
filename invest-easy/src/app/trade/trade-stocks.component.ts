@@ -56,6 +56,7 @@ export class TradeStocksComponent implements OnInit {
   today = new Date();
   marketSnapshot: MarketSnapshot | null = null;
   loading = true;
+  isWatched = false;
 
   constructor(
     private router: Router,
@@ -83,6 +84,7 @@ export class TradeStocksComponent implements OnInit {
     } else if (this.security_code) {
       this.loadMarketData(this.security_code);
       this.loadRTData(this.security_code);
+      this.checkIfWatched();
     }
     this.loadAccounts();
   }
@@ -266,6 +268,7 @@ export class TradeStocksComponent implements OnInit {
 
     try {
       await this.watchlistService.addToWatchlist(this.security_code).toPromise();
+      this.isWatched = true;
       this.messageService.add({
         severity: 'success',
         summary: 'Added to Watchlist',
@@ -278,5 +281,16 @@ export class TradeStocksComponent implements OnInit {
         detail: 'Failed to add to watchlist'
       });
     }
+  }
+
+  checkIfWatched() {
+    this.watchlistService.isWatched(this.security_code).subscribe({
+      next: (watched) => {
+        this.isWatched = watched;
+      },
+      error: (error) => {
+        console.error('Failed to check watchlist status', error);
+      }
+    });
   }
 }

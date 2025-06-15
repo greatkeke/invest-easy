@@ -85,9 +85,9 @@ async def get_watchlist(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/is-watched/{instrument_id}")
+@router.get("/is-watched/{instrument_code}")
 async def is_watched(
-    instrument_id: str,
+    instrument_code: str,
     svc: Annotated[WatchlistService, Depends(WatchlistService)],
     user: Annotated[User, Depends(current_active_user)],
 ):
@@ -95,12 +95,12 @@ async def is_watched(
     Check if instrument is in user's watchlist
 
     Args:
-        instrument_id: Instrument ID to check
+        instrument_code: Instrument code to check
 
     Returns:
         bool: True if watched, False otherwise
     """
     try:
-        return await svc.is_watched(user_id=str(user.id), instrument_id=instrument_id)
+        return await svc.is_watched(user_id=user.id, instrument_code=instrument_code)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

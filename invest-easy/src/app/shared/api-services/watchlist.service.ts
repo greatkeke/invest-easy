@@ -67,4 +67,8 @@ export class WatchlistService {
   addToWatchlist(symbol: string): Observable<any> {
     return this.http.post('/watchlist/add', { code: symbol });
   }
+
+  isWatched(instrumentCode: string): Observable<boolean> {
+    return this.http.get<boolean>(`/watchlist/is-watched/${instrumentCode}`);
+  }
 }
