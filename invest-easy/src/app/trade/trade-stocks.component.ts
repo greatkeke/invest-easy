@@ -261,24 +261,46 @@ export class TradeStocksComponent implements OnInit {
     this.displayPreview = false;
   }
 
-  async addToWatchlist() {
+  addToWatchlist() {
     if (!this.security_code || !this.marketSnapshot) {
       return;
     }
 
-    try {
-      await this.watchlistService.addToWatchlist(this.security_code).toPromise();
-      this.isWatched = true;
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Added to Watchlist',
-        detail: `${this.marketSnapshot.name} has been added to your watchlist`
+    if (this.isWatched) {
+      this.watchlistService.removeFromWatchlist(this.security_code).subscribe({
+        next: () => {
+          this.isWatched = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Removed from Watchlist',
+            detail: `${this.marketSnapshot?.name} has been removed from your watchlist`
+          });
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to remove from watchlist'
+          });
+        }
       });
-    } catch (error) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to add to watchlist'
+    } else {
+      this.watchlistService.addToWatchlist(this.security_code).subscribe({
+        next: () => {
+          this.isWatched = true;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Added to Watchlist',
+            detail: `${this.marketSnapshot?.name} has been added to your watchlist`
+          });
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to add to watchlist'
+          });
+        }
       });
     }
   }

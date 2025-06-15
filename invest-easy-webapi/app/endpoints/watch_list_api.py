@@ -45,9 +45,9 @@ async def add_to_watchlist(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.delete("/remove/{instrument_id}")
+@router.delete("/remove/{instrument_code}")
 async def remove_from_watchlist(
-    instrument_id: str,
+    instrument_code: str,
     svc: Annotated[WatchlistService, Depends(WatchlistService)],
     user: Annotated[User, Depends(current_active_user)],
 ):
@@ -55,14 +55,14 @@ async def remove_from_watchlist(
     Remove an instrument from user's watchlist
 
     Args:
-        instrument_id: Instrument ID to remove
+        instrument_code: Instrument code to remove
 
     Returns:
         bool: True if removed, False if not found
     """
     try:
         return await svc.remove_from_watchlist(
-            user_id=str(user.id), instrument_id=instrument_id
+            user_id=user.id, instrument_code=instrument_code
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

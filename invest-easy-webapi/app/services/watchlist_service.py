@@ -59,19 +59,26 @@ class WatchlistService:
         await self.session.commit()
         return watched
 
-    async def remove_from_watchlist(self, user_id: str, instrument_id: str):
+    async def remove_from_watchlist(self, user_id: uuid.UUID, instrument_code: str):
         """
         Remove an instrument from user's watchlist
 
         Args:
             user_id: User ID
-            instrument_id: Instrument ID to remove
+            instrument_code: Instrument code to remove
 
         Returns:
             bool: True if removed, False if not found
         """
         watched = await self.session.scalars(
-            WatchList.get_watch_list_stmp(user_id, instrument_id)
+            select(WatchList)
+            .join(Instrument, WatchList.instrument_id == Instrument.id)
+            .where(
+                WatchList.user_id == user_id,
+                WatchList.is_active == True,
+                Instrument.code == instrument_code,
+                Instrument.is_active == True,
+            )
         )
         watched = watched.one_or_none()
 

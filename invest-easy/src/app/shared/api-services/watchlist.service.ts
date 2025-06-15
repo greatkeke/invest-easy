@@ -71,4 +71,8 @@ export class WatchlistService {
   isWatched(instrumentCode: string): Observable<boolean> {
     return this.http.get<boolean>(`/watchlist/is-watched/${instrumentCode}`);
   }
+
+  removeFromWatchlist(symbol: string): Observable<any> {
+    return this.http.delete(`/watchlist/remove/${symbol}`);
+  }
 }
