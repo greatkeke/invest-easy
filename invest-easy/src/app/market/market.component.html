@@ -39,10 +39,10 @@
     </p-tablist>
     <p-tabpanel [value]="0">
       <div class="cards-container">
-        @for (index of indices; track index.symbol) {
-        <p-card styleClass="p-0" (click)="navigateToResult(index.symbol)">
+        @for (index of indices; track index.code) {
+        <p-card styleClass="p-0" (click)="navigateToResult(index.code)">
           <ng-template #title>{{index.name}}</ng-template>
-          <ng-template #subtitle>{{index.symbol}}</ng-template>
+          <ng-template #subtitle>{{index.code}}</ng-template>
           <div>
             <div class="price">{{index.price | number:'1.2-2'}}</div>
             <div class="change" [class.positive]="index.change > 0" [class.negative]="index.change < 0">
@@ -55,10 +55,10 @@
     </p-tabpanel>
     <p-tabpanel [value]="1">
       <div class="cards-container">
-        @for (stock of watchlist; track stock.symbol) {
-        <p-card styleClass="p-2" (click)="navigateToResult(stock.symbol)">
+        @for (stock of watchlist; track stock.code) {
+        <p-card styleClass="p-2" (click)="navigateToResult(stock.code)">
           <ng-template #title>{{stock.name}}</ng-template>
-          <ng-template #subtitle>{{stock.symbol}}</ng-template>
+          <ng-template #subtitle>{{stock.code}}</ng-template>
           <div class="card-content">
             <div class="price">{{stock.price | number:'1.2-2'}}</div>
             <div class="change" [class.positive]="stock.change > 0" [class.negative]="stock.change < 0">

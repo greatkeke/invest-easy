@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MarketService } from '../shared/api-services/market.service';
-import { WatchlistService } from '../shared/api-services/watchlist.service';
-import { MarketSnapshot } from '../shared/api-services/market-snapshot.model';
+import { MarketIndex, MarketService } from '../shared/api-services/market.service';
+import { WatchlistItem, WatchlistService } from '../shared/api-services/watchlist.service';
 import { MarketTemperatureService } from '../shared/api-services/market-temperature.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -31,8 +30,8 @@ import { SecuritiesQueryComponent } from '../securities-query/securities-query.c
   ]
 })
 export class MarketComponent implements OnInit {
-  indices: any[] = [];
-  watchlist: any[] = [];
+  indices: MarketIndex[] = [];
+  watchlist: WatchlistItem[] = [];
   marketTemperature: any = null;
   loading = true;
 
@@ -53,17 +52,12 @@ export class MarketComponent implements OnInit {
 
   loadMarketData(): void {
     this.marketService.getMarketIndices().subscribe({
-      next: (snapshots: MarketSnapshot[]) => {
-        this.indices = snapshots.map(snapshot => ({
-          name: snapshot.name,
-          symbol: snapshot.code,
-          price: snapshot.last_price,
-          change: snapshot.last_price - snapshot.prev_close_price,
-          percent: ((snapshot.last_price - snapshot.prev_close_price) / snapshot.prev_close_price * 100).toFixed(2)
-        }));
+      next: (data) => {
+        this.indices = data;
         this.loading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error('Failed to load market indices:', err);
         this.loading = false;
       }
     });

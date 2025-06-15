@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-interface MarketIndex {
+export interface MarketIndex {
   name: string;
-  symbol: string;
+  code: string;
   price: number;
   change: number;
   percent: string;
@@ -18,9 +19,17 @@ import { RTData } from './rt-data.model';
 export class MarketService {
   constructor(private http: HttpClient) { }
 
-  getMarketIndices(): Observable<MarketSnapshot[]> {
+  getMarketIndices(): Observable<MarketIndex[]> {
     const codes = ['HK.800000', 'HK.03032', 'SH.000001', 'SZ.399001', 'SZ.399006'];
-    return this.getMarketSnapshot(codes);
+    return this.getMarketSnapshot(codes).pipe(
+      map((snapshots: MarketSnapshot[]) => snapshots.map(snapshot => ({
+        name: snapshot.name,
+        code: snapshot.code,
+        price: snapshot.last_price,
+        change: snapshot.last_price - snapshot.prev_close_price,
+        percent: ((snapshot.last_price - snapshot.prev_close_price) / snapshot.prev_close_price * 100).toFixed(2)
+      })))
+    );
   }
 
   getMarketSnapshot(codes: string[]): Observable<MarketSnapshot[]> {
