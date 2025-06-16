@@ -21,11 +21,6 @@ class TradeRequest(BaseModel):
     quantity: float
 
 
-@router.get("/positions")
-async def get_positions():
-    return []
-
-
 @router.post("/in")
 async def trade_in(
     request: TradeRequest,

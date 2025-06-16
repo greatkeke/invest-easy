@@ -45,7 +45,7 @@ class TradeService:
             if not user_account:
                 raise ValueError("User account not found")
 
-            # Get or create Instrument
+            # Get Instrument
             instrument = await self.session.scalars(
                 select(Instrument).where(
                     Instrument.code == code, Instrument.is_active == True
@@ -54,14 +54,7 @@ class TradeService:
             instrument = instrument.first()
 
             if not instrument:
-                # Get market data to create instrument
-                market_data = self.market_service.get_market_snapshot([code])
-                if not market_data or market_data.__len__() <= 0:
-                    raise ValueError(f"No such instrument found: {code}")
-                else:
-                    instrument = Instrument(name=market_data[0]["name"], code=code)
-                self.session.add(instrument)
-                await self.session.flush()
+                raise ValueError(f"No such instrument found: {code}")
 
             # Get or create Position
             position = await self.session.scalars(
