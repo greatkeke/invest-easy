@@ -10,6 +10,7 @@ from ..domain.instruments import Instrument
 from ..domain.accounts import UserAccount
 from ..infrastructure.db import get_async_session
 from ..services.market_service import MarketService
+from ..services.balance_service import BalanceService
 
 
 class PositionResponse(BaseModel):
@@ -17,6 +18,7 @@ class PositionResponse(BaseModel):
     quantity: float
     price: float
     avg_price: float
+    market_value: float
     pl: float
     today_pl: float
     percentage: float
@@ -29,9 +31,11 @@ class PositionService:
         self,
         session: Annotated[AsyncSession, Depends(get_async_session)],
         market_service: Annotated[MarketService, Depends(MarketService)],
+        balance_service: Annotated[BalanceService, Depends(BalanceService)],
     ):
         self.session = session
         self.market_service = market_service
+        self.balance_service = balance_service
 
     async def get_positions_by_user_id(self, user_id: uuid.UUID):
         try:
@@ -72,12 +76,35 @@ class PositionService:
                     )
                 }
 
+                # Calculate total market value of all positions
+                total_market_value = sum(
+                    position.quantity * position.avg_price
+                    for position, _ in positions_data
+                )
+
+                # Get account balance (handles both object and dict return types)
+                balances = await self.balance_service.get_balances(
+                    user_id, uaccount.account_id
+                )
+                if not balances or len(balances) != 1:
+                    account_balance = 0.0
+                else:
+                    balance = balances[0]
+                    if isinstance(balance, dict):
+                        account_balance = balance.get("balance", 0.0)  # Dict case
+                    else:
+                        account_balance = balance.balance  # Object case
+
+                # Calculate denominator for percentage (total market value + balance)
+                denominator = total_market_value + account_balance
+
                 positions.extend(
                     PositionResponse(
                         id=position.id,
                         quantity=position.quantity,
                         price=market_data[instrument.code]["last_price"],
                         avg_price=position.avg_price,
+                        market_value=position.quantity * position.avg_price,
                         pl=(
                             market_data[instrument.code]["last_price"]
                             - position.avg_price
@@ -90,7 +117,11 @@ class PositionService:
                         * position.quantity,
                         instrument_code=instrument.code,
                         instrument_name=instrument.name,
-                        percentage=0.0,
+                        percentage=(
+                            (position.quantity * position.avg_price) / denominator
+                            if denominator != 0
+                            else 0.0
+                        ),
                     ).model_dump()
                     for position, instrument in positions_data
                 )

@@ -31,7 +31,7 @@ export class PositionService {
       // Calculate derived fields for frontend display
       return positions.map(p => ({
         ...p,
-        marketValue: p.quantity * (p.price || p.avg_price),
+        marketValue: p.market_value,
         price: p.price,
         cost: p.avg_price,
         todayPL: p.today_pl, 
