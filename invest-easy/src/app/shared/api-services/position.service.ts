@@ -25,18 +25,18 @@ export class PositionService {
   async getPositions(): Promise<Position[]> {
     try {
       const positions = await firstValueFrom(
-        this.http.get<Position[]>('/positions/')
+        this.http.get<any[]>('/positions/')
       );
       
       // Calculate derived fields for frontend display
       return positions.map(p => ({
         ...p,
         marketValue: p.quantity * (p.price || p.avg_price),
-        price: p.price || p.avg_price,
+        price: p.price,
         cost: p.avg_price,
-        todayPL: 0, // Will need real calculation
-        pl: 0, // Will need real calculation
-        portfolioPercent: 0 // Will need real calculation
+        todayPL: p.today_pl, 
+        pl: p.pl, 
+        portfolioPercent: p.percentage 
       }));
     } catch (error) {
       console.error('Failed to fetch positions', error);
