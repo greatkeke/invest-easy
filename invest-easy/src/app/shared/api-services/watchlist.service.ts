@@ -46,7 +46,7 @@ export class WatchlistService {
           const price = marketData.last_price;
           const prevClose = marketData.prev_close_price;
           const priceChange = price - prevClose;
-          const percentChange = ((priceChange / prevClose) * 100).toFixed(2) + '%';
+          const percentChange = ((priceChange / prevClose) * 100).toFixed(2);
 
           return {
             ...item,

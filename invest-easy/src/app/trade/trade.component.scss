@@ -16,6 +16,7 @@
   border-radius: 8px;
   margin-bottom: 1.5rem;
   padding: 0.25rem 0.5rem;
+
   h3 {
     margin-top: 0;
   }
@@ -87,31 +88,11 @@
 .positions-dashboard {
   overflow-x: auto;
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
+  .positive {
+    color: #f44336;
+  }
 
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: var(--card-bg);
-      font-weight: 500;
-    }
-
-    tr:hover {
-      background-color: var(--primary-200);
-    }
-
-    .positive {
-      color: #4caf50;
-    }
-
-    .negative {
-      color: #f44336;
-    }
+  .negative {
+    color: #4caf50;
   }
 }
