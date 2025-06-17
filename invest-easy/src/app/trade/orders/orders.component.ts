@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
-import { OrdersService, OrderResponse } from '../../shared/api-services/orders.service';
+import { OrdersService } from '../../shared/api-services/orders.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, TagModule],
+  imports: [CommonModule, TableModule, ButtonModule],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss']
 })
@@ -49,15 +48,11 @@ export class OrdersComponent {
 
   getStatusSeverity(status: string) {
     switch (status) {
-      case 'QUEUED': return 'info';
-      case 'WORKING': return 'warning';
-      case 'FILLED': return 'success';
-      case 'CANCELLED': return 'danger';
-      default: return null;
+      case 'QUEUED': return 'text-cyan-800';
+      case 'WORKING': return 'text-teal-900';
+      case 'FILLED': return 'text-emerald-800';
+      case 'CANCELLED': return 'text-slate-500';
+      default: return 'text-neutral-400';
     }
-  }
-
-  trimStatus(status: string): string {
-    return status.substring(0, 4);
   }
 }

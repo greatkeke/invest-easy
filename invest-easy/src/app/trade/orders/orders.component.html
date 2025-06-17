@@ -13,7 +13,7 @@
     <ng-template #body let-order let-expanded="expanded">
       <tr [pRowToggler]="order">
         <td>
-          <p-tag [value]="trimStatus(order.status)" [severity]="getStatusSeverity(order.status)" styleClass=""></p-tag>
+          <small [class]="getStatusSeverity(order.status)">{{order.status}}</small>
         </td>
         <td>{{order.name}}</td>
         <td>{{order.price}}</td>
@@ -44,10 +44,10 @@
   <div class="load-more-container">
     <div *ngIf="!allLoaded" class="load-more" (click)="loadOrders()">
       <i *ngIf="loading" class="pi pi-spinner pi-spin text-red-500 mr-2"></i>
-      Load More
+      <small class="text-stone-500">load more</small>
     </div>
     <div *ngIf="allLoaded && !loading" class="all-loaded">
-      All orders loaded
+      all orders loaded
     </div>
   </div>
 </div>
