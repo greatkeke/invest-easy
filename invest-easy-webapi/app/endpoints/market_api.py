@@ -52,3 +52,19 @@ async def search_stocks(
         List of dicts containing matching stocks
     """
     return await svc.search_stocks(query=query)
+
+
+@router.get("/instruments-by-user")
+async def get_instruments_by_user(
+    market_svc: Annotated[MarketService, Depends(MarketService)],
+    user: User = Depends(current_active_user),
+):
+    """
+    Get all instruments for a user including positions and watchlist
+
+    Returns:
+        List of dicts containing instrument code and name
+    """
+    return await market_svc.get_user_instruments(
+        user_id=user.id,
+    )
