@@ -37,8 +37,10 @@ export class OrdersService {
 
   constructor(private http: HttpClient) { }
 
-  getOrders(): Observable<any[]> {
-    return this.http.get<OrderResponse[]>(this.apiUrl).pipe(
+  getOrders(page: number = 1, pageSize: number = 5): Observable<any[]> {
+    return this.http.get<OrderResponse[]>(this.apiUrl, {
+      params: { page, page_size: pageSize }
+    }).pipe(
       map(responses => responses.map(response => ({
         id: response.order.id,
         status: response.order.status,

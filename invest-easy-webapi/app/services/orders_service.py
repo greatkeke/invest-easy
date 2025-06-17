@@ -13,7 +13,10 @@ class OrdersService:
     def __init__(self, session: Annotated[AsyncSession, Depends(get_async_session)]):
         self.session = session
 
-    async def get_user_orders(self, user_id: uuid.UUID) -> List[dict]:
+    async def get_user_orders(
+        self, user_id: uuid.UUID, page: int = 1, page_size: int = 5
+    ) -> List[dict]:
+        # Get paginated results
         result = await self.session.execute(
             select(Order, Instrument)
             .join(UserAccount, Order.user_account_id == UserAccount.id)
@@ -25,6 +28,8 @@ class OrdersService:
                 Order.is_active == True,
             )
             .order_by(desc(Order.created_at))
+            .limit(page_size)
+            .offset((page - 1) * page_size)
         )
         return [
             {
@@ -37,9 +42,9 @@ class OrdersService:
                     "price": order.price,
                     "trade_in": order.trade_in,
                     "status": order.status.name,
-                    "created_at": order.created_at
+                    "created_at": order.created_at,
                 },
-                "instrument": instrument
+                "instrument": instrument,
             }
             for order, instrument in result.all()
         ]

@@ -17,6 +17,7 @@ export class OrdersComponent {
   orders: any[] = [];
   loading = false;
   allLoaded = false;
+  currentPage = 1;
 
   constructor(private ordersService: OrdersService, private router: Router) {
   }
@@ -31,11 +32,14 @@ export class OrdersComponent {
 
   loadOrders() {
     this.loading = true;
-    this.ordersService.getOrders().subscribe({
+    this.ordersService.getOrders(this.currentPage, 5).subscribe({
       next: (orders) => {
-        this.orders = orders;
+        this.orders = [...this.orders, ...orders];
         this.loading = false;
-        this.allLoaded = true;
+        this.allLoaded = orders.length < 5; // Default page size is 5
+        if (!this.allLoaded) {
+          this.currentPage++;
+        }
       },
       error: () => {
         this.loading = false;
