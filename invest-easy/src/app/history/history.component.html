@@ -2,7 +2,7 @@
     <p-progressBar *ngIf="isInit" mode="indeterminate" [style]="{'height': '6px', 'width': '100%'}"></p-progressBar>
     <div *ngIf="!isInit">
         <div *ngFor="let record of records"
-            class="p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+            class="p-4 my-2 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
             <div class="flex justify-between items-center">
                 <span class="font-medium">
                     <ng-container [ngSwitch]="record.type">
