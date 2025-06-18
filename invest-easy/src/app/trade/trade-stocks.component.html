@@ -3,7 +3,7 @@
   </app-top-navigation>
 
   <p-dialog header="Select Security" [(visible)]="dialogVisible" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-    [style]="{width: '50vw'}" [modal]="true" (onHide)="closeQuery()" [focusOnShow]="true">
+    [style]="{width: '50vw'}" [modal]="true" (visibleChange)="closeQuery()" [focusOnShow]="true">
     <app-securities-query (resultSelected)="onSecuritySelected($event)" [autofocus]="true"></app-securities-query>
   </p-dialog>
 
