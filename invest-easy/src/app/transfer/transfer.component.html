@@ -9,11 +9,11 @@
 
   <!-- Main Content -->
   <div class="flex-1 overflow-auto">
-    <p-tabs [value]="activeTabIndex" (valueChange)="onTabChange($event)">
+    <p-tabs [value]="activeTabIndex" (valueChange)="onTabChange($event)" scrollable>
       <p-tablist>
-        <p-tab [value]="0">In</p-tab>
-        <p-tab [value]="1">Out</p-tab>
-        <p-tab [value]="2">Record</p-tab>
+        <p-tab [value]="0">To Payees/FPS</p-tab>
+        <p-tab [value]="1">To HSBC accounts</p-tab>
+        <p-tab [value]="2">Record history</p-tab>
       </p-tablist>
       <p-tabpanels>
         <!-- Transfer In Tab -->

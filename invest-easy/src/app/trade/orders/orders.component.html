@@ -44,10 +44,10 @@
   <div class="load-more-container">
     <div *ngIf="!allLoaded" class="load-more" (click)="loadOrders()">
       <i *ngIf="loading" class="pi pi-spinner pi-spin text-red-500 mr-2"></i>
-      <small class="text-stone-500">load more</small>
+      <small class="text-stone-500">Load more orders</small>
     </div>
     <div *ngIf="allLoaded && !loading" class="all-loaded">
-      all orders loaded
+      All orders loaded
     </div>
   </div>
 </div>
