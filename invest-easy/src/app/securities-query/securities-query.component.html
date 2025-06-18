@@ -3,19 +3,35 @@
     <p-iconfield class="grow">
       <p-inputicon styleClass="pi pi-search" />
       <input type="text" class="w-full" pInputText [(ngModel)]="searchQuery" (input)="onSearch()"
-        placeholder="Search securites" i18n-placeholder />
+        [pAutoFocus]="autofocus" (focus)="onFocus()" (blur)="onBlur()" placeholder="Search securites"
+        i18n-placeholder />
     </p-iconfield>
     <p-button *ngIf="searchResults.length > 0" icon="pi pi-times" (click)="clearSearch()" variant="outlined"
       severity="secondary" styleClass="h-full">
     </p-button>
   </div>
 
-  <p-listbox [options]="searchResults" *ngIf="searchResults.length > 0" class="search-results"
-    (onClick)="selectResult($event.option.code)" [listStyle]="{'max-height':'15rem'}">
-    <ng-template let-result pTemplate="item">
-      <div class="result-item">
-        <div>{{result.name}} ({{result.code}})</div>
-      </div>
-    </ng-template>
-  </p-listbox>
+  <div *ngIf="searchResults.length > 0">
+    <small>Search Results</small>
+    <p-listbox [options]="searchResults"  class="search-results"
+      (onClick)="selectResult($event.option.code)" [listStyle]="{'max-height':'15rem'}">
+      <ng-template let-result pTemplate="item">
+        <div class="result-item">
+          <div>{{result.name}} ({{result.code}})</div>
+        </div>
+      </ng-template>
+    </p-listbox>
+  </div>
+
+  <div *ngIf="showLatestInstruments && instruments.length > 0">
+    <small>Recent Securities</small>
+    <p-listbox [options]="instruments" class="search-results" (onClick)="selectResult($event.option.code)"
+      [listStyle]="{'max-height':'15rem'}">
+      <ng-template let-instrument pTemplate="item">
+        <div class="result-item">
+          <div>{{instrument.name}} ({{instrument.code}})</div>
+        </div>
+      </ng-template>
+    </p-listbox>
+  </div>
 </div>

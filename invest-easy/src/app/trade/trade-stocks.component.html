@@ -4,7 +4,7 @@
 
   <p-dialog header="Select Security" [(visible)]="dialogVisible" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
     [style]="{width: '50vw'}" [modal]="true">
-    <app-securities-query (resultSelected)="onSecuritySelected($event)"></app-securities-query>
+    <app-securities-query (resultSelected)="onSecuritySelected($event)" [autofocus]="true"></app-securities-query>
   </p-dialog>
 
   <div class="p-4 space-y-4">

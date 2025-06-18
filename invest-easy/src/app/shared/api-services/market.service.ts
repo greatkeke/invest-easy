@@ -43,4 +43,8 @@ export class MarketService {
   searchSecurities(query: string): Observable<any[]> {
     return this.http.get<any[]>('/market/search', { params: { query } });
   }
+
+  getInstrumentsByUser(): Observable<any[]> {
+    return this.http.get<any[]>('/market/instruments-by-user');
+  }
 }
