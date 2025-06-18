@@ -100,6 +100,10 @@ export class TradeStocksComponent implements OnInit {
     this.loadRTData(this.security_code);
   }
 
+  closeQuery(){
+    this.goBack();
+  }
+
   async loadAccounts() {
     try {
       const accounts = await this.accountsService.fetchAccounts();
