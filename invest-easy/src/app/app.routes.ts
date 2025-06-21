@@ -15,6 +15,7 @@ import { InstrumentDetailComponent } from './instrument-detail/instrument-detail
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { AuthGuard } from './shared/auth.guard';
 import { AdvertisementComponent } from './advertisement/advertisement.component';
+import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -93,6 +94,11 @@ export const routes: Routes = [
   {
     path: 'general-settings',
     component: GeneralSettingsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'order-detail',
+    component: OrderDetailComponent,
     canActivate: [AuthGuard]
   }
 ];
