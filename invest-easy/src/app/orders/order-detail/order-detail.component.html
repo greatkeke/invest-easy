@@ -25,7 +25,7 @@
                 </div>
                 <div>
                     <label class="text-gray-500">Price</label>
-                    <p>{{orderDetail.order.price | currency}}</p>
+                    <p>{{orderDetail.order.price | currency: orderDetail.balance.ccy}}</p>
                 </div>
                 <div>
                     <label class="text-gray-500">Date</label>
