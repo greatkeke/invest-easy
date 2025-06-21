@@ -3,9 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated, List
 from fastapi import Depends
 from sqlalchemy import select, desc
-from ..domain.accounts import UserAccount
+from ..domain.accounts import Account, UserAccount
 from ..domain.instruments import Instrument
 from ..domain.orders import Order
+from ..domain.balance import Balance
 from ..infrastructure.db import get_async_session
 
 
@@ -48,3 +49,31 @@ class OrdersService:
             }
             for order, instrument in result.all()
         ]
+
+    async def get_order_detail(self, id: uuid.UUID, user_id: uuid.UUID) -> dict:
+        detail = await self.session.execute(
+            select(Order, Instrument, Account, Balance)
+            .join(UserAccount, UserAccount.id == Order.user_account_id)
+            .join(Account, UserAccount.account_id == Account.id)
+            .join(Balance, Balance.user_account_id == UserAccount.id)
+            .where(
+                Order.id == id,
+                UserAccount.user_id == user_id,
+                Order.instrument_id == Instrument.id,
+                UserAccount.is_active == True,
+                Order.is_active == True,
+                Instrument.is_active == True,
+                Account.is_active == True,
+            )
+        )
+        detail = detail.first()
+
+        if not detail:
+            return {}
+
+        return {
+            "order": detail.Order,
+            "instrument": detail.Instrument,
+            "account": detail.Account,
+            "balance": detail.Balance
+        } 
