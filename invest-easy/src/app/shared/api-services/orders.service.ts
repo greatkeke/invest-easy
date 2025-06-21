@@ -24,9 +24,28 @@ export interface Order {
   created_at: string;
 }
 
+export interface Account {
+  id: string;
+  name: string;
+  ccy: string;
+}
+
+export interface Balance {
+  id: string;
+  balance: number;
+  ccy: string;
+}
+
 export interface OrderResponse {
   order: Order;
   instrument: Instrument;
+}
+
+export interface OrderDetail {
+  order: Order;
+  instrument: Instrument;
+  account: Account;
+  balance: Balance
 }
 
 @Injectable({
@@ -51,5 +70,9 @@ export class OrdersService {
         filled: response.order.quantity
       })))
     );
+  }
+
+  getOrderDetailById(id: string): Observable<OrderDetail> {
+    return this.http.get<OrderDetail>(`${this.apiUrl}detail/${id}`);
   }
 }

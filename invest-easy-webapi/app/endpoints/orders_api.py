@@ -36,5 +36,5 @@ async def get_order_detail_by_id(
     user: User = Depends(current_active_user),
     orders_service: OrdersService = Depends(OrdersService),
 ):
-    order = await orders_service.get_order_detail(id, user.id)
-    return order
+    detail = await orders_service.get_order_detail(id, user.id)
+    return detail

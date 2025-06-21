@@ -71,9 +71,11 @@ class OrdersService:
         if not detail:
             return {}
 
-        return {
+        response = {
             "order": detail.Order,
             "instrument": detail.Instrument,
             "account": detail.Account,
-            "balance": detail.Balance
-        } 
+            "balance": detail.Balance,
+        }
+        response["order"].status = detail.Order.status.name
+        return response
