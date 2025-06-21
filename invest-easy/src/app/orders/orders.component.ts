@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { OrdersService } from '../../shared/api-services/orders.service';
 import { Router } from '@angular/router';
+import { OrdersService } from '../shared/api-services/orders.service';
 
 @Component({
   selector: 'app-orders',
