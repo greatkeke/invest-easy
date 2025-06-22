@@ -25,8 +25,8 @@
         <div class="flex w-full justify-between">
           <span class="text-md">{{marketSnapshot.last_price | currency:'USD':'symbol':'1.2-2'}}</span>
           <span *ngIf="marketSnapshot.prev_close_price" class="text-md" [ngClass]="{
-                  'text-green-500': marketSnapshot.last_price >= marketSnapshot.prev_close_price,
-                  'text-red-500': marketSnapshot.last_price < marketSnapshot.prev_close_price
+                  'text-red-500': marketSnapshot.last_price >= marketSnapshot.prev_close_price,
+                  'text-green-500': marketSnapshot.last_price < marketSnapshot.prev_close_price
                 }">
             {{ (marketSnapshot.last_price - marketSnapshot.prev_close_price) >= 0 ? '+' : '' }}
             {{ (marketSnapshot.last_price - marketSnapshot.prev_close_price) | number:'1.2-2' }}
@@ -36,20 +36,7 @@
         </div>
       </div>
       <div class="min-h-10">
-        <p-chart type="line" [data]="chartData" [options]="{
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          elements: {
-            line: {
-              borderColor: 'rgb(59, 130, 246)',
-              borderWidth: 1
-            },
-            point: {
-              radius: 0
-            }
-          }
-        }"></p-chart>
+        <p-chart type="line" [data]="chartData" [options]="options"></p-chart>
       </div>
     </div>
 

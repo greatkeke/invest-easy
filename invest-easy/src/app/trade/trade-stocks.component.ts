@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChartModule } from 'primeng/chart';
@@ -57,6 +57,7 @@ export class TradeStocksComponent implements OnInit {
   marketSnapshot: MarketSnapshot | null = null;
   loading = true;
   isWatched = false;
+  documentStyle!: CSSStyleDeclaration;
 
   constructor(
     private router: Router,
@@ -65,15 +66,19 @@ export class TradeStocksComponent implements OnInit {
     private marketService: MarketService,
     private accountsService: AccountsService,
     private tradeService: TradeService,
-    private watchlistService: WatchlistService
+    private watchlistService: WatchlistService,
   ) { }
 
   tradeType = 'buy';
   security_code = '';
 
   dialogVisible = false;
+  options: any = {};
+
+  platformId = inject(PLATFORM_ID);
 
   ngOnInit() {
+    this.initChart();
     let params = this.route.snapshot?.queryParams;
     if (params['trade'] === 'sell') {
       this.tradeType = 'sell';
@@ -89,6 +94,46 @@ export class TradeStocksComponent implements OnInit {
     this.loadAccounts();
   }
 
+  initChart() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.documentStyle = getComputedStyle(document.documentElement);
+      const textColor = this.documentStyle.getPropertyValue('--p-text-color');
+      const textColorSecondary = this.documentStyle.getPropertyValue('--p-text-muted-color');
+      const surfaceBorder = this.documentStyle.getPropertyValue('--p-content-border-color');
+
+      this.options = {
+        maintainAspectRatio: false,
+        aspectRatio: 0.6,
+        plugins: {
+          legend: {
+            labels: {
+              color: textColor
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: textColorSecondary
+            },
+            grid: {
+              color: surfaceBorder
+            }
+          },
+          y: {
+            ticks: {
+              color: textColorSecondary
+            },
+            grid: {
+              color: surfaceBorder
+            }
+          }
+        }
+      };
+    }
+  }
+
+
   showSecurityDialog() {
     this.dialogVisible = true;
   }
@@ -100,7 +145,7 @@ export class TradeStocksComponent implements OnInit {
     this.loadRTData(this.security_code);
   }
 
-  closeQuery(){
+  closeQuery() {
     this.goBack();
   }
 
@@ -150,7 +195,7 @@ export class TradeStocksComponent implements OnInit {
               {
                 label: 'Price',
                 data: data.map((item: RTData) => item.cur_price),
-                borderColor: '#4CAF50',
+                borderColor: this.documentStyle.getPropertyValue('--p-blue-500'),
                 tension: 0.4
               }
             ]
