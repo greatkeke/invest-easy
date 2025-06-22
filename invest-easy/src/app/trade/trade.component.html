@@ -48,13 +48,13 @@
     </div>
   </div>
 
-  <div class="dashboard positions-dashboard shadow-lg">
+  <div class="my-2">
     <h3 class="text-md">Positions</h3>
     <p-table [value]="positions" [rowHover]="true" [responsive]="true" styleClass="p-datatable-sm p-datatable-striped"
-      stripedRows>
+      stripedRows [scrollable]="true">
       <ng-template pTemplate="header">
         <tr>
-          <th class="text-sm">Symbol</th>
+          <th class="text-sm" pFrozenColumn>Security</th>
           <th class="text-sm">MV/Qty</th>
           <th class="text-sm">Price/Cost</th>
           <th class="text-sm">Today's P/L</th>
@@ -64,7 +64,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-position>
         <tr (click)="navigateTo('/trade-stocks', {code: position.instrument_code})">
-          <td class="text-sm">{{ position.instrument_name }}</td>
+          <td class="text-sm" pFrozenColumn>{{ position.instrument_name }}</td>
           <td class="text-sm">{{ position.marketValue | number:'1.2-2'}} / {{ position.quantity }}</td>
           <td class="text-sm">{{ position.price | number:'1.2-2' }} / {{ position.cost | number:'1.2-2' }}</td>
           <td class="text-sm" [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">
@@ -79,8 +79,10 @@
     </p-table>
   </div>
 
-  <div class="dashboard orders-dashboard shadow-lg">
+  <div class="my-2">
     <h3 class="text-md">Recent Orders</h3>
-    <app-orders></app-orders>
+    <div class="mt-2">
+      <app-orders></app-orders>
+    </div>
   </div>
 </div>
