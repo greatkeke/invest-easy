@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChartModule } from 'primeng/chart';
@@ -18,7 +18,7 @@ import { Account, AccountsService } from '../shared/api-services/accounts.servic
 import { TradeService } from '../shared/api-services/trade.service';
 import { WatchlistService } from '../shared/api-services/watchlist.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { SecuritiesQueryComponent } from '../securities-query/securities-query.component';
 
 interface ChartData {
@@ -67,6 +67,7 @@ export class TradeStocksComponent implements OnInit {
     private accountsService: AccountsService,
     private tradeService: TradeService,
     private watchlistService: WatchlistService,
+    private location: Location,
   ) { }
 
   tradeType = 'buy';
@@ -145,6 +146,9 @@ export class TradeStocksComponent implements OnInit {
   }
 
   onSecuritySelected(code: string) {
+    const params = new HttpParams().appendAll({ code: code, trade: this.tradeType });
+    this.location.replaceState(location.pathname, params.toString());
+
     this.security_code = code;
     this.dialogVisible = false;
     this.loadMarketData(this.security_code);
