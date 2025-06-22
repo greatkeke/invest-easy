@@ -17,6 +17,9 @@ import { OrdersComponent } from '../orders/orders.component';
 })
 export class TradeComponent {
   overviewAccount: AccountBalance | undefined;
+  totalPL?: number;
+  totalTodayPL?: number;
+
   constructor(
     private router: Router,
     private accountSvc: AccountsService,
@@ -27,6 +30,13 @@ export class TradeComponent {
     try {
       this.overviewAccount = await this.accountSvc.fetchOverviewAccountBalances();
       this.positions = await this.positionSvc.getPositions();
+      this.totalPL = 0;
+      this.totalTodayPL = 0;
+      for (let index = 0; index < this.positions.length; index++) {
+        const element = this.positions[index];
+        this.totalPL += element.pl;
+        this.totalTodayPL += element.todayPL;
+      }
     } catch (error) {
       console.error('Failed to load data', error);
     }
