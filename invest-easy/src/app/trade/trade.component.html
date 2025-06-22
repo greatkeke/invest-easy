@@ -51,13 +51,13 @@
       <ng-template pTemplate="body" let-position>
         <tr (click)="navigateTo('/trade-stocks', {code: position.instrument_code})">
           <td class="text-sm">{{ position.instrument_name }}</td>
-          <td class="text-sm">{{ position.marketValue | currency }} / {{ position.quantity }}</td>
-          <td class="text-sm">{{ position.price | currency }} / {{ position.cost | currency }}</td>
+          <td class="text-sm">{{ position.marketValue | number:'1.2-2'}} / {{ position.quantity }}</td>
+          <td class="text-sm">{{ position.price | number:'1.2-2' }} / {{ position.cost | number:'1.2-2' }}</td>
           <td class="text-sm" [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">
-            {{ position.todayPL | currency }}
+            {{ position.todayPL | number:'1.2-2' }}
           </td>
           <td class="text-sm" [class.positive]="position.pl > 0" [class.negative]="position.pl < 0">
-            {{ position.pl | currency }}
+            {{ position.pl | number:'1.2-2' }}
           </td>
           <td class="text-sm">{{ position.portfolioPercent | percent }}</td>
         </tr>
