@@ -102,13 +102,19 @@ export class TradeStocksComponent implements OnInit {
       const surfaceBorder = this.documentStyle.getPropertyValue('--p-content-border-color');
 
       this.options = {
+        responsive: true,
         maintainAspectRatio: false,
-        aspectRatio: 0.6,
+        aspectRatio: 1.4,
         plugins: {
-          legend: {
-            labels: {
-              color: textColor
-            }
+          legend: { display: false }
+        },
+        elements: {
+          line: {
+            borderColor: 'rgb(59, 130, 246)',
+            borderWidth: 1
+          },
+          point: {
+            radius: 0
           }
         },
         scales: {
