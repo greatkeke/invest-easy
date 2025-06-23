@@ -11,6 +11,7 @@ from .infrastructure.users import fastapi_users, auth_backend, current_active_us
 from .infrastructure.schemas import UserRead, UserCreate, UserUpdate
 from .infrastructure.futu_api_service import FutuApiService
 from .endpoints import balance_api, accounts_api, market_api, trade_api, position_api, orders_api, watch_list_api
+from .infrastructure.default_settings import create_default_settings
 
 
 @asynccontextmanager
@@ -23,6 +24,7 @@ async def lifespan(app: FastAPI):
         try:
             futu_service = FutuApiService(session=session)
             await futu_service.initialize_all_markets_instruments()
+            await create_default_settings(session)
         finally:
             await session.close()
     
