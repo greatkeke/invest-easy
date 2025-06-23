@@ -8,6 +8,8 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { MarketService } from '../shared/api-services/market.service';
 import { AutoFocusModule } from 'primeng/autofocus';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-securities-query',
@@ -20,8 +22,10 @@ import { AutoFocusModule } from 'primeng/autofocus';
     ListboxModule,
     IconFieldModule,
     InputIconModule,
-    AutoFocusModule
+    AutoFocusModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './securities-query.component.html',
   styleUrls: ['./securities-query.component.scss']
 })
@@ -37,7 +41,10 @@ export class SecuritiesQueryComponent implements OnInit {
 
   @Output() resultSelected = new EventEmitter<string>();
 
-  constructor(private marketService: MarketService) { }
+  constructor(
+    private marketService: MarketService,
+    private messageService: MessageService
+  ) { }
 
   onSearch(): void {
     if (!this.searchQuery.trim()) {
@@ -67,7 +74,16 @@ export class SecuritiesQueryComponent implements OnInit {
   }
 
   selectResult(code: string): void {
-    this.resultSelected.emit(code);
+    if (code.startsWith("US")) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Trade Restricted',
+        detail: 'You don\'t have permit to US trade.'
+      });
+    }
+    else {
+      this.resultSelected.emit(code);
+    }
   }
 
   ngOnInit(): void {
