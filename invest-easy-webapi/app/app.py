@@ -10,7 +10,16 @@ from .infrastructure.db import create_tables, get_async_session
 from .infrastructure.users import fastapi_users, auth_backend, current_active_user
 from .infrastructure.schemas import UserRead, UserCreate, UserUpdate
 from .infrastructure.futu_api_service import FutuApiService
-from .endpoints import balance_api, accounts_api, market_api, trade_api, position_api, orders_api, watch_list_api
+from .endpoints import (
+    balance_api,
+    accounts_api,
+    market_api,
+    trade_api,
+    position_api,
+    orders_api,
+    watch_list_api,
+    settings_api,
+)
 from .infrastructure.default_settings import create_default_settings
 
 
@@ -18,7 +27,7 @@ from .infrastructure.default_settings import create_default_settings
 async def lifespan(app: FastAPI):
     # Not needed if you setup a migration system like Alembic
     await create_tables()
-    
+
     # Initialize market instruments
     async for session in get_async_session():
         try:
@@ -27,7 +36,7 @@ async def lifespan(app: FastAPI):
             await create_default_settings(session)
         finally:
             await session.close()
-    
+
     yield
 
 
@@ -57,6 +66,7 @@ app.include_router(trade_api.router, prefix="/api")
 app.include_router(position_api.router, prefix="/api")
 app.include_router(orders_api.router, prefix="/api")
 app.include_router(watch_list_api.router, prefix="/api")
+app.include_router(settings_api.router, prefix="/api")
 
 
 app.add_middleware(
