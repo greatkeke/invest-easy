@@ -1,45 +1,45 @@
-<app-top-navigation></app-top-navigation>
+<app-top-navigation [title]="groupName"></app-top-navigation>
 <div class="p-4 max-w-3xl mx-auto">
-  <form [formGroup]="form" class="space-y-4">
-    <div *ngFor="let item of items" class="space-y-2">
-      <label [for]="item.DefinedAttributeName" class="block text-gray-700 font-medium">
-        {{item.DefinedAttributeName}}
-      </label>
-
-      <ng-container [ngSwitch]="item.DefinedAttributeType">
+  <form [formGroup]="form" class="flex flex-col space-y-2">
+    <p-card *ngFor="let item of items" class="" [header]="item.name">
+      <ng-container [ngSwitch]="item.type">
         <!-- Text Input -->
-        <input pInputText *ngSwitchCase="'text'" [id]="item.DefinedAttributeName"
-          [formControlName]="item.DefinedAttributeName" styleClass="w-full" />
+        <input pInputText *ngSwitchCase="'TEXT'" [id]="item.name" [formControlName]="item.name" styleClass="w-full" />
 
         <!-- Number Input -->
-        <p-inputNumber *ngSwitchCase="'number'" [id]="item.DefinedAttributeName"
-          [formControlName]="item.DefinedAttributeName" styleClass="w-full">
+        <p-inputNumber *ngSwitchCase="'NUMBER'" [id]="item.name" [formControlName]="item.name" styleClass="w-full">
         </p-inputNumber>
 
         <!-- Boolean Checkbox -->
-        <p-checkbox *ngSwitchCase="'boolean'" [binary]="true" [id]="item.DefinedAttributeName"
-          [formControlName]="item.DefinedAttributeName">
+        <p-checkbox *ngSwitchCase="'BOOLEAN'" [binary]="true" [id]="item.name" [formControlName]="item.name">
         </p-checkbox>
 
         <!-- Email Input -->
-        <input pInputText *ngSwitchCase="'email'" [id]="item.DefinedAttributeName"
-          [formControlName]="item.DefinedAttributeName" styleClass="w-full" type="email" />
+        <input pInputText *ngSwitchCase="'EMAIL'" [id]="item.name" [formControlName]="item.name" styleClass="w-full"
+          type="email" />
 
         <!-- Phone Input -->
-        <p-inputMask *ngSwitchCase="'phone'" [id]="item.DefinedAttributeName"
-          [formControlName]="item.DefinedAttributeName" mask="(999) 999-9999" styleClass="w-full">
+        <p-inputMask *ngSwitchCase="'PHONE'" [id]="item.name" [formControlName]="item.name" mask="(999) 999-9999"
+          styleClass="w-full">
         </p-inputMask>
 
         <!-- Address Textarea -->
-        <textarea pTextarea *ngSwitchCase="'address'" [id]="item.DefinedAttributeName"
-          [formControlName]="item.DefinedAttributeName" styleClass="w-full">
+        <textarea pTextarea *ngSwitchCase="'ADDRESS'" [id]="item.name" [formControlName]="item.name"
+          styleClass="w-full">
         </textarea>
 
         <!-- Select Dropdown -->
-        <p-select *ngSwitchCase="'select'" [id]="item.DefinedAttributeName"
-          [formControlName]="item.DefinedAttributeName" [options]="item.DefinedAttributeValue" styleClass="w-full">
-        </p-select>
+        <!-- <p-select *ngSwitchCase="'OPTIONS'" [id]="item.name" [formControlName]="item.name"
+          [options]="getOptions(item.value)" styleClass="w-full">
+        </p-select> -->
+        
+        <div *ngSwitchCase="'OPTIONS'">
+          <div *ngFor="let option of getOptions(item.value)">
+            <p-checkbox [formControlName]="item.name" [value]="option" [inputId]="option" />
+            <label [for]="option" class="ml-2">{{option}}</label>
+          </div>
+        </div>
       </ng-container>
-    </div>
+    </p-card>
   </form>
 </div>

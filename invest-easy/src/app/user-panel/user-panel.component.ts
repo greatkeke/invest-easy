@@ -4,7 +4,6 @@ import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
-import { ConfigService } from '../shared/config.service';
 import { AUTH_TOKEN_KEY } from '../shared/api-interceptor';
 
 @Component({
@@ -47,7 +46,7 @@ export class UserPanelComponent {
   async fetchUsername(): Promise<void> {
     try {
       const response = await lastValueFrom(
-        this.http.get<{username:string}>('/authenticated-user/name')
+        this.http.get<{ username: string }>('/authenticated-user/name')
       );
       this.username = response.username;
     } catch (error) {
@@ -62,7 +61,7 @@ export class UserPanelComponent {
   }
 
   navigateTo(target: string) {
-    this.router.navigate([target]);
+    this.router.navigate(['/general-settings'], { queryParams: { group: target } });
   }
 
   async LogOff() {
