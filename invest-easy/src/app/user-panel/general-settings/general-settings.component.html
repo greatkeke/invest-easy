@@ -11,8 +11,11 @@
         </p-inputNumber>
 
         <!-- Boolean Checkbox -->
-        <p-checkbox *ngSwitchCase="'BOOLEAN'" [binary]="true" [id]="item.name" [formControlName]="item.name">
-        </p-checkbox>
+        <div *ngSwitchCase="'BOOLEAN'">
+          <p-checkbox [binary]="true" [inputId]="item.name" [formControlName]="item.name">
+          </p-checkbox>
+          <label [for]="item.name" class="ml-2">{{item.name}}</label>
+        </div>
 
         <!-- Email Input -->
         <input pInputText *ngSwitchCase="'EMAIL'" [id]="item.name" [formControlName]="item.name" styleClass="w-full"
@@ -32,7 +35,7 @@
         <!-- <p-select *ngSwitchCase="'OPTIONS'" [id]="item.name" [formControlName]="item.name"
           [options]="getOptions(item.value)" styleClass="w-full">
         </p-select> -->
-        
+
         <div *ngSwitchCase="'OPTIONS'">
           <div *ngFor="let option of getOptions(item.value)">
             <p-checkbox [formControlName]="item.name" [value]="option" [inputId]="option" />
