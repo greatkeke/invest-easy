@@ -29,6 +29,8 @@ class DefinedItem(Base):
     name = mapped_column(String, nullable=False)
     value = mapped_column(String, nullable=False)
     type = mapped_column(SQLEnum(DefinedAttributeType), nullable=False)
+    editable = mapped_column(Boolean, default=True)
+    secret = mapped_column(Boolean, default=False)
 
 
 class DefinedValue(Base):
@@ -38,5 +40,3 @@ class DefinedValue(Base):
     item_id = mapped_column(Integer, nullable=False)
     user_id = mapped_column(UUID, nullable=True)
     value = mapped_column(String, nullable=False)
-    editable = mapped_column(Boolean, default=True)
-    secret = mapped_column(Boolean, default=False)

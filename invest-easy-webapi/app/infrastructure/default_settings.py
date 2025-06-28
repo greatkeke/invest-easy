@@ -80,6 +80,7 @@ async def predefined_settings(session: AsyncSession):
                 "Verify Identity",
                 "You're verified with HSBC accounts",
                 DefinedAttributeType.TEXT,
+                False
             ),
         ],
     }
@@ -89,12 +90,16 @@ async def predefined_settings(session: AsyncSession):
         group = groups[group_name]
         for item in items:
             # Check if item exists
+            editable = item[3] if len(item) > 3 else True
+            secret = item[4] if len(item) > 4 else False
             existing = (
                 (
                     await session.execute(
                         select(DefinedItem)
                         .where(DefinedItem.group_id == group.id)
                         .where(DefinedItem.name == item[0])
+                        .where(DefinedItem.editable == editable)
+                        .where(DefinedItem.secret == secret)
                     )
                 )
                 .scalars()
@@ -105,6 +110,8 @@ async def predefined_settings(session: AsyncSession):
                 # Update existing item
                 existing.value = item[1]
                 existing.type = item[2]
+                existing.editable = editable
+                existing.secret = secret
                 existing.updated_at = datetime.now()
             else:
                 # Create new item
@@ -113,6 +120,8 @@ async def predefined_settings(session: AsyncSession):
                     name=item[0],
                     value=item[1],
                     type=item[2],
+                    editable = editable,
+                    secret = secret
                 )
                 session.add(new_item)
 
