@@ -18,3 +18,16 @@ async def get_defined_items(
     """
     items = await setting_svc.get_defined_items(group_name, user.id)
     return items
+
+
+@router.put("/{group_name}")
+async def update_settings(
+    group_name: str,
+    settings: Dict[str, str],
+    user: User = Depends(current_active_user),
+    setting_svc: SettingsService = Depends(SettingsService),
+) -> bool:
+    """
+    Update settings for a group.
+    """
+    return await setting_svc.update_settings(group_name, settings, user.id)

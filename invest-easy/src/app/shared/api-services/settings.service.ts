@@ -21,4 +21,8 @@ export class SettingsService {
   getDefinedItems(groupName: string): Observable<DefinedItem[]> {
     return this.http.get<DefinedItem[]>(`/settings/defined-items/${groupName}`);
   }
+
+  updateSettings(groupName: string, settings: any): Observable<boolean> {
+    return this.http.put<boolean>(`/settings/${groupName}`, settings);
+  }
 }

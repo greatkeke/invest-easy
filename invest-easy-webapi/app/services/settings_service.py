@@ -48,3 +48,49 @@ class SettingsService:
             }
             for item, value in settings
         ]
+
+    async def update_settings(
+        self, group_name: str, settings: Dict[str, str], user_id: uuid.UUID
+    ) -> bool:
+        """
+        Update user settings for a group.
+        Creates or updates DefinedValue records for each setting.
+        """
+        # Get all defined items for the group
+        items = await self.session.execute(
+            select(DefinedItem)
+            .join(DefinedGroup, DefinedItem.group_id == DefinedGroup.id)
+            .where(
+                DefinedGroup.name == group_name,
+                DefinedGroup.is_active == True,
+                DefinedItem.is_active == True,
+            )
+        )
+        items = items.scalars().all()
+
+        # Get existing user values
+        existing_values = await self.session.execute(
+            select(DefinedValue).where(
+                DefinedValue.item_id.in_([item.id for item in items]),
+                DefinedValue.user_id == user_id,
+                DefinedValue.is_active == True,
+            )
+        )
+        existing_values = {v.item_id: v for v in existing_values.scalars().all()}
+
+        # Update or create values
+        for item in items:
+            if item.name in settings:
+                value = settings[item.name]
+                if item.id in existing_values:
+                    # Update existing
+                    existing_values[item.id].value = value
+                else:
+                    # Create new
+                    new_value = DefinedValue(
+                        item_id=item.id, user_id=user_id, value=value, is_active=True
+                    )
+                    self.session.add(new_value)
+
+        await self.session.commit()
+        return True

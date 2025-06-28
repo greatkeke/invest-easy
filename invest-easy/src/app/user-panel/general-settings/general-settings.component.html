@@ -12,7 +12,8 @@
 
         <!-- Boolean Checkbox -->
         <div *ngSwitchCase="'BOOLEAN'">
-          <p-checkbox [binary]="true" [inputId]="item.name" [formControlName]="item.name">
+          <p-checkbox [binary]="true" [inputId]="item.name" trueValue="true" falseValue="false"
+            [formControlName]="item.name" [readonly]="!item.editable">
           </p-checkbox>
           <label [for]="item.name" class="ml-2">{{item.name}}</label>
         </div>
@@ -44,5 +45,13 @@
         </div>
       </ng-container>
     </p-card>
+
+    <div class="w-full my-4">
+      <p-button label="Save" (click)="onSave()" styleClass="w-full"></p-button>
+    </div>
   </form>
 </div>
+
+
+<!-- Security Tip -->
+<p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }"></p-toast>

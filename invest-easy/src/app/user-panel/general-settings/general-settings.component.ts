@@ -12,6 +12,9 @@ import { DefinedItem, SettingsService } from '../../shared/api-services/settings
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-general-settings',
@@ -24,10 +27,13 @@ import { CardModule } from 'primeng/card';
     CheckboxModule,
     InputMaskModule,
     SelectModule,
-    CardModule
+    CardModule,
+    ButtonModule,
+    ToastModule
   ],
   templateUrl: './general-settings.component.html',
-  styleUrl: './general-settings.component.scss'
+  styleUrl: './general-settings.component.scss',
+  providers: [MessageService]
 })
 export class GeneralSettingsComponent implements OnInit {
   @Input() items: DefinedItem[] = [];
@@ -39,7 +45,8 @@ export class GeneralSettingsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private settingsService: SettingsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private messageService: MessageService
   ) {
     this.form = this.fb.group({});
   }
@@ -65,7 +72,7 @@ export class GeneralSettingsComponent implements OnInit {
     const formGroup: any = {};
     this.items.forEach(item => {
       formGroup[item.name] = [
-        { value: item.item_value, disabled: !item.editable },
+        { value: item.user_defined_value == null ? item.item_value : item.user_defined_value, disabled: !item.editable },
         this.getValidators(item.type)
       ];
     });
@@ -85,5 +92,36 @@ export class GeneralSettingsComponent implements OnInit {
 
   getOptions(value: string) {
     return value.split(',').map(option => option.trim());
+  }
+
+  onSave() {
+    if (this.form.invalid) return;
+
+    this.isLoading = true;
+    const settings = this.form.getRawValue();
+
+    this.settingsService.updateSettings(this.groupName, settings)
+      .pipe(
+        catchError(err => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to save settings',
+            life: 3000
+          });
+          return of(false);
+        }),
+        finalize(() => this.isLoading = false)
+      )
+      .subscribe((success: boolean) => {
+        if (success) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Settings saved successfully',
+            life: 3000
+          });
+        }
+      });
   }
 }
