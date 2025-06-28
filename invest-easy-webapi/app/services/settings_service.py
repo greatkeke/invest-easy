@@ -41,9 +41,9 @@ class SettingsService:
                 "item_id": item.id,
                 "name": item.name,
                 "item_value": item.value,
-                "type": item.type,
+                "type": item.type.name,
                 "user_defined_value": value.value if value else None,
-                "editable": value.editable if value else False,
+                "editable": value.editable if value else True,
                 "secret": value.secret if value else False,
             }
             for item, value in settings

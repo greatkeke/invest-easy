@@ -65,7 +65,7 @@ export class GeneralSettingsComponent implements OnInit {
     const formGroup: any = {};
     this.items.forEach(item => {
       formGroup[item.name] = [
-        { value: item.value, disabled: !item.editable },
+        { value: item.item_value, disabled: !item.editable },
         this.getValidators(item.type)
       ];
     });

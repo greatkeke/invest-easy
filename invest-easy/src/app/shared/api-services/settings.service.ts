@@ -3,9 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface DefinedItem {
+  item_id: number;
   name: string;
-  value: any;
+  item_value: string;
   type: 'TEXT' | 'NUMBER' | 'BOOLEAN' | 'EMAIL' | 'PHONE' | 'ADDRESS' | 'OPTIONS';
+  user_defined_value: string;
   editable: boolean;
   secret: boolean;
 }
