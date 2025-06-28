@@ -14,10 +14,7 @@ async def get_defined_items(
     setting_svc: SettingsService = Depends(SettingsService),
 ) -> List[Dict[str, Any]]:
     """
-    Get defined items for a group, combining global and user-specific settings.
-    User-specific settings override global settings.
+    Get defined items for a group.
     """
     items = await setting_svc.get_defined_items(group_name, user.id)
-    if not items:
-        raise HTTPException(status_code=404, detail="Group not found or no items found")
     return items

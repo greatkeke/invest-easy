@@ -14,21 +14,29 @@ class DefinedAttributeType(Enum):
     OPTIONS = 6
 
 
-class DefinedItem(Base):
-    __tablename__ = "defined_items"
-
-    id = mapped_column(Integer, primary_key=True)
-    group_id = mapped_column(Integer, nullable=False)
-    user_id = mapped_column(UUID, nullable=True)
-    name = mapped_column(String, nullable=False)
-    value = mapped_column(String, nullable=False)
-    type = mapped_column(SQLEnum(DefinedAttributeType), nullable=False)
-    editable = mapped_column(Boolean, default=True)
-    secret = mapped_column(Boolean, default=False)
-
-
 class DefinedGroup(Base):
     __tablename__ = "defined_group"
 
     id = mapped_column(Integer, primary_key=True)
     name = mapped_column(String, nullable=False)
+
+
+class DefinedItem(Base):
+    __tablename__ = "defined_items"
+
+    id = mapped_column(Integer, primary_key=True)
+    group_id = mapped_column(Integer, nullable=False)
+    name = mapped_column(String, nullable=False)
+    value = mapped_column(String, nullable=False)
+    type = mapped_column(SQLEnum(DefinedAttributeType), nullable=False)
+
+
+class DefinedValue(Base):
+    __tablename__ = "defined_value"
+
+    id = mapped_column(Integer, primary_key=True)
+    item_id = mapped_column(Integer, nullable=False)
+    user_id = mapped_column(UUID, nullable=True)
+    value = mapped_column(String, nullable=False)
+    editable = mapped_column(Boolean, default=True)
+    secret = mapped_column(Boolean, default=False)

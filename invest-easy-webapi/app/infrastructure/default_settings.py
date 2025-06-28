@@ -4,39 +4,42 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..domain.defind_item import DefinedItem, DefinedGroup, DefinedAttributeType
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-async def create_default_settings(session: AsyncSession):
-    user_id: Optional[uuid.UUID] = None #None for global settings
-    """Create or update default settings for a user"""
+class GroupNames:
+    NOTIFICATION = "Notification"
+    SECURITY = "Security"
+
+
+async def get_or_create_group(session: AsyncSession, name: str) -> DefinedGroup:
+    try:
+        group = (
+            (
+                await session.execute(
+                    select(DefinedGroup).where(DefinedGroup.name == name)
+                )
+            )
+            .scalars()
+            .first()
+        )
+        if not group:
+            group = DefinedGroup(name=name)
+            session.add(group)
+            await session.flush()
+        return group
+    except Exception as e:
+        logger.error(f"Error getting/creating group {name}: {e}")
+        raise
+
+
+async def predefined_settings(session: AsyncSession):
     # Get or create groups
-    notification_group = (
-        (
-            await session.execute(
-                select(DefinedGroup).where(DefinedGroup.name == "Notification")
-            )
-        )
-        .scalars()
-        .first()
-    )
-    if not notification_group:
-        notification_group = DefinedGroup(name="Notification")
-        session.add(notification_group)
-
-    security_group = (
-        (
-            await session.execute(
-                select(DefinedGroup).where(DefinedGroup.name == "Security")
-            )
-        )
-        .scalars()
-        .first()
-    )
-    if not security_group:
-        security_group = DefinedGroup(name="Security")
-        session.add(security_group)
-
-    await session.flush()
+    notification_group = await get_or_create_group(session, GroupNames.NOTIFICATION)
+    security_group = await get_or_create_group(session, GroupNames.SECURITY)
+    groups = {group.name: group for group in [notification_group, security_group]}
 
     # Define all default settings
     default_settings = {
@@ -65,38 +68,32 @@ async def create_default_settings(session: AsyncSession):
         "Security": [
             (
                 "Login Devices",
-                "OnePlus phone 13T, iOS 12mini, mac mini m4",
+                "Windows, MacOS, iOS, Android",
                 DefinedAttributeType.OPTIONS,
             ),
             (
                 "Login Credentials",
                 "PIN, FaceID, FingerPrint",
                 DefinedAttributeType.OPTIONS,
-                False,
             ),
             (
                 "Verify Identity",
                 "You're verified with HSBC accounts",
                 DefinedAttributeType.TEXT,
-                False,
             ),
         ],
     }
 
     # Create or update items
     for group_name, items in default_settings.items():
-        group = notification_group if group_name == "Notification" else security_group
+        group = groups[group_name]
         for item in items:
-            # Handle optional editable parameter
-            editable = item[3] if len(item) > 3 else True
-
             # Check if item exists
             existing = (
                 (
                     await session.execute(
                         select(DefinedItem)
                         .where(DefinedItem.group_id == group.id)
-                        .where(DefinedItem.user_id == user_id)
                         .where(DefinedItem.name == item[0])
                     )
                 )
@@ -108,16 +105,14 @@ async def create_default_settings(session: AsyncSession):
                 # Update existing item
                 existing.value = item[1]
                 existing.type = item[2]
-                existing.editable = editable
+                existing.updated_at = datetime.now()
             else:
                 # Create new item
                 new_item = DefinedItem(
                     group_id=group.id,
-                    user_id=user_id,
                     name=item[0],
                     value=item[1],
                     type=item[2],
-                    editable=editable,
                 )
                 session.add(new_item)
 

@@ -20,7 +20,7 @@ from .endpoints import (
     watch_list_api,
     settings_api,
 )
-from .infrastructure.default_settings import create_default_settings
+from .infrastructure.default_settings import predefined_settings
 
 
 @asynccontextmanager
@@ -33,7 +33,7 @@ async def lifespan(app: FastAPI):
         try:
             futu_service = FutuApiService(session=session)
             await futu_service.initialize_all_markets_instruments()
-            await create_default_settings(session)
+            await predefined_settings(session)
         finally:
             await session.close()
 
