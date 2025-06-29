@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
+import { TopNavigationComponent } from '../../shared/top-navigation/top-navigation.component';
 
 @Component({
     selector: 'app-contact-detail',

@@ -10,12 +10,12 @@ import { AssetDetailComponent } from './asset-detail/asset-detail.component';
 import { TradeStocksComponent } from './trade/trade-stocks.component';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { ExchangeComponent } from './exchange/exchange.component';
-import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 import { InstrumentDetailComponent } from './instrument-detail/instrument-detail.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { AuthGuard } from './shared/auth.guard';
 import { AdvertisementComponent } from './advertisement/advertisement.component';
 import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
+import { ContactDetailComponent } from './user-panel/contact-detail/contact-detail.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
