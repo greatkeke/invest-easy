@@ -42,6 +42,7 @@
 
         <!-- Single -->
         <div *ngSwitchCase="'SINGLE'">
+          <small>{{item.note}}</small>
           <p-select [formControlName]="item.name" [options]="getOptions(item.item_value)"  [placeholder]="item.note"
             class="w-full" />
         </div>
