@@ -6,10 +6,11 @@ export interface DefinedItem {
   item_id: number;
   name: string;
   item_value: string;
-  type: 'TEXT' | 'NUMBER' | 'BOOLEAN' | 'EMAIL' | 'PHONE' | 'ADDRESS' | 'OPTIONS';
+  type: 'TEXT' | 'NUMBER' | 'BOOLEAN' | 'EMAIL' | 'PHONE' | 'ADDRESS' | 'OPTIONS' | 'SINGLE';
   user_defined_value: string;
   editable: boolean;
   secret: boolean;
+  note: string;
 }
 
 @Injectable({

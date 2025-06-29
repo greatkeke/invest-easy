@@ -32,16 +32,18 @@
           styleClass="w-full">
         </textarea>
 
-        <!-- Select Dropdown -->
-        <!-- <p-select *ngSwitchCase="'OPTIONS'" [id]="item.name" [formControlName]="item.name"
-          [options]="getOptions(item.value)" styleClass="w-full">
-        </p-select> -->
-
+        <!-- Options -->
         <div *ngSwitchCase="'OPTIONS'">
           <div *ngFor="let option of getOptions(item.item_value)">
             <p-checkbox [formControlName]="item.name" [value]="option" [inputId]="option" />
             <label [for]="option" class="ml-2">{{option}}</label>
           </div>
+        </div>
+
+        <!-- Single -->
+        <div *ngSwitchCase="'SINGLE'">
+          <p-select [formControlName]="item.name" [options]="getOptions(item.item_value)"  [placeholder]="item.note"
+            class="w-full" />
         </div>
       </ng-container>
     </p-card>

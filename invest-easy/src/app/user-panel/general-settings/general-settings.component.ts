@@ -71,8 +71,12 @@ export class GeneralSettingsComponent implements OnInit {
   createForm() {
     const formGroup: any = {};
     this.items.forEach(item => {
+      let value = item.user_defined_value == null ? item.item_value : item.user_defined_value;
+      if (item.user_defined_value == null && item.type == 'SINGLE') {
+        value = this.getOptions(item.item_value)[0];
+      }
       formGroup[item.name] = [
-        { value: item.user_defined_value == null ? item.item_value : item.user_defined_value, disabled: !item.editable },
+        { value: value, disabled: !item.editable },
         this.getValidators(item.type)
       ];
     });

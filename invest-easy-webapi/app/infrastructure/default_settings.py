@@ -49,8 +49,9 @@ async def predefined_settings(session: AsyncSession):
         DefinedItem("Language", "English,简体中文,繁体中文", DefinedItemType.SINGLE),
         DefinedItem(
             "App mode",
-            "Full mode:Features our full range of products and services, Lite mode:Features a simpler interface and easy-to-understand instructions.",
+            "Full mode, Lite mode",
             DefinedItemType.SINGLE,
+            note="Features our full range of products and services, Features a simpler interface and easy-to-understand instructions.",
         ),
     ]
     notification_settings = [
@@ -112,9 +113,6 @@ async def predefined_settings(session: AsyncSession):
                         select(DefinedItem).where(
                             DefinedItem.group_id == group.id,
                             DefinedItem.name == item.name,
-                            DefinedItem.editable == item.editable,
-                            DefinedItem.secret == item.secret,
-                            DefinedItem.note == item.note,
                         )
                     )
                 )
