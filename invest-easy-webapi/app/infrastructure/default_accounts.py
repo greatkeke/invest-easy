@@ -11,28 +11,28 @@ async def create_default_account(
     """Create default accounts for a new user"""
     # Create the account
     account_ov = Account(
-        name=f"{username} - overview account",
+        name=f"Overview Account",
         ccy="HKD",
         is_overview=True,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
     account_hkd = Account(
-        name=f"{username} - HKD account",
+        name=f"HKD Account",
         ccy="HKD",
         is_overview=False,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
     account_usd = Account(
-        name=f"{username} - USD account",
+        name=f"USD Account",
         ccy="USD",
         is_overview=False,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
     account_cnh = Account(
-        name=f"{username} - CNH account",
+        name=f"CNH Account",
         ccy="CNH",
         is_overview=False,
         created_at=datetime.now(),
