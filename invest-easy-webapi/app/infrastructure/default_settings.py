@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 class GroupNames:
     GENERAL = "General"
+    CONTACT_DETAILS = "Contact details"
     NOTIFICATION = "Notification"
     SECURITY = "Security"
 
@@ -36,17 +37,20 @@ async def get_or_create_group(session: AsyncSession, name: str) -> DefinedGroup:
 
 async def predefined_settings(session: AsyncSession):
     # Get or create groups
+    general_group = await get_or_create_group(session, GroupNames.GENERAL)
+    contact_details_group = await get_or_create_group(
+        session, GroupNames.CONTACT_DETAILS
+    )
     notification_group = await get_or_create_group(session, GroupNames.NOTIFICATION)
     security_group = await get_or_create_group(session, GroupNames.SECURITY)
-    general_group = await get_or_create_group(session, GroupNames.GENERAL)
-    groups = {
-        group.name: group
-        for group in [general_group, notification_group, security_group]
-    }
 
     # Define all default settings
     general_settings = [
-        DefinedItem("Language", "English,简体中文,繁体中文", DefinedItemType.SINGLE),
+        DefinedItem(
+            "Language",
+            "English,简体中文,繁体中文",
+            DefinedItemType.SINGLE,
+        ),
         DefinedItem(
             "App mode",
             "Full mode, Lite mode",
@@ -54,10 +58,32 @@ async def predefined_settings(session: AsyncSession):
             note="Features our full range of products and services, Features a simpler interface and easy-to-understand instructions.",
         ),
     ]
+    contact_details_settings = [
+        DefinedItem(
+            "Mobile number",
+            "",
+            DefinedItemType.PHONE,
+            note="Your updated contact details will be applied to all of your accounts including any either-to-sign joint accounts.",
+        ),
+        DefinedItem(
+            "Address",
+            "",
+            DefinedItemType.ADDRESS,
+            note="You'll receive SMS and email notifications shortly after the update. Please contact us if you don't receive them",
+        ),
+        DefinedItem(
+            "Email address",
+            "",
+            DefinedItemType.EMAIL,
+            note="FPS registrations with your old mobile number and email address will cease in 1 working day. Please register again for FPS with your new contact details via mobile or online banking.",
+        ),
+    ]
     notification_settings = [
         DefinedItem("Email Notification", "true", DefinedItemType.BOOLEAN),
         DefinedItem(
-            "Email Address to receive notifications", "", DefinedItemType.EMAIL
+            "Email Address to receive notifications",
+            "",
+            DefinedItemType.EMAIL,
         ),
         DefinedItem("SMS Notifications", "false", DefinedItemType.BOOLEAN),
         DefinedItem(
@@ -69,9 +95,17 @@ async def predefined_settings(session: AsyncSession):
         DefinedItem("Trade Information", "true", DefinedItemType.BOOLEAN),
         DefinedItem("Market Information", "true", DefinedItemType.BOOLEAN),
         DefinedItem("Order Information", "true", DefinedItemType.BOOLEAN),
-        DefinedItem("Government Information", "true", DefinedItemType.BOOLEAN),
+        DefinedItem(
+            "Government Information",
+            "true",
+            DefinedItemType.BOOLEAN,
+        ),
         DefinedItem("Policy Information", "true", DefinedItemType.BOOLEAN),
-        DefinedItem("Environment Information", "true", DefinedItemType.BOOLEAN),
+        DefinedItem(
+            "Environment Information",
+            "true",
+            DefinedItemType.BOOLEAN,
+        ),
         DefinedItem(
             "Important Financial Information (CPI)",
             "true",
@@ -97,14 +131,14 @@ async def predefined_settings(session: AsyncSession):
         ),
     ]
     default_settings = {
-        GroupNames.GENERAL: general_settings,
-        GroupNames.NOTIFICATION: notification_settings,
-        GroupNames.SECURITY: security_settings,
+        general_group: general_settings,
+        contact_details_group: contact_details_settings,
+        notification_group: notification_settings,
+        security_group: security_settings,
     }
 
     # Create or update items
-    for group_name, items in default_settings.items():
-        group = groups[group_name]
+    for group, items in default_settings.items():
         for item in items:
             # Check if item exists
             existing = (

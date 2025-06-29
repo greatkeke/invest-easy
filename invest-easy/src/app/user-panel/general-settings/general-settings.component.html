@@ -2,7 +2,11 @@
 <div class="p-4 max-w-3xl mx-auto">
   <form [formGroup]="form" class="flex flex-col space-y-2">
     <p-card *ngFor="let item of items" class="" [header]="item.name">
+      <p>
+        <small>{{item.note}}</small>
+      </p>
       <ng-container [ngSwitch]="item.type">
+
         <!-- Text Input -->
         <input pInputText *ngSwitchCase="'TEXT'" [id]="item.name" [formControlName]="item.name" styleClass="w-full" />
 
@@ -19,7 +23,7 @@
         </div>
 
         <!-- Email Input -->
-        <input pInputText *ngSwitchCase="'EMAIL'" [id]="item.name" [formControlName]="item.name" styleClass="w-full"
+        <input pInputText *ngSwitchCase="'EMAIL'" [id]="item.name" [formControlName]="item.name" class="w-full"
           type="email" />
 
         <!-- Phone Input -->
@@ -29,7 +33,7 @@
 
         <!-- Address Textarea -->
         <textarea pTextarea *ngSwitchCase="'ADDRESS'" [id]="item.name" [formControlName]="item.name"
-          styleClass="w-full">
+          class="w-full border-solid border-1 border-gray-500 rounded-sm" rows="3" cols="30">
         </textarea>
 
         <!-- Options -->
@@ -42,8 +46,7 @@
 
         <!-- Single -->
         <div *ngSwitchCase="'SINGLE'">
-          <small>{{item.note}}</small>
-          <p-select [formControlName]="item.name" [options]="getOptions(item.item_value)"  [placeholder]="item.note"
+          <p-select [formControlName]="item.name" [options]="getOptions(item.item_value)" [placeholder]="item.note"
             class="w-full" />
         </div>
       </ng-container>
