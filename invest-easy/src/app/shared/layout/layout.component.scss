@@ -41,7 +41,7 @@
     }
 
     &.active {
-      color: #1976d2;
+      color: var(--p-red-500);
       opacity: 1;
     }
   }

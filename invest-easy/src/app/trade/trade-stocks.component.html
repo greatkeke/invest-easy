@@ -197,7 +197,7 @@
         (onClick)="cancelPreview()"></p-button>
       <p-button *ngIf="tradeType === 'buy'" label="Buy" severity="danger" icon="pi pi-cart-plus"
         (onClick)="confirmOrder()"></p-button>
-      <p-button *ngIf="tradeType === 'sell'" label="Sell" severity="warn" icon="pi pi-shopping-bag"
+      <p-button *ngIf="tradeType === 'sell'" label="Sell" severity="danger" icon="pi pi-shopping-bag"
         (onClick)="confirmOrder()"></p-button>
     </ng-template>
   </p-dialog>

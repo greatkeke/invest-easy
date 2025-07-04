@@ -12,7 +12,7 @@
                         <span *ngSwitchCase="BalanceType.TRADE_SELL">Trade Sell</span>
                     </ng-container>
                 </span>
-                <span class="text-primary-500 font-semibold">{{ record.amount | currency }} {{record.ccy}}</span>
+                <span class="font-semibold">{{ record.amount | currency }} {{record.ccy}}</span>
             </div>
             <div class="flex justify-between text-sm text-gray-500 mt-1">
                 <span>{{ record.created_at | date:'short' }}</span>
