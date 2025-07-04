@@ -12,6 +12,7 @@ class GroupNames:
     CONTACT_DETAILS = "Contact details"
     NOTIFICATION = "Notification"
     SECURITY = "Security"
+    PAY_TRANSFER = "Pay and transfer"
 
 
 async def get_or_create_group(session: AsyncSession, name: str) -> DefinedGroup:
@@ -43,6 +44,7 @@ async def predefined_settings(session: AsyncSession):
     )
     notification_group = await get_or_create_group(session, GroupNames.NOTIFICATION)
     security_group = await get_or_create_group(session, GroupNames.SECURITY)
+    payTransfer_group = await get_or_create_group(session, GroupNames.PAY_TRANSFER)
 
     # Define all default settings
     general_settings = [
@@ -130,11 +132,29 @@ async def predefined_settings(session: AsyncSession):
             False,
         ),
     ]
+    payTransfer_settings = [
+        DefinedItem("Transfer limits to payees", "", DefinedItemType.Empty, False),
+        DefinedItem("Registered account", "50000.00", DefinedItemType.NUMBER),
+        DefinedItem("Non-registered payee", "40000.00", DefinedItemType.NUMBER),
+        DefinedItem("Other transfer limits", "", DefinedItemType.Empty, editable=False),
+        DefinedItem("Small-value payments", "10000.00", DefinedItemType.NUMBER),
+        DefinedItem("Bill payments", "5000000.00", DefinedItemType.NUMBER),
+        DefinedItem("Cross-border transfers", "1000000.00", DefinedItemType.NUMBER),
+        DefinedItem("Your local HSBC account", "999999999.00", DefinedItemType.NUMBER),
+        DefinedItem(
+            "Reminder",
+            "",
+            DefinedItemType.Empty,
+            editable=False,
+            note="Review your transfer limits regularly and make necessary adjustments that suit your needs.\nIf you want to increase your transfer limits, we may ask for the identification number you use to bank with us to verify your identity.",
+        ),
+    ]
     default_settings = {
         general_group: general_settings,
         contact_details_group: contact_details_settings,
         notification_group: notification_settings,
         security_group: security_settings,
+        payTransfer_group: payTransfer_settings
     }
 
     # Create or update items

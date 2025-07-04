@@ -97,7 +97,7 @@ export class GeneralSettingsComponent implements OnInit {
   getOptions(value: string) {
     return value.split(',').map(option => option.trim());
   }
-
+  
   onSave() {
     if (this.form.invalid) return;
 

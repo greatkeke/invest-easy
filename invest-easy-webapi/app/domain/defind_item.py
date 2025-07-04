@@ -6,14 +6,15 @@ from .base_domain import Base
 
 
 class DefinedItemType(Enum):
-    TEXT = 0
-    NUMBER = 1
-    BOOLEAN = 2
-    EMAIL = 3
-    PHONE = 4
-    ADDRESS = 5
-    OPTIONS = 6
-    SINGLE = 7
+    Empty = 0
+    TEXT = 1
+    NUMBER = 2
+    BOOLEAN = 3
+    EMAIL = 4
+    PHONE = 5
+    ADDRESS = 6
+    OPTIONS = 7
+    SINGLE = 8
 
 
 class DefinedGroup(Base):
