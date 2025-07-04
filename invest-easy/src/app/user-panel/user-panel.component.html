@@ -1,18 +1,19 @@
 <div class="text-gray-500 dark:text-gray-400 shadow-lg h-[100vh]">
-  <div class="flex items-center p-2 justify-end">
-    <p-button (click)="closePanel()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-      icon="pi pi-times" iconPos="right" variant="outlined" [rounded]="true" [text]="true">
-    </p-button>
-  </div>
-  <div
-    class="px-4 py-2 font-bold border-solid shadow-sm mx-4 mb-2 rounded-md flex justify-between bg-red-100 dark:bg-red-50"
-    (click)="navigateTo('Contact details')">
-    <div class="">
-      <h5>Welcome, {{username}}</h5>
-      <small class="font-normal text-wrap">Last successful logon: {{now}}</small>
+  <div class="bg-[url('/240325-our-values-and-purpose-370x208.jpg')] bg-cover bg-center pb-2">
+    <div class="flex items-center p-2 justify-end">
+      <p-button (click)="closePanel()" [rounded]="true" severity="danger" [outlined]="true" icon="pi pi-times"
+        iconPos="right" class="bg-white rounded-full" size="small"></p-button>
     </div>
-    <div class="flex flex-col justify-center">
-      <i class="pi pi-chevron-right" style="font-size: 2rem"></i>
+    <div
+      class="px-4 py-2 font-bold border-solid shadow-sm mx-4 mb-2 rounded-md flex justify-between bg-red-100 dark:bg-red-50"
+      (click)="navigateTo('Contact details')">
+      <div class="">
+        <h5>Welcome, {{username}}</h5>
+        <small class="font-normal text-wrap">Last successful logon: {{now}}</small>
+      </div>
+      <div class="flex flex-col justify-center">
+        <i class="pi pi-chevron-right" style="font-size: 2rem"></i>
+      </div>
     </div>
   </div>
   <ul class="overflow-y-auto mx-4">
