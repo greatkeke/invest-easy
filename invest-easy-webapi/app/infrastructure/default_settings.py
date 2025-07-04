@@ -14,6 +14,9 @@ class GroupNames:
     SECURITY = "Security"
     PAY_TRANSFER = "Pay and transfer"
     COMMUNICATION_PREFERENCES = "Communication preferences"
+    INVESTMENT = "Investment"
+    OPEN_BANKING_CONSENT = "Open Banking consent"
+    ACTIVITY_LOG = "Activity log"
 
 
 async def get_or_create_group(session: AsyncSession, name: str) -> DefinedGroup:
@@ -46,7 +49,14 @@ async def predefined_settings(session: AsyncSession):
     notification_group = await get_or_create_group(session, GroupNames.NOTIFICATION)
     security_group = await get_or_create_group(session, GroupNames.SECURITY)
     payTransfer_group = await get_or_create_group(session, GroupNames.PAY_TRANSFER)
-    communication_preferences_group = await get_or_create_group(session, GroupNames.COMMUNICATION_PREFERENCES)
+    communication_preferences_group = await get_or_create_group(
+        session, GroupNames.COMMUNICATION_PREFERENCES
+    )
+    investment_group = await get_or_create_group(session, GroupNames.INVESTMENT)
+    open_banking_consent_group = await get_or_create_group(
+        session, GroupNames.OPEN_BANKING_CONSENT
+    )
+    activity_log_group = await get_or_create_group(session, GroupNames.ACTIVITY_LOG)
 
     # Define all default settings
     general_settings = [
@@ -154,8 +164,59 @@ async def predefined_settings(session: AsyncSession):
     communication_preferences_settings = [
         DefinedItem("Push notification preferences", "true", DefinedItemType.BOOLEAN),
         DefinedItem("Marketing prefernces", "true", DefinedItemType.BOOLEAN),
-        DefinedItem("Important notifications prefernces", "true", DefinedItemType.BOOLEAN),
-        DefinedItem("Credit card transaction notifications", "true", DefinedItemType.BOOLEAN, note="Online, phone, fax, mail and in-app purchases up to HKD500."),
+        DefinedItem(
+            "Important notifications prefernces", "true", DefinedItemType.BOOLEAN
+        ),
+        DefinedItem(
+            "Credit card transaction notifications",
+            "true",
+            DefinedItemType.BOOLEAN,
+            note="Online, phone, fax, mail and in-app purchases up to HKD500.",
+        ),
+    ]
+    investment_settings = [
+        DefinedItem(
+            "Your risk profile",
+            "0,1,2,3,4,5",
+            DefinedItemType.SINGLE,
+            note="A risk profile will help you understand your risk appetite, and provide some indication of the risk tolerance for a typical investor displaying your personal investment characteristics.",
+        ),
+        DefinedItem(
+            "Risk tips",
+            "",
+            DefinedItemType.Empty,
+            note="On a scale of 0 to 5, the greater the number, the higher the risk you're comfortable to take.",
+        ),
+    ]
+    open_banking_consent_settings = [
+        DefinedItem(
+            "",
+            "",
+            DefinedItemType.Empty,
+            note="You can manage your consents for account data sharing between HSBC and other banks using the Open Banking service.",
+        ),
+        DefinedItem(
+            "Data from other banks",
+            "No data sharing",
+            DefinedItemType.OPTIONS,
+            editable=False,
+            note="Here you'll see the list of consents you've provided to HSBC. This allows us to access your account data and display it on your homepage.",
+        ),
+    ]
+    activity_log_settings = [
+        DefinedItem(
+            "",
+            "",
+            DefinedItemType.Empty,
+            note="Here you'll see activities completed on HSBC Online and Mobile Banking, Rewards+ and Easy Invest in the last 90 days. This helps you to monitor your account for unauthorised access.",
+        ),
+        DefinedItem(
+            "Warning activities",
+            "",
+            DefinedItemType.Empty,
+            editable=False,
+            note="If you don't recoginise any of the activities, please contact us immediately via Chat with us.",
+        ),
     ]
     default_settings = {
         general_group: general_settings,
@@ -163,7 +224,10 @@ async def predefined_settings(session: AsyncSession):
         notification_group: notification_settings,
         security_group: security_settings,
         payTransfer_group: payTransfer_settings,
-        communication_preferences_group: communication_preferences_settings
+        communication_preferences_group: communication_preferences_settings,
+        investment_group: investment_settings,
+        open_banking_consent_group: open_banking_consent_settings,
+        activity_log_group: activity_log_settings,
     }
 
     # Create or update items
