@@ -13,6 +13,7 @@ class GroupNames:
     NOTIFICATION = "Notification"
     SECURITY = "Security"
     PAY_TRANSFER = "Pay and transfer"
+    COMMUNICATION_PREFERENCES = "Communication preferences"
 
 
 async def get_or_create_group(session: AsyncSession, name: str) -> DefinedGroup:
@@ -45,6 +46,7 @@ async def predefined_settings(session: AsyncSession):
     notification_group = await get_or_create_group(session, GroupNames.NOTIFICATION)
     security_group = await get_or_create_group(session, GroupNames.SECURITY)
     payTransfer_group = await get_or_create_group(session, GroupNames.PAY_TRANSFER)
+    communication_preferences_group = await get_or_create_group(session, GroupNames.COMMUNICATION_PREFERENCES)
 
     # Define all default settings
     general_settings = [
@@ -149,12 +151,19 @@ async def predefined_settings(session: AsyncSession):
             note="Review your transfer limits regularly and make necessary adjustments that suit your needs.\nIf you want to increase your transfer limits, we may ask for the identification number you use to bank with us to verify your identity.",
         ),
     ]
+    communication_preferences_settings = [
+        DefinedItem("Push notification preferences", "true", DefinedItemType.BOOLEAN),
+        DefinedItem("Marketing prefernces", "true", DefinedItemType.BOOLEAN),
+        DefinedItem("Important notifications prefernces", "true", DefinedItemType.BOOLEAN),
+        DefinedItem("Credit card transaction notifications", "true", DefinedItemType.BOOLEAN, note="Online, phone, fax, mail and in-app purchases up to HKD500."),
+    ]
     default_settings = {
         general_group: general_settings,
         contact_details_group: contact_details_settings,
         notification_group: notification_settings,
         security_group: security_settings,
-        payTransfer_group: payTransfer_settings
+        payTransfer_group: payTransfer_settings,
+        communication_preferences_group: communication_preferences_settings
     }
 
     # Create or update items
