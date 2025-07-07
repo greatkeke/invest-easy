@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, Location, NgStyle } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { HttpParams } from '@angular/common/http';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   @Input() title = 'Invest-Easy'; // Default value
   @Input() bg_img = 'financial-regulation-header.jpg';
   displayUserPanel = false;
@@ -26,8 +26,8 @@ export class HeaderComponent {
   ) { }
 
   ngOnInit() {
-    this.route.queryParamMap.subscribe(params => {
-      const ntf = params.get('notification');
+    this.route.queryParams.subscribe(params => {
+      const ntf = params['notification'];
       if (!!ntf && ntf == "on") {
         this.displayNotificationCenter = true;
       }
@@ -39,9 +39,7 @@ export class HeaderComponent {
 
   goToNotifications() {
     this.displayNotificationCenter = true;
-
-    const params = new HttpParams().appendAll({ notification: "on" });
-    this.location.go(location.pathname, params.toString());
+    this.router.navigate([], { queryParams: { notification: "on" } });
   }
 
   onClose() {
