@@ -9,7 +9,7 @@
 </div>
 
 <p-dialog [(visible)]="displayNotificationCenter" [breakpoints]="{ '768px': '100vw' }" [modal]="true"
-  [dismissableMask]="true" position="right"
+  [dismissableMask]="true" position="right" (onHide)="onClose()"
   styleClass="rounded-none! w-[25vw] h-[100vh]! max-h-[100vh]! m-0! r-0! t-0! absolute">
   <ng-template #header>
     <div class="text-xl font-bold p-4">Notifications</div>
