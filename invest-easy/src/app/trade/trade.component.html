@@ -15,7 +15,7 @@
 
   <div class="dashboard asset-dashboard shadow-md hover:shadow-lg" (click)="navigateTo('/asset-detail')">
     <div class="dashboard-header">
-      <h3 class="cursor-pointer text-md font-bold">Total Asset</h3>
+      <h3 class="cursor-pointer text-md font-semibold">Total Asset</h3>
       <button class="toggle-metrics" (click)="toggleMetrics($event)">
         <i class="pi" [class]="showMetrics ? 'pi-eye' : 'pi-eye-slash'"></i>
       </button>
@@ -49,7 +49,7 @@
   </div>
 
   <div class="my-2">
-    <h3 class="text-md font-bold">Positions</h3>
+    <h3 class="text-md font-semibold">Positions</h3>
     <p-table [value]="positions" [rowHover]="true" [responsive]="true" styleClass="p-datatable-sm p-datatable-striped"
       stripedRows [scrollable]="true">
       <ng-template pTemplate="header">
@@ -81,8 +81,8 @@
     </p-table>
   </div>
 
-  <div class="my-2">
-    <h3 class="text-md font-bold">Recent Orders</h3>
+  <div class="mt-6">
+    <h3 class="text-md font-semibold">Recent Orders</h3>
     <div class="mt-2">
       <app-orders></app-orders>
     </div>
