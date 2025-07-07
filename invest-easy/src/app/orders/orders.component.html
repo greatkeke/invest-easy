@@ -15,7 +15,9 @@
         <td>
           <small [class]="getStatusSeverity(order.status)">{{order.status}}</small>
         </td>
-        <td>{{order.name}}</td>
+        <td>
+          <div class="line-clamp-2 text-ellipsis">{{order.name}}</div>
+        </td>
         <td>{{order.price}}</td>
         <td>{{order.quantity}}/{{order.filled}}</td>
       </tr>
@@ -24,10 +26,14 @@
     <ng-template #expandedrow let-order>
       <tr>
         <td colspan="4" class="button-container">
-          <p-button label="Quotes" size="small" variant="outlined" styleClass="mr-2" (click)="navigateTo('/trade-stocks',{code: order.code})"></p-button>
-          <p-button label="Edit" size="small" variant="outlined" styleClass="mr-2" [disabled]="order.status == 'FILLED'"></p-button>
-          <p-button label="Cancel" size="small" variant="outlined" styleClass="mr-2" [disabled]="order.status == 'FILLED'"></p-button>
-          <p-button label="Details" size="small" variant="outlined" styleClass="" (click)="navigateTo('/order-detail',{id:order.id})"></p-button>
+          <p-button label="Quotes" size="small" variant="outlined" styleClass="mr-2"
+            (click)="navigateTo('/trade-stocks',{code: order.code})"></p-button>
+          <p-button label="Edit" size="small" variant="outlined" styleClass="mr-2"
+            [disabled]="order.status == 'FILLED'"></p-button>
+          <p-button label="Cancel" size="small" variant="outlined" styleClass="mr-2"
+            [disabled]="order.status == 'FILLED'"></p-button>
+          <p-button label="Details" size="small" variant="outlined" styleClass=""
+            (click)="navigateTo('/order-detail',{id:order.id})"></p-button>
         </td>
       </tr>
     </ng-template>
