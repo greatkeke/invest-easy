@@ -24,7 +24,7 @@ export class NotificationCenterComponent {
     { 
       id: 2, 
       title: 'Account Alert', 
-      content: 'Your portfolio has been updated. <a href="/portfolio" class="text-blue-500 hover:underline">Check now</a>', 
+      content: 'Your portfolio has been updated. <a href="/trade" class="text-blue-500 hover:underline">Check now</a>', 
       read: true, 
       date: new Date(),
       expanded: false
