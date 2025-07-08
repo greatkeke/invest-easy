@@ -1,41 +1,38 @@
 <app-top-navigation title="Exchange"></app-top-navigation>
 
 <div class="p-4">
-  <p-card header="Currency Exchange">
-    <form class="flex flex-col gap-4">
+  <div header="Currency Exchange">
+    <form #exchangeForm="ngForm" (ngSubmit)="submitExchange()" class="flex flex-col gap-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- From Group -->
         <div class="p-4 border rounded">
           <h3 class="text-lg font-semibold mb-4">From</h3>
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
-            <p-select [options]="currencies" [(ngModel)]="fromCurrency" optionLabel="name" optionValue="code"
-              name="fromCurrency">
-              <ng-template pTemplate="selectedItem">
+            <p-select [options]="accounts" [(ngModel)]="fromAccount" name="fromAccount">
+              <ng-template #selectedItem let-selectedAccount>
                 <div class="flex items-center gap-2">
-                  <i class="" [ngClass]="'fi fi-' + fromCurrency.toLowerCase()"></i>
-                  <span>{{fromCurrency}}</span>
+                  <i class="" [ngClass]="'fi fi-' + selectedAccount.flag"></i>
+                  <span>{{selectedAccount.ccy}}</span>
                 </div>
               </ng-template>
-              <ng-template let-currency pTemplate="item">
+              <ng-template let-account #item>
                 <div class="flex items-center gap-2">
-                  <i class="" [ngClass]="'fi fi-' + currency.code.toLowerCase()"></i>
-                  <span>{{currency.name}} ({{currency.code}})</span>
+                  <i class="" [ngClass]="'fi fi-' + account.flag"></i>
+                  <span>{{account.name}} ({{account.ccy}})</span>
                 </div>
               </ng-template>
             </p-select>
 
-            <p-inputNumber [(ngModel)]="fromAmount" name="fromAmount" placeholder="Amount"
-              mode="decimal"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="fromAmount" name="fromAmount" placeholder="Amount" mode="decimal"
+              (onInput)="calculateAmount()"></p-inputNumber>
           </div>
 
           <div class="flex flex-col gap-2 text-sm">
-            <div>Amount Available: {{getAvailableAmount(fromCurrency)}}</div>
-            <div>Reference Rate: {{getExchangeRate(fromCurrency, toCurrency)}}</div>
-            <div>
-              <label class="text-sm mr-2">Account:</label>
-              <p-select [options]="accounts" [(ngModel)]="fromAccount" optionLabel="name" optionValue="id"
-                name="fromAccount"></p-select>
+            <div *ngIf="fromAccount">Amount Available: {{fromAccount.balance | currency:
+              fromAccount.ccy:'symbol':'1.2-2'}}</div>
+            <div *ngIf="fromAccount && toAccount">Reference Rate: {{getExchangeRate(fromAccount.ccy, toAccount.ccy) |
+              number:'1.5-5'}}
             </div>
           </div>
         </div>
@@ -45,28 +42,31 @@
           <h3 class="text-lg font-semibold mb-4">To</h3>
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
-            <p-select [options]="currencies" [(ngModel)]="toCurrency" optionLabel="name" optionValue="code"
-              name="toCurrency">
-              <ng-template pTemplate="selectedItem">
+            <p-select [options]="accounts" [(ngModel)]="toAccount" name="toAccount">
+              <ng-template #selectedItem let-selectedAccount>
                 <div class="flex items-center gap-2">
-                  <i class="" [ngClass]="'fi fi-' + toCurrency.toLowerCase()"></i>
-                  <span>{{toCurrency}}</span>
+                  <i class="" [ngClass]="'fi fi-' + selectedAccount.flag"></i>
+                  <span>{{selectedAccount.ccy}}</span>
                 </div>
               </ng-template>
-              <ng-template let-currency pTemplate="item">
+              <ng-template let-account pTemplate="item">
                 <div class="flex items-center gap-2">
-                  <i class="" [ngClass]="'fi fi-' + currency.code.toLowerCase()"></i>
-                  <span>{{currency.name}} ({{currency.code}})</span>
+                  <i class="" [ngClass]="'fi fi-' + account.flag"></i>
+                  <span>{{account.name}} ({{account.code}})</span>
                 </div>
               </ng-template>
             </p-select>
 
-            <p-inputNumber [(ngModel)]="toAmount" name="toAmount" placeholder="Amount" mode="decimal"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="toAmount" name="toAmount" placeholder="Amount" mode="decimal"
+              (onInput)="calculateAmount(false)"></p-inputNumber>
           </div>
 
           <div class="flex flex-col gap-2 text-sm">
-            <div>Completed: {{completedDate | date:'medium'}}</div>
-            <div>Account: Main Account</div>
+            <div *ngIf="toAccount">Amount Available: {{toAccount.balance | currency: toAccount.ccy:'symbol':'1.2-2'}}
+            </div>
+            <div *ngIf="fromAccount && toAccount">Reference Rate: {{getExchangeRate(toAccount.ccy, fromAccount.ccy) |
+              number: '1.5-5'}}
+            </div>
           </div>
         </div>
       </div>
@@ -82,12 +82,11 @@
       </div>
 
       <div class="flex flex-col items-center mt-6">
-        <p-button class="w-full p-4" styleClass="w-full" variant="outlined" label="Submit"
-          (onClick)="submitExchange()"></p-button>
+        <p-button class="w-full p-4" styleClass="w-full" variant="outlined" label="Submit" type="Submit"></p-button>
         <a routerLink="/exchange/history" class="text-primary-500 underline">View Exchange History</a>
       </div>
     </form>
-  </p-card>
+  </div>
 
   <p-dialog [(visible)]="showDialog" [modal]="true" [style]="{width: '450px'}">
     <ng-template pTemplate="header">
@@ -95,19 +94,19 @@
     </ng-template>
     <div class="flex flex-col gap-2">
       <p>{{dialogMessage}}</p>
-      <div *ngIf="dialogSuccess" class="grid grid-cols-2 gap-2 mt-2">
-        <div>From:</div>
-        <div>{{fromAmount}} {{fromCurrency}}</div>
-        <div>To:</div>
-        <div>{{toAmount}} {{toCurrency}}</div>
+      <div *ngIf="dialogSuccess && fromAccount && toAccount" class="grid grid-cols-2 gap-2 mt-2">
+        <div>From {{fromAccount.ccy}}:</div>
+        <div class="line-clamp-1 text-ellipsis">{{fromAmount | currency: fromAccount.ccy}}</div>
+        <div>To {{toAccount.ccy}}:</div>
+        <div class="line-clamp-1 text-ellipsis">{{toAmount | currency: toAccount.ccy}}</div>
         <div>Rate:</div>
-        <div>{{getExchangeRate(fromCurrency, toCurrency)}}</div>
+        <div>{{getExchangeRate(fromAccount.ccy, toAccount.ccy) | number:'1.5-5'}}</div>
         <div>Date:</div>
         <div>{{completedDate | date:'medium'}}</div>
       </div>
     </div>
     <ng-template pTemplate="footer">
-      <p-button label="OK" (onClick)="showDialog = false" styleClass="p-button-text"></p-button>
+      <p-button label="OK" (onClick)="showDialog = false" variant="outlined"></p-button>
     </ng-template>
   </p-dialog>
 </div>

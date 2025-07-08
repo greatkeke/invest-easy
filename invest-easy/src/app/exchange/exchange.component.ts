@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -7,18 +7,12 @@ import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { SelectModule } from 'primeng/select';
+import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
 
-interface Currency {
-  code: string;
-  name: string;
+interface FlagAccountBalance extends AccountBalance {
+  flag: string;
 }
 
-interface Account {
-  id: string;
-  name: string;
-  balance: number;
-  currency: string;
-}
 
 @Component({
   selector: 'app-exchange',
@@ -36,45 +30,48 @@ interface Account {
   templateUrl: './exchange.component.html',
   styleUrl: './exchange.component.scss'
 })
-export class ExchangeComponent {
-  currencies: Currency[] = [
-    { code: 'hk', name: 'Hong Kong Dollar' },
-    { code: 'us', name: 'US Dollar' },
-    { code: 'eu', name: 'Euro' },
-    { code: 'gb', name: 'British Pound' },
-    { code: 'jp', name: 'Japanese Yen' },
-    { code: 'cn', name: 'Chinese Yuan' }
-  ];
+export class ExchangeComponent implements OnInit {
+  accounts: FlagAccountBalance[] = [];
 
-  accounts: Account[] = [
-    { id: '1', name: 'Main Account', balance: 50000, currency: 'hk' },
-    { id: '2', name: 'Savings Account', balance: 20000, currency: 'hk' },
-    { id: '3', name: 'Investment Account', balance: 15000, currency: 'us' }
-  ];
-
-  fromCurrency: string = 'hk';
-  toCurrency: string = 'us';
-  fromAmount: number | null = null;
-  toAmount: number | null = null;
-  fromAccount: string = '1';
+  fromAccount?: FlagAccountBalance;
+  fromAmount: number = 0.0;
+  toAccount?: FlagAccountBalance;
+  toCcy: string = "";
+  toAmount: number = 0.0;
 
   showDialog = false;
   dialogSuccess = false;
   dialogMessage = '';
   completedDate = new Date();
 
-  getAvailableAmount(currency: string): string {
-    const account = this.accounts.find(a => a.id === this.fromAccount);
-    if (account && account.currency === currency) {
-      return account.balance.toLocaleString();
+  constructor(private accountSvc: AccountsService) { }
+
+  async ngOnInit(): Promise<void> {
+    const balances = await this.accountSvc.fetchAccountBalances();
+    this.accounts = balances.map(b => ({
+      ...b,
+      flag: b.ccy.slice(0, 2).toLocaleLowerCase()
+    } as FlagAccountBalance));
+
+    let hkdAccount = this.accounts.filter(x => x.ccy == 'HKD')[0];
+    if (hkdAccount) {
+      this.fromAccount = hkdAccount;
     }
-    return '0';
+    let usdAccount = this.accounts.filter(x => x.ccy == "USD")[0];
+    if (usdAccount) {
+      this.toAccount = usdAccount;
+    }
   }
 
-  getExchangeRate(from: string, to: string): number {
+
+  getExchangeRate(from?: string, to?: string): number {
+    if (!!!from || !!!to) {
+      return 1;
+    }
     // Simplified exchange rates - in real app would fetch from API
     const rates: Record<string, number> = {
       'HKD': 1,
+      'CNH': 0.97,
       'USD': 0.13,
       'EUR': 0.12,
       'GBP': 0.10,
@@ -86,8 +83,19 @@ export class ExchangeComponent {
     return rates[to] / rates[from];
   }
 
+  calculateAmount(isFrom = true) {
+    let rate = this.getExchangeRate(this.fromAccount?.ccy, this.toAccount?.ccy)
+    let a = isFrom ? this.fromAmount : this.toAmount;
+    let b = isFrom ? a * rate : a / rate;
+    if (isFrom) {
+      this.toAmount = b;
+    } else {
+      this.fromAmount = b;
+    }
+  }
+
   submitExchange() {
-    if (!this.fromAmount || !this.toAmount) {
+    if (!this.fromAccount || !this.toAccount) {
       this.dialogSuccess = false;
       this.dialogMessage = 'Please enter valid amounts for both currencies';
       this.showDialog = true;
