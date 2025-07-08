@@ -9,6 +9,7 @@ export interface AccountBalance {
   balance_id: string;
   balance: number;
   ccy: string;
+  flag: string;
 }
 
 import { Injectable } from '@angular/core';
@@ -36,7 +37,10 @@ export class AccountsService {
   async fetchAccountBalances(): Promise<AccountBalance[]> {
     try {
       const balances = await lastValueFrom(this.http.get<AccountBalance[]>('/accounts/balances'));
-      return balances;
+      return balances.map(b => ({
+        ...b,
+        flag: b.ccy.slice(0, 2).toLocaleLowerCase()
+      }));
     } catch (error) {
       throw error;
     }

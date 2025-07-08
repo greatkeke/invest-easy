@@ -9,10 +9,6 @@ import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.
 import { SelectModule } from 'primeng/select';
 import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
 
-interface FlagAccountBalance extends AccountBalance {
-  flag: string;
-}
-
 
 @Component({
   selector: 'app-exchange',
@@ -31,11 +27,11 @@ interface FlagAccountBalance extends AccountBalance {
   styleUrl: './exchange.component.scss'
 })
 export class ExchangeComponent implements OnInit {
-  accounts: FlagAccountBalance[] = [];
+  accounts: AccountBalance[] = [];
 
-  fromAccount?: FlagAccountBalance;
+  fromAccount?: AccountBalance;
   fromAmount: number = 0.0;
-  toAccount?: FlagAccountBalance;
+  toAccount?: AccountBalance;
   toCcy: string = "";
   toAmount: number = 0.0;
 
@@ -47,11 +43,7 @@ export class ExchangeComponent implements OnInit {
   constructor(private accountSvc: AccountsService) { }
 
   async ngOnInit(): Promise<void> {
-    const balances = await this.accountSvc.fetchAccountBalances();
-    this.accounts = balances.map(b => ({
-      ...b,
-      flag: b.ccy.slice(0, 2).toLocaleLowerCase()
-    } as FlagAccountBalance));
+    this.accounts = await this.accountSvc.fetchAccountBalances();
 
     let hkdAccount = this.accounts.filter(x => x.ccy == 'HKD')[0];
     if (hkdAccount) {

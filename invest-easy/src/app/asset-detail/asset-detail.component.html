@@ -14,12 +14,15 @@
       <p-accordion [multiple]="true" [(value)]="expand_id" class=""
         styleClass="rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
         <p-accordion-panel *ngFor="let account of accountBalances" [value]="account.id">
-          <p-accordion-header>{{account.name}}</p-accordion-header>
+          <p-accordion-header>
+            <i [ngClass]="'fi fi-' + account.flag"></i>
+            {{account.name}}
+          </p-accordion-header>
           <p-accordion-content>
             <div class="grid grid-cols-2 gap-4 p-3">
               <div class="text-gray-600">Balance:</div>
               <div class="text-right">
-                {{account.balance ? (account.balance | number:'1.2-2') + ' ' + account.ccy : 'N/A'}}
+                {{account.balance | currency : account.ccy : 'symbol': '1.2-2'}}
               </div>
             </div>
           </p-accordion-content>
