@@ -19,6 +19,7 @@ from .endpoints import (
     orders_api,
     watch_list_api,
     settings_api,
+    news_api
 )
 from .infrastructure.default_settings import predefined_settings
 
@@ -67,6 +68,7 @@ app.include_router(position_api.router, prefix="/api")
 app.include_router(orders_api.router, prefix="/api")
 app.include_router(watch_list_api.router, prefix="/api")
 app.include_router(settings_api.router, prefix="/api")
+app.include_router(news_api.router, prefix="/api")
 
 
 app.add_middleware(

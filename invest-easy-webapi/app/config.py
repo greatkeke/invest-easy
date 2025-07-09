@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     allow_origins: str = "*"  # Default value, will be overridden by .env
     futu_openD_host: str = "127.0.0.1"
     futu_openD_port: int = 1000
+    news_api_key: str = ""
 
     model_config = SettingsConfigDict(
         env_file=os.path.abspath(
