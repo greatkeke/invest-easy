@@ -18,5 +18,5 @@ async def get_news_endpoint(
     page: int = 1,
     page_size: int = 10
 ):
-    news = await newsSvc.get_paginated_news(user, page, page_size)
+    news = await newsSvc.get_paginated_news(page, page_size)
     return news
