@@ -8,8 +8,8 @@
         <span class="news-date">{{article.published_at | date:'mediumDate'}}</span>
       </div>
       <h3 class="news-title">{{article.title}}</h3>
-      <div>
-        
+      <div *ngIf="article.image_url" class="">
+        <img [src]="article.image_url" class="w-full md:w-1/4">
       </div>
       <p class="news-description">{{article.description}}</p>
       <a [href]="article.url" target="_blank" class="read-more">Read more</a>
