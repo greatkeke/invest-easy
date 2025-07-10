@@ -7,6 +7,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CommonModule } from '@angular/common';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-orders-detail',
@@ -16,7 +17,8 @@ import { CommonModule } from '@angular/common';
     CardModule,
     FieldsetModule,
     TagModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    SkeletonModule
   ],
   templateUrl: './order-detail.component.html',
   styleUrl: './order-detail.component.scss'
