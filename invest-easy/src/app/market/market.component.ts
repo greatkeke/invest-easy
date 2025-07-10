@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
 import { HeaderComponent } from '../shared/header/header.component';
 import { SecuritiesQueryComponent } from '../securities-query/securities-query.component';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-market',
@@ -26,7 +27,8 @@ import { SecuritiesQueryComponent } from '../securities-query/securities-query.c
     CardModule,
     TabsModule,
     RouterModule,
-    SecuritiesQueryComponent
+    SecuritiesQueryComponent,
+    SkeletonModule
   ]
 })
 export class MarketComponent implements OnInit {
