@@ -5,7 +5,6 @@ from sqlalchemy import select, and_
 from ..domain.users import User
 from ..domain.accounts import Account, UserAccount
 from ..domain.balance import Balance
-from sqlalchemy import select
 from ..infrastructure.db import get_async_session
 
 
@@ -15,7 +14,7 @@ class AccountService:
 
     async def get_user_accounts(self, user: User):
         result = await self.session.execute(
-            select(Account.id, Account.name)
+            select(Account)
             .join(UserAccount, UserAccount.account_id == Account.id)
             .where(
                 UserAccount.user_id == user.id,
@@ -24,7 +23,10 @@ class AccountService:
                 Account.is_active == True,
             )
         )
-        return [{"id": str(row[0]), "name": row[1]} for row in result.all()]
+        return [
+            {"id": account.id, "name": account.name, "ccy": account.ccy}
+            for account in result.scalars().all()
+        ]
 
     async def get_user_accounts_balances(self, user: User, is_overview: bool = False):
         # Get accounts
@@ -32,22 +34,19 @@ class AccountService:
             select(Account, Balance)
             .outerjoin(
                 UserAccount,
-                and_(
-                    UserAccount.account_id == Account.id,
-                    UserAccount.user_id == user.id,
-                    UserAccount.is_active == True,
-                ),
+                UserAccount.account_id == Account.id,
             )
             .outerjoin(
                 Balance,
-                and_(
-                    Balance.user_account_id == UserAccount.id, Balance.is_active == True
-                ),
+                Balance.user_account_id == UserAccount.id,
             )
             .where(
+                UserAccount.user_id == user.id,
+                UserAccount.is_active == True,
                 Account.is_overview == is_overview,
-                Balance.is_overview == is_overview,
                 Account.is_active == True,
+                Balance.is_overview == is_overview,
+                Balance.is_active == True,
             )
         )
         accounts = [

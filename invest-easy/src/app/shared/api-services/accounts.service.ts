@@ -1,15 +1,13 @@
 export interface Account {
-  value: string;
-  label: string;
-}
-
-export interface AccountBalance {
   id: string;
   name: string;
-  balance_id: string;
-  balance: number;
   ccy: string;
   flag: string;
+}
+
+export interface AccountBalance extends Account {
+  balance_id: string;
+  balance: number;
 }
 
 import { Injectable } from '@angular/core';
@@ -26,12 +24,16 @@ export class AccountsService {
     try {
       const accounts = await lastValueFrom(this.http.get<any[]>('/accounts/'));
       return accounts.map(account => ({
-        label: account.name,
-        value: account.id
+        ...account,
+        flag: this.getFlagFromCcy(account.ccy)
       } as Account));
     } catch (error) {
       throw error;
     }
+  }
+
+  private getFlagFromCcy(ccy: string): string {
+    return ccy.slice(0, 2).toLocaleLowerCase();
   }
 
   async fetchAccountBalances(): Promise<AccountBalance[]> {
@@ -39,7 +41,7 @@ export class AccountsService {
       const balances = await lastValueFrom(this.http.get<AccountBalance[]>('/accounts/balances'));
       return balances.map(b => ({
         ...b,
-        flag: b.ccy.slice(0, 2).toLocaleLowerCase()
+        flag: this.getFlagFromCcy(b.ccy)
       }));
     } catch (error) {
       throw error;

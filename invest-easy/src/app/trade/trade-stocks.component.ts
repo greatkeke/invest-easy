@@ -252,7 +252,7 @@ export class TradeStocksComponent implements OnInit {
     price: 0,
     quantity: 100,
     goodUntil: new Date(),
-    payFrom: this.accounts.length > 0 ? this.accounts[0] : { label: '', value: '' }
+    payFrom: this.accounts.length > 0 ? this.accounts[0] : { id: '', name: '' }
   };
 
   // Calculate estimated total
@@ -285,7 +285,7 @@ export class TradeStocksComponent implements OnInit {
 
     try {
       const request = {
-        account_id: this.orderForm.payFrom.value,
+        account_id: this.orderForm.payFrom.id,
         code: this.security_code,
         price: this.orderForm.price,
         quantity: this.orderForm.quantity

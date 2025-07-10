@@ -15,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { lastValueFrom } from 'rxjs';
+import { AccountSelectorComponent } from '../shared/account-selector/account-selector.component';
 
 @Component({
   selector: 'app-transfer',
@@ -30,7 +31,8 @@ import { lastValueFrom } from 'rxjs';
     PasswordModule,
     ButtonModule,
     TopNavigationComponent,
-    HistoryComponent
+    HistoryComponent,
+    AccountSelectorComponent
   ],
   templateUrl: './transfer.component.html',
   styleUrls: ['./transfer.component.scss'],
@@ -40,14 +42,14 @@ export class TransferComponent implements OnInit {
   accounts: Account[] = [];
 
   inForm = {
-    toAccount: '',
-    amount: null
+    toAccount: null as Account | null,
+    amount: null as number | null
   };
 
   outForm = {
-    fromAccount: '',
+    fromAccount: null as Account | null,
     balance: 0, // Mock balance
-    amount: null,
+    amount: null as number | null,
     password: ''
   };
 
@@ -80,8 +82,8 @@ export class TransferComponent implements OnInit {
     this.accountsService.fetchAccounts().then(accounts => {
       this.accounts = accounts;
       if (this.accounts.length > 0) {
-        this.inForm.toAccount = this.accounts[0].value;
-        this.outForm.fromAccount = this.accounts[0].value;
+        this.inForm.toAccount = this.accounts[0];
+        this.outForm.fromAccount = this.accounts[0];
       }
       this.isLoading = false;
     }).catch(() => {
@@ -125,7 +127,7 @@ export class TransferComponent implements OnInit {
     this.isLoading = true;
     try {
       await lastValueFrom(this.http.post('/balance/transfer/in', {
-        account_id: this.inForm.toAccount,
+        account_id: this.inForm.toAccount?.id,
         amount: this.inForm.amount,
         transfer_in: true
       }));
@@ -133,7 +135,7 @@ export class TransferComponent implements OnInit {
       this.RecordChangesAt = new Date();
       this.showSuccessDialog = true;
     } catch (error) {
-      let accountName = this.accounts.filter(x => x.value === this.inForm.toAccount)?.pop()?.label;
+      let accountName = this.accounts.filter(x => x.id === this.inForm.toAccount?.id)?.pop()?.name;
       this.messageService.add({
         severity: 'error',
         summary: 'Failed',
@@ -158,7 +160,7 @@ export class TransferComponent implements OnInit {
     this.isLoading = true;
     try {
       await lastValueFrom(this.http.post('/balance/transfer/out', {
-        account_id: this.outForm.fromAccount,
+        account_id: this.outForm.fromAccount?.id,
         amount: this.outForm.amount,
         password: this.outForm.password
       }));
@@ -166,7 +168,7 @@ export class TransferComponent implements OnInit {
       this.RecordChangesAt = new Date();
       this.showSuccessDialog = true;
     } catch (error) {
-      let accountName = this.accounts.filter(x => x.value === this.outForm.fromAccount)?.pop()?.label;
+      let accountName = this.accounts.filter(x => x.id === this.outForm.fromAccount?.id)?.pop()?.name;
       this.messageService.add({
         severity: 'error',
         summary: 'Failed',

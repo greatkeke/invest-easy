@@ -1,0 +1,14 @@
+<p-select [options]="options" [(ngModel)]="value" [name]="name" (onChange)="onValueChange($event.value)">
+  <ng-template #selectedItem let-selectedAccount>
+    <div class="flex items-center gap-2">
+      <i class="" [ngClass]="'fi fi-' + selectedAccount.flag"></i>
+      <span>{{selectedAccount.ccy}}</span>
+    </div>
+  </ng-template>
+  <ng-template let-account #item>
+    <div class="flex items-center gap-2">
+      <i class="" [ngClass]="'fi fi-' + account.flag"></i>
+      <span>{{account.name}} ({{account.ccy}})</span>
+    </div>
+  </ng-template>
+</p-select>

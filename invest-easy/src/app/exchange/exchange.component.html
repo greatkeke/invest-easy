@@ -9,20 +9,7 @@
           <h3 class="text-lg font-semibold mb-4">From</h3>
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
-            <p-select [options]="accounts" [(ngModel)]="fromAccount" name="fromAccount">
-              <ng-template #selectedItem let-selectedAccount>
-                <div class="flex items-center gap-2">
-                  <i class="" [ngClass]="'fi fi-' + selectedAccount.flag"></i>
-                  <span>{{selectedAccount.ccy}}</span>
-                </div>
-              </ng-template>
-              <ng-template let-account #item>
-                <div class="flex items-center gap-2">
-                  <i class="" [ngClass]="'fi fi-' + account.flag"></i>
-                  <span>{{account.name}} ({{account.ccy}})</span>
-                </div>
-              </ng-template>
-            </p-select>
+            <app-account-selector [options]="accounts" [(value)]="fromAccount" name="fromAccount"></app-account-selector>
 
             <p-inputNumber [(ngModel)]="fromAmount" name="fromAmount" placeholder="Amount" mode="decimal"
               (onInput)="calculateAmount()"></p-inputNumber>
@@ -42,20 +29,7 @@
           <h3 class="text-lg font-semibold mb-4">To</h3>
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
-            <p-select [options]="accounts" [(ngModel)]="toAccount" name="toAccount">
-              <ng-template #selectedItem let-selectedAccount>
-                <div class="flex items-center gap-2">
-                  <i class="" [ngClass]="'fi fi-' + selectedAccount.flag"></i>
-                  <span>{{selectedAccount.ccy}}</span>
-                </div>
-              </ng-template>
-              <ng-template let-account pTemplate="item">
-                <div class="flex items-center gap-2">
-                  <i class="" [ngClass]="'fi fi-' + account.flag"></i>
-                  <span>{{account.name}} ({{account.code}})</span>
-                </div>
-              </ng-template>
-            </p-select>
+            <app-account-selector [options]="accounts" [(value)]="toAccount" name="toAccount"></app-account-selector>
 
             <p-inputNumber [(ngModel)]="toAmount" name="toAmount" placeholder="Amount" mode="decimal"
               (onInput)="calculateAmount(false)"></p-inputNumber>

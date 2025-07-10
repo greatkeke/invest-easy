@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { SelectModule } from 'primeng/select';
+import { AccountSelectorComponent } from '../shared/account-selector/account-selector.component';
 import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
 
 
@@ -21,7 +22,8 @@ import { AccountBalance, AccountsService } from '../shared/api-services/accounts
     ButtonModule,
     DialogModule,
     CardModule,
-    TopNavigationComponent
+    TopNavigationComponent,
+    AccountSelectorComponent
   ],
   templateUrl: './exchange.component.html',
   styleUrl: './exchange.component.scss'

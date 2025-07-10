@@ -21,8 +21,8 @@
           <form (ngSubmit)="submitIn()" class="space-y-4">
             <div class="p-field">
               <label for="toAccount" class="block mb-2 text-sm">To Account</label>
-              <p-select [options]="accounts" [(ngModel)]="inForm.toAccount" name="toAccount" required
-                inputId="toAccount" size="small" placeholder="chose an account"></p-select>
+              <app-account-selector [options]="accounts" [(value)]="inForm.toAccount"
+                name="toAccount"></app-account-selector>
             </div>
             <div class="p-field">
               <label for="amount" class="block mb-2 text-sm">Amount</label>
@@ -40,8 +40,8 @@
           <form (ngSubmit)="submitOut()" class="space-y-4">
             <div class="p-field">
               <label for="fromAccount" class="block mb-2 text-sm">From Account</label>
-              <p-select [options]="accounts" [(ngModel)]="outForm.fromAccount" name="fromAccount" required
-                inputId="fromAccount" size="small" placeholder="chose an account"></p-select>
+              <app-account-selector [options]="accounts" [(value)]="outForm.fromAccount"
+                name="fromAccount"></app-account-selector>
             </div>
             <!-- <div class="p-field">
               <label for="balance" class="block mb-2 text-sm">Available Balance</label>
