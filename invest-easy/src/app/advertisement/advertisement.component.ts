@@ -4,12 +4,13 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CommonModule } from '@angular/common';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-advertisement',
   templateUrl: './advertisement.component.html',
   styleUrls: ['./advertisement.component.scss'],
-  imports: [TopNavigationComponent, ProgressBarModule, ProgressSpinnerModule, CommonModule]
+  imports: [TopNavigationComponent, ProgressBarModule, ProgressSpinnerModule, CommonModule, SkeletonModule]
 })
 export class AdvertisementComponent {
   isLoading: boolean = true;

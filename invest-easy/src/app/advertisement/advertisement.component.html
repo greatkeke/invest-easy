@@ -2,11 +2,20 @@
     <app-top-navigation [title]="adType"></app-top-navigation>
 
     <div class="ad-content p-4">
-        <p-progressBar *ngIf="isLoading" mode="indeterminate" [style]="{'height': '6px', 'width': '100%'}"></p-progressBar>
-        <div *ngIf="isLoading" class="flex flex-col items-center justify-center gap-8 h-96">
-            <p-progressSpinner styleClass="w-16 h-16 border-red-500" strokeWidth="4" animationDuration="1s">
-            </p-progressSpinner>
-            <p class="text-gray-600">Loading...</p>
+        <p-progressBar *ngIf="isLoading" mode="indeterminate"
+            [style]="{'height': '6px', 'width': '100%'}"></p-progressBar>
+        <div *ngIf="isLoading">
+            <div class="card">
+                <div class="flex flex-wrap">
+                    <div class="w-full xl:w-6/12 p-4">
+                        <p-skeleton class="mb-2" />
+                        <p-skeleton width="10rem" class="mb-2" />
+                        <p-skeleton width="5rem" class="mb-2" />
+                        <p-skeleton height="2rem" class="mb-2" />
+                        <p-skeleton width="10rem" height="4rem" />
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div *ngIf="!isLoading" class="flex flex-col md:flex-row gap-4">
