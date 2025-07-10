@@ -7,11 +7,12 @@ import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.
 import { HistoryComponent } from '../history/history.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-asset-detail',
   standalone: true,
-  imports: [CommonModule, ButtonModule, TableModule, TopNavigationComponent, HistoryComponent, ProgressSpinnerModule, AccordionModule],
+  imports: [CommonModule, ButtonModule, TableModule, TopNavigationComponent, HistoryComponent, ProgressSpinnerModule, AccordionModule, SkeletonModule],
   templateUrl: './asset-detail.component.html',
   styleUrl: './asset-detail.component.scss'
 })
