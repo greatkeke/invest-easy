@@ -2,11 +2,12 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../shared/header/header.component';
 import { NewsItem, NewsService } from '../shared/api-services/news.service';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, SkeletonModule],
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss']
 })
