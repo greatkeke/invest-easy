@@ -6,10 +6,10 @@
             <div class="flex justify-between items-center">
                 <span class="font-medium">
                     <ng-container [ngSwitch]="record.type">
-                        <span *ngSwitchCase="BalanceType.TRANSFER_IN">Transfer In</span>
-                        <span *ngSwitchCase="BalanceType.TRANSFER_OUT">Transfer Out</span>
-                        <span *ngSwitchCase="BalanceType.TRADE_BUY">Trade Buy</span>
-                        <span *ngSwitchCase="BalanceType.TRADE_SELL">Trade Sell</span>
+                        <span *ngSwitchCase="BalanceType.TRANSFER_IN">Transfer to Payees/FPS</span>
+                        <span *ngSwitchCase="BalanceType.TRANSFER_OUT">Transfer to HSBC account</span>
+                        <span *ngSwitchCase="BalanceType.TRADE_BUY">Trade Purchase</span>
+                        <span *ngSwitchCase="BalanceType.TRADE_SELL">Trade Sale</span>
                     </ng-container>
                 </span>
                 <span class="font-semibold">{{ record.amount | currency }} {{record.ccy}}</span>
