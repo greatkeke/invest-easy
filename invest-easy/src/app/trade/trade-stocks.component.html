@@ -145,7 +145,7 @@
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Account buying power</label>
-          <span class="text-sm font-bold">$25,000.00</span>
+          <span class="text-sm font-bold">{{orderForm.payFrom.balance | currency: orderForm.payFrom.ccy}}</span>
         </div>
       </form>
     </div>
@@ -184,11 +184,11 @@
         </div>
         <div>
           <label class="block text-sm text-gray-700">Pay From</label>
-          <p class="font-medium">{{orderForm.payFrom.name}}</p>
+          <p class="font-medium"><i [ngClass]="'fi fi-' + orderForm.payFrom.flag" class="mr-2"></i>{{orderForm.payFrom.name}}</p>
         </div>
         <div>
           <label class="block text-sm text-gray-700">Estimated Total</label>
-          <p class="font-medium">{{estimatedTotal | currency:'USD'}}</p>
+          <p class="font-medium">{{estimatedTotal | currency: orderForm.payFrom.ccy }}</p>
         </div>
       </div>
     </div>

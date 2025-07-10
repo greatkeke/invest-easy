@@ -14,7 +14,7 @@ import { MessageService } from 'primeng/api';
 import { MarketService } from '../shared/api-services/market.service';
 import { MarketSnapshot } from '../shared/api-services/market-snapshot.model';
 import { RTData } from '../shared/api-services/rt-data.model';
-import { Account, AccountsService } from '../shared/api-services/accounts.service';
+import { Account, AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
 import { TradeService } from '../shared/api-services/trade.service';
 import { WatchlistService } from '../shared/api-services/watchlist.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -163,7 +163,7 @@ export class TradeStocksComponent implements OnInit {
 
   async loadAccounts() {
     try {
-      const accounts = await this.accountsService.fetchAccounts();
+      const accounts = await this.accountsService.fetchAccountBalances();
       if (accounts && accounts.length > 0) {
         this.accounts = accounts;
         this.orderForm.payFrom = accounts[0];
@@ -248,13 +248,13 @@ export class TradeStocksComponent implements OnInit {
     { label: 'Limit price', value: 'limit' },
     { label: 'Market price', value: 'market' }
   ];
-  accounts: Account[] = [];
+  accounts: AccountBalance[] = [];
   orderForm = {
     type: this.orderTypes[0],
     price: 0,
     quantity: 100,
     goodUntil: new Date(),
-    payFrom: this.accounts.length > 0 ? this.accounts[0] : { id: '', name: '' }
+    payFrom: this.accounts.length > 0 ? this.accounts[0] : { id: '', name: '', balance: 0.0, ccy: "HKD", flag: 'hk' }
   };
 
   // Calculate estimated total
