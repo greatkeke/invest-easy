@@ -20,6 +20,7 @@ import { WatchlistService } from '../shared/api-services/watchlist.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { SecuritiesQueryComponent } from '../securities-query/securities-query.component';
+import { AccountSelectorComponent } from '../shared/account-selector/account-selector.component';
 
 interface ChartData {
   labels: string[];
@@ -46,7 +47,8 @@ interface ChartData {
     DialogModule,
     ToastModule,
     RadioButtonModule,
-    SecuritiesQueryComponent
+    SecuritiesQueryComponent,
+    AccountSelectorComponent
   ],
   templateUrl: './trade-stocks.component.html',
   styleUrls: ['./trade-stocks.component.scss'],

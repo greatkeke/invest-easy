@@ -18,7 +18,7 @@
       <div class="flex flex-col justify-between items-start mb-4">
         <div class="w-full flex items-center gap-2 justify-between">
           <h2 class="text-md font-bold mb-2">{{marketSnapshot.name || 'N/A'}}</h2>
-          <p-button [icon]="isWatched ? 'pi pi-heart-fill' : 'pi pi-heart'" 
+          <p-button [icon]="isWatched ? 'pi pi-heart-fill' : 'pi pi-heart'"
             [styleClass]="isWatched ? 'p-button-rounded p-button-text p-button-sm p-button-danger' : 'p-button-rounded p-button-text p-button-sm'"
             (click)="addToWatchlist()" [disabled]="!marketSnapshot"></p-button>
         </div>
@@ -139,8 +139,8 @@
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Pay from</label>
-          <p-select [options]="accounts" [(ngModel)]="orderForm.payFrom" name="payFrom" optionLabel="label"
-            [showClear]="false" placeholder="Select account" size="small"></p-select>
+          <app-account-selector [options]="accounts" [(value)]="orderForm.payFrom"
+            name="payFrom"></app-account-selector>
         </div>
 
         <div>
