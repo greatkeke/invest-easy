@@ -3,10 +3,17 @@
     <div *ngIf="!isInit">
         <div *ngFor="let record of records"
             class="p-4 my-2 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-            <div>
-                <span class="text-md font-medium">{{ record.account_name }}</span>
+            <div class="text-sm text-gray-500 mb-2">
+                <div class="flex items-center justify-center">
+                    <div class="mr-2"><span>{{ record.created_at | date:'long' }}</span></div>
+                    <div class="grow border-t border-gray-300"></div>
+                </div>
             </div>
+
             <div class="flex justify-between items-center">
+                <div>
+                    <span class="text-md font-medium">{{ record.account_name }}</span>
+                </div>
                 <span class="font-medium">
                     <ng-container [ngSwitch]="record.type">
                         <span *ngSwitchCase="BalanceType.TRANSFER_IN">Transfer to Payees/FPS</span>
@@ -15,12 +22,10 @@
                         <span *ngSwitchCase="BalanceType.TRADE_SELL">Trade Sale</span>
                     </ng-container>
                 </span>
+            </div>
+            <div class="flex justify-end">
                 <span class="font-semibold">{{ record.amount | currency: record.ccy }} </span>
             </div>
-            <div class="text-sm text-gray-500">
-                <span>{{ record.created_at | date:'long' }}</span>
-            </div>
-
         </div>
     </div>
 

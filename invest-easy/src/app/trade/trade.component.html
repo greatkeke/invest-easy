@@ -67,8 +67,14 @@
           <td class="text-sm" pFrozenColumn>
             <div class="line-clamp-2 text-ellipsis">{{ position.instrument_name }}</div>
           </td>
-          <td class="text-sm">{{ position.marketValue | number:'1.2-2'}} / {{ position.quantity }}</td>
-          <td class="text-sm">{{ position.price | number:'1.2-2' }} / {{ position.cost | number:'1.2-2' }}</td>
+          <td class="text-sm">
+            <div>{{ position.marketValue | number:'1.2-2'}}</div>
+            <div>{{ position.quantity }}</div>
+          </td>
+          <td class="text-sm">
+            <div>{{ position.price | number:'1.2-2' }}</div>
+            <div>{{ position.cost | number:'1.2-2' }}</div>
+          </td>
           <td class="text-sm" [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">
             {{ position.todayPL | number:'1.2-2' }}
           </td>

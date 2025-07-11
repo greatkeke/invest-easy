@@ -28,8 +28,9 @@
         styleClass="rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
         <p-accordion-panel *ngFor="let account of accountBalances" [value]="account.id">
           <p-accordion-header>
-            <i [ngClass]="'fi fi-' + account.flag"></i>
-            {{account.name}}
+            <div>
+              <i [ngClass]="'fi fi-' + account.flag" class="mr-2"></i>{{account.name}}
+            </div>
           </p-accordion-header>
           <p-accordion-content>
             <div class="grid grid-cols-2 gap-4 p-3">
