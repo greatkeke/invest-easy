@@ -58,6 +58,7 @@ class PositionService:
                     .join(Instrument, Position.instrument_id == Instrument.id)
                     .where(
                         Position.user_account_id == uaccount.id,
+                        Position.quantity > 0,
                         Position.is_active == True,
                     )
                 )

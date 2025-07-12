@@ -22,6 +22,8 @@ class NewsService:
         session: Annotated[AsyncSession, Depends(get_async_session)],
     ):
         self.session = session
+        self.newsapi = NewsApiClient(api_key=settings.news_api_key)
+
 
     async def get_paginated_news(self, page: int, page_size: int) -> List[NewsItem]:
         """
@@ -62,8 +64,7 @@ class NewsService:
                 not latest_news
                 or (datetime.now() - latest_news.created_at).total_seconds() > 3600
             ):
-                newsapi = NewsApiClient(api_key=settings.news_api_key)
-                response = newsapi.get_top_headlines(
+                response = self.newsapi.get_top_headlines(
                     category="business", page=page, page_size=page_size
                 )
 

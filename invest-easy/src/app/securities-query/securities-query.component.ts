@@ -70,7 +70,7 @@ export class SecuritiesQueryComponent implements OnInit {
   clearSearch(): void {
     this.searchQuery = '';
     this.searchResults = [];
-    this.showLatestInstruments = true;
+    this.showLatestInstruments = this.autofocus ? true : false;
   }
 
   selectResult(code: string): void {
