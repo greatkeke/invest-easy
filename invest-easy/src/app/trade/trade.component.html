@@ -76,12 +76,14 @@
             <div>{{ position.cost | number:'1.2-2' }}</div>
           </td>
           <td class="text-sm" [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">
-            {{ position.todayPL | number:'1.2-2' }}
+            <div>{{ position.todayPL | number:'1.2-2' }}</div>
+            <div>{{ position.todayPL_p | percent:'1.2-2' }}</div>
           </td>
           <td class="text-sm" [class.positive]="position.pl > 0" [class.negative]="position.pl < 0">
-            {{ position.pl | number:'1.2-2' }}
+            <div>{{ position.pl | number:'1.2-2' }}</div>
+            <div>{{ position.pl_p | percent:'1.2-2' }}</div>
           </td>
-          <td class="text-sm">{{ position.portfolioPercent | percent }}</td>
+          <td class="text-sm">{{ position.portfolioPercent | percent:'1.2-2' }}</td>
         </tr>
       </ng-template>
     </p-table>

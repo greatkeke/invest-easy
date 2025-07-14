@@ -12,7 +12,9 @@ export interface Position {
   price: number;
   cost: number;
   todayPL: number;
+  todayPL_p: number;
   pl: number;
+  pl_p: number;
   portfolioPercent: number;
 }
 
@@ -20,23 +22,25 @@ export interface Position {
   providedIn: 'root'
 })
 export class PositionService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   async getPositions(): Promise<Position[]> {
     try {
       const positions = await firstValueFrom(
         this.http.get<any[]>('/positions/')
       );
-      
+
       // Calculate derived fields for frontend display
       return positions.map(p => ({
         ...p,
         marketValue: p.market_value,
         price: p.price,
         cost: p.avg_price,
-        todayPL: p.today_pl, 
-        pl: p.pl, 
-        portfolioPercent: p.percentage 
+        todayPL: p.today_pl,
+        todayPL_p: !!!p.market_value ? 0.0 : p.today_pl / p.market_value,
+        pl: p.pl,
+        pl_p: !!!p.market_value ? 0.0 : p.pl / p.market_value,
+        portfolioPercent: p.percentage
       }));
     } catch (error) {
       console.error('Failed to fetch positions', error);
