@@ -48,10 +48,8 @@
 
         <!-- Single -->
         <div *ngSwitchCase="'SINGLE'">
-          <div>
-            <small>{{item.note}}</small>
-          </div>
-          <p-checkbox [formControlName]="item.name" [value]="item.item_value" class="w-full" />
+          <p-select [formControlName]="item.name" [options]="getOptions(item.item_value)" [placeholder]="item.note"
+            class="w-full" />
         </div>
       </ng-container>
     </p-card>

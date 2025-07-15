@@ -69,27 +69,43 @@ export class GeneralSettingsComponent implements OnInit {
   }
 
   createForm() {
-    const formGroup: any = {};
+    if (!this.items?.length) {
+      this.form = this.fb.group({});
+      return;
+    }
+
+    const formGroup: Record<string, FormGroup | [any, Validators[]]> = {};
+    
     this.items.forEach(item => {
-      let value = item.user_defined_value == null ? item.item_value : item.user_defined_value;
-      if (item.type == "OPTIONS") {
+      const value = item.user_defined_value ?? item.item_value;
+      const isEditable = !item.editable;
+
+      if (item.type === "OPTIONS") {
+        const optionsGroup: Record<string, [any]> = {};
         const valueJson = JSON.parse(value);
-        const optionsGroup: any = {};
+        
         Object.keys(valueJson).forEach(key => {
-          optionsGroup[key] = [
-            { value: valueJson[key], disabled: !item.editable }
-          ];
+          optionsGroup[key] = [{ value: valueJson[key], disabled: isEditable }];
         });
+        
         formGroup[item.name] = this.fb.group(optionsGroup);
-      }
-      else {
+      } 
+      else if (item.type === 'SINGLE') {
+        const finalValue = item.user_defined_value ?? this.getOptions(item.item_value)[0];
         formGroup[item.name] = [
-          { value: value, disabled: !item.editable },
+          { value: finalValue, disabled: isEditable },
           this.getValidators(item.type)
         ];
-        this.form = this.fb.group(formGroup);
+      } 
+      else {
+        formGroup[item.name] = [
+          { value, disabled: isEditable },
+          this.getValidators(item.type)
+        ];
       }
     });
+
+    this.form = this.fb.group(formGroup);
   }
 
   getValidators(type: string) {
@@ -101,6 +117,10 @@ export class GeneralSettingsComponent implements OnInit {
       default:
         return [];
     }
+  }
+
+  getOptions(value: string) {
+    return value.split(',').map(option => option.trim());
   }
 
   fromOptions(value: any) {
