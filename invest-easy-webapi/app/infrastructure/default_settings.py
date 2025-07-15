@@ -129,12 +129,12 @@ async def predefined_settings(session: AsyncSession):
     security_settings = [
         DefinedItem(
             "Login Devices",
-            "Windows, MacOS, iOS, Android",
+            "{\"Windows\":false, \"MacOS\":false, \"iOS\":false, \"Android\":false}",
             DefinedItemType.OPTIONS,
         ),
         DefinedItem(
             "Login Credentials",
-            "PIN, FaceID, FingerPrint",
+            "{\"PIN\":false, \"FaceID\":false, \"FingerPrint\":false}",
             DefinedItemType.OPTIONS,
         ),
         DefinedItem(

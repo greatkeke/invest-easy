@@ -38,16 +38,20 @@
 
         <!-- Options -->
         <div *ngSwitchCase="'OPTIONS'">
-          <div *ngFor="let option of getOptions(item.item_value)">
-            <p-checkbox [formControlName]="item.name" [value]="option" [inputId]="option" />
-            <label [for]="option" class="ml-2">{{option}}</label>
+          <div [formGroupName]="item.name">
+            <div *ngFor="let option of fromOptions(item.item_value)">
+              <p-checkbox [formControlName]="option" [value]="option" [binary]="true" [inputId]="option" />
+              <label [for]="option" class="ml-2">{{option}}</label>
+            </div>
           </div>
         </div>
 
         <!-- Single -->
         <div *ngSwitchCase="'SINGLE'">
-          <p-select [formControlName]="item.name" [options]="getOptions(item.item_value)" [placeholder]="item.note"
-            class="w-full" />
+          <div>
+            <small>{{item.note}}</small>
+          </div>
+          <p-checkbox [formControlName]="item.name" [value]="item.item_value" class="w-full" />
         </div>
       </ng-container>
     </p-card>

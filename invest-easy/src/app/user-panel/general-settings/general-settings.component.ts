@@ -72,15 +72,24 @@ export class GeneralSettingsComponent implements OnInit {
     const formGroup: any = {};
     this.items.forEach(item => {
       let value = item.user_defined_value == null ? item.item_value : item.user_defined_value;
-      if (item.user_defined_value == null && item.type == 'SINGLE') {
-        value = this.getOptions(item.item_value)[0];
+      if (item.type == "OPTIONS") {
+        const valueJson = JSON.parse(value);
+        const optionsGroup: any = {};
+        Object.keys(valueJson).forEach(key => {
+          optionsGroup[key] = [
+            { value: valueJson[key], disabled: !item.editable }
+          ];
+        });
+        formGroup[item.name] = this.fb.group(optionsGroup);
       }
-      formGroup[item.name] = [
-        { value: value, disabled: !item.editable },
-        this.getValidators(item.type)
-      ];
+      else {
+        formGroup[item.name] = [
+          { value: value, disabled: !item.editable },
+          this.getValidators(item.type)
+        ];
+        this.form = this.fb.group(formGroup);
+      }
     });
-    this.form = this.fb.group(formGroup);
   }
 
   getValidators(type: string) {
@@ -94,16 +103,21 @@ export class GeneralSettingsComponent implements OnInit {
     }
   }
 
-  getOptions(value: string) {
-    return value.split(',').map(option => option.trim());
+  fromOptions(value: any) {
+    const obj = JSON.parse(value);
+    return Object.keys(obj);
   }
-  
+
   onSave() {
     if (this.form.invalid) return;
 
     this.isLoading = true;
     const settings = this.form.getRawValue();
-
+    Object.keys(settings).forEach(key => {
+      if (typeof (settings[key]) != 'string') {
+        settings[key] = JSON.stringify(settings[key]);
+      }
+    });
     this.settingsService.updateSettings(this.groupName, settings)
       .pipe(
         catchError(err => {
