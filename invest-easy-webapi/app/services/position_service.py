@@ -105,7 +105,7 @@ class PositionService:
                         quantity=position.quantity,
                         price=market_data[instrument.code]["last_price"],
                         avg_price=position.avg_price,
-                        market_value=position.quantity * position.avg_price,
+                        market_value=position.quantity * market_data[instrument.code]["last_price"],
                         pl=(
                             market_data[instrument.code]["last_price"]
                             - position.avg_price
