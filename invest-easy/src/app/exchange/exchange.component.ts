@@ -9,6 +9,7 @@ import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.
 import { SelectModule } from 'primeng/select';
 import { AccountSelectorComponent } from '../shared/account-selector/account-selector.component';
 import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
+import { ExchangeService } from '../shared/api-services/exchange.service';
 
 
 @Component({
@@ -42,7 +43,7 @@ export class ExchangeComponent implements OnInit {
   dialogMessage = '';
   completedDate = new Date();
 
-  constructor(private accountSvc: AccountsService) { }
+  constructor(private accountSvc: AccountsService, private exchangeSvc: ExchangeService) { }
 
   async ngOnInit(): Promise<void> {
     this.accounts = await this.accountSvc.fetchAccountBalances();
@@ -88,7 +89,7 @@ export class ExchangeComponent implements OnInit {
     }
   }
 
-  submitExchange() {
+  async submitExchange() {
     if (!this.fromAccount || !this.toAccount) {
       this.dialogSuccess = false;
       this.dialogMessage = 'Please enter valid amounts for both currencies';
@@ -96,10 +97,13 @@ export class ExchangeComponent implements OnInit {
       return;
     }
 
-    // In real app, would call API here
-    this.completedDate = new Date();
-    this.dialogSuccess = true;
-    this.dialogMessage = 'Your exchange request has been processed successfully.';
-    this.showDialog = true;
+    const ok = await this.exchangeSvc.exchange(this.fromAccount.id, this.toAccount.id, this.fromAmount);
+
+    if (ok) {
+      this.completedDate = new Date();
+      this.dialogSuccess = true;
+      this.dialogMessage = 'Your exchange request has been processed successfully.';
+      this.showDialog = true;
+    }
   }
 }
