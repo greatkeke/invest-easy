@@ -14,11 +14,21 @@ import { SelectModule } from 'primeng/select';
 export class AccountSelectorComponent {
   @Input() options: Account[] = [];
   @Input() name: string = '';
-  @Input() value: any;
+  _value: any;
   @Output() valueChange = new EventEmitter<Account>();
+  @Output() selectChange = new EventEmitter<Account>();
+
+  private prevValue?: Account;
+
+  @Input() set value(value: any) {
+    this._value = value;
+    this.prevValue = value;
+  }
 
   onValueChange(selectedValue: Account) {
-    this.value = selectedValue;
     this.valueChange.emit(selectedValue);
+    if (selectedValue.id != this.prevValue!.id) {
+      this.selectChange.emit(this.prevValue!);
+    }
   }
 }

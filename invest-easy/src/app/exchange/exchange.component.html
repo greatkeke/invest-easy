@@ -3,13 +3,14 @@
 <div class="p-4">
   <div header="Currency Exchange">
     <form #exchangeForm="ngForm" (ngSubmit)="submitExchange()" class="flex flex-col gap-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex flex-row flex-wrap gap-4 justify-center items-center">
         <!-- From Group -->
-        <div class="p-4 border rounded">
+        <div class="p-4 border rounded grow">
           <h3 class="text-lg font-semibold mb-4">From</h3>
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
-            <app-account-selector [options]="accounts" [(value)]="fromAccount" name="fromAccount"></app-account-selector>
+            <app-account-selector [options]="accounts" [(value)]="fromAccount" (selectChange)="onSelectChange($event, true)"
+              name="fromAccount"></app-account-selector>
 
             <p-inputNumber [(ngModel)]="fromAmount" name="fromAmount" placeholder="Amount" mode="decimal"
               (onInput)="calculateAmount()"></p-inputNumber>
@@ -24,8 +25,13 @@
           </div>
         </div>
 
+        <div>
+          <p-button variant="outlined" icon="pi pi-arrow-right-arrow-left" styleClass="min-w-20"
+            (onClick)="exchangeFlag()"></p-button>
+        </div>
+
         <!-- To Group -->
-        <div class="p-4 border rounded">
+        <div class="p-4 border rounded grow">
           <h3 class="text-lg font-semibold mb-4">To</h3>
 
           <div class="flex flex-wrap items-center gap-2 mb-4">

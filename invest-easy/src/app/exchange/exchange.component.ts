@@ -89,6 +89,24 @@ export class ExchangeComponent implements OnInit {
     }
   }
 
+  exchangeFlag(fromAccount?: AccountBalance, toAccount?: AccountBalance) {
+    fromAccount = fromAccount ?? this.fromAccount;
+    toAccount = toAccount ?? this.toAccount;
+    const tmp = fromAccount;
+    this.fromAccount = toAccount;
+    this.toAccount = tmp;
+  }
+
+  onSelectChange(prevAccount: any, isFrom = false) {
+    if (this.fromAccount?.id == this.toAccount?.id) {
+      if (isFrom) {
+        this.toAccount = prevAccount;
+      } else {
+        this.fromAccount = prevAccount;
+      }
+    }
+  }
+
   async submitExchange() {
     if (!this.fromAccount || !this.toAccount) {
       this.dialogSuccess = false;
