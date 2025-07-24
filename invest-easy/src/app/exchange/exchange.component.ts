@@ -10,6 +10,7 @@ import { SelectModule } from 'primeng/select';
 import { AccountSelectorComponent } from '../shared/account-selector/account-selector.component';
 import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
 import { ExchangeService } from '../shared/api-services/exchange.service';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
@@ -24,7 +25,8 @@ import { ExchangeService } from '../shared/api-services/exchange.service';
     DialogModule,
     CardModule,
     TopNavigationComponent,
-    AccountSelectorComponent
+    AccountSelectorComponent,
+    RouterModule
   ],
   templateUrl: './exchange.component.html',
   styleUrl: './exchange.component.scss'

@@ -9,8 +9,8 @@
           <h3 class="text-lg font-semibold mb-4">From</h3>
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
-            <app-account-selector [options]="accounts" [(value)]="fromAccount" (selectChange)="onSelectChange($event, true)"
-              name="fromAccount"></app-account-selector>
+            <app-account-selector [options]="accounts" [(value)]="fromAccount"
+              (selectChange)="onSelectChange($event, true)" name="fromAccount"></app-account-selector>
 
             <p-inputNumber [(ngModel)]="fromAmount" name="fromAmount" placeholder="Amount" mode="decimal"
               (onInput)="calculateAmount()"></p-inputNumber>
@@ -63,7 +63,8 @@
 
       <div class="flex flex-col items-center mt-6">
         <p-button class="w-full p-4" styleClass="w-full" variant="outlined" label="Submit" type="Submit"></p-button>
-        <a routerLink="/exchange/history" class="text-primary-500 underline">View Exchange History</a>
+        <a [routerLink]="['/transfer']" [queryParams]="{tab:'record'}" class="text-primary-500 underline">View Exchange
+          History</a>
       </div>
     </form>
   </div>
