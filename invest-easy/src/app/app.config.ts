@@ -1,6 +1,6 @@
 import { ApplicationConfig, provideZoneChangeDetection, isDevMode, inject, provideAppInitializer } from '@angular/core';
 import { ConfigService } from './shared/config.service';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { HttpClient, HttpHeaders, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { apiInterceptor, InterceptorSkipHeader } from './shared/api-interceptor';
 
@@ -76,7 +76,7 @@ export const appConfig: ApplicationConfig = {
       );
     }),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(routes, withInMemoryScrolling({scrollPositionRestoration:'enabled'})),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch(), withInterceptors([apiInterceptor])),
     provideServiceWorker('ngsw-worker.js', {

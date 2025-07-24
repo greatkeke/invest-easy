@@ -50,8 +50,9 @@
 
   <div class="my-2">
     <h3 class="text-md font-semibold">Positions</h3>
+    @if(positions && positions.length > 0){
     <p-table [value]="positions" [rowHover]="true" [responsive]="true" styleClass="p-datatable-sm p-datatable-striped"
-      stripedRows [scrollable]="true">
+      stripedRows [scrollable]="true" #scrolling>
       <ng-template pTemplate="header">
         <tr>
           <th class="text-sm text-nowrap" pFrozenColumn>Security</th>
@@ -87,6 +88,7 @@
         </tr>
       </ng-template>
     </p-table>
+    }
   </div>
 
   <div class="mt-6">
