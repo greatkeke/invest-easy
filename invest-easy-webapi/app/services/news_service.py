@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from ..infrastructure.db import get_async_session
 from dateutil import parser
+from asyncer import asyncify
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,6 @@ class NewsService:
     ):
         self.session = session
         self.newsapi = NewsApiClient(api_key=settings.news_api_key)
-
 
     async def get_paginated_news(self, page: int, page_size: int) -> List[NewsItem]:
         """
@@ -64,9 +64,10 @@ class NewsService:
                 not latest_news
                 or (datetime.now() - latest_news.created_at).total_seconds() > 3600
             ):
-                response = self.newsapi.get_top_headlines(
+                response = await asyncify(self.newsapi.get_top_headlines)(
                     category="business", page=page, page_size=page_size
                 )
+
 
                 if response["status"] == "ok":
                     # Convert and store new articles
