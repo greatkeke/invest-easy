@@ -91,12 +91,14 @@ export class ExchangeComponent implements OnInit {
     }
   }
 
-  exchangeFlag(fromAccount?: AccountBalance, toAccount?: AccountBalance) {
-    fromAccount = fromAccount ?? this.fromAccount;
-    toAccount = toAccount ?? this.toAccount;
-    const tmp = fromAccount;
-    this.fromAccount = toAccount;
+  exchangeFlag() {
+    const tmp = this.fromAccount;
+    this.fromAccount = this.toAccount;
     this.toAccount = tmp;
+
+    const amount = this.fromAmount;
+    this.fromAmount = this.toAmount;
+    this.toAmount = amount;
   }
 
   onSelectChange(prevAccount: any, isFrom = false) {

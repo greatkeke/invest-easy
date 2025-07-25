@@ -35,7 +35,8 @@
           <h3 class="text-lg font-semibold mb-4">To</h3>
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
-            <app-account-selector [options]="accounts" [(value)]="toAccount" name="toAccount"></app-account-selector>
+            <app-account-selector [options]="accounts" [(value)]="toAccount" name="toAccount"
+              (selectChange)="onSelectChange($event)"></app-account-selector>
 
             <p-inputNumber [(ngModel)]="toAmount" name="toAmount" placeholder="Amount" mode="decimal"
               (onInput)="calculateAmount(false)"></p-inputNumber>

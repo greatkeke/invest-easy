@@ -7,7 +7,7 @@ import { HeaderComponent } from '../shared/header/header.component';
 import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
 import { Position, PositionService } from '../shared/api-services/position.service';
 import { OrdersComponent } from '../orders/orders.component';
-import { filter, map, tap } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({

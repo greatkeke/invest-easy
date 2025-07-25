@@ -52,7 +52,7 @@
     <h3 class="text-md font-semibold">Positions</h3>
     @if(positions && positions.length > 0){
     <p-table [value]="positions" [rowHover]="true" [responsive]="true" styleClass="p-datatable-sm p-datatable-striped"
-      stripedRows [scrollable]="true" #scrolling>
+      [scrollable]="true" #scrolling>
       <ng-template pTemplate="header">
         <tr>
           <th class="text-sm text-nowrap" pFrozenColumn>Security</th>
