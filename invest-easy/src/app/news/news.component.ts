@@ -42,9 +42,9 @@ export class NewsComponent implements OnInit {
   }
 
   scrolling = async (s: any) => {
-    let st = s.target.scrollTop;
-    let sh = s.target.scrollHeight;
-    let oh = s.target.offsetHeight;
+    let st = s.target.scrollingElement.scrollTop;
+    let sh = s.target.scrollingElement.scrollHeight;
+    let oh = s.target.scrollingElement.offsetHeight;
     if (sh <= (st + oh + 100)) {
       await this.loadNews();
     }
