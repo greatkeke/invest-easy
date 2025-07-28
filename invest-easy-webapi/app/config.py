@@ -10,6 +10,10 @@ class Settings(BaseSettings):
     futu_openD_host: str = "127.0.0.1"
     futu_openD_port: int = 1000
     news_api_key: str = ""
+    log_path: str = "./logs"  # Default log path
+    log_level: str = "INFO"  # Default log level
+    log_max_size: int = 50  # Default max log size in MB
+    log_backup_count: int = 5  # Default backup count
 
     model_config = SettingsConfigDict(
         env_file=os.path.abspath(
@@ -30,7 +34,7 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings():
     settings = Settings()
-    logging.info(f"Current allow_origins value: {settings.allow_origins}")
+    logging.warning(f"Current allow_origins value: {settings.allow_origins}")
     if settings.allow_origins == "*":
         logging.warning(
             "Using default allow_origins value - check .env file configuration"

@@ -26,6 +26,7 @@ COPY main.py .
 # Create volumes
 VOLUME /invest-easy-webapi/db
 VOLUME /invest-easy-webapi/env
+VOLUME /invest-easy-webapi/logs
 
 EXPOSE 10008
 

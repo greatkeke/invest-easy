@@ -1,7 +1,10 @@
+import logging
+import os
 from contextlib import asynccontextmanager
 from typing import Annotated
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from logging.handlers import RotatingFileHandler
 from .config import settings
 from .domain.users import User
 from .domain.instruments import Instrument
@@ -23,6 +26,46 @@ from .endpoints import (
     exchange_api
 )
 from .infrastructure.default_settings import predefined_settings
+
+
+# Configure logging
+log_path = settings.log_path
+os.makedirs(log_path, exist_ok=True)
+
+# Convert log level from string to logging constant
+log_level = getattr(logging, settings.log_level.upper(), logging.INFO)
+
+# Create rotating file handler (50MB max size)
+max_bytes = settings.log_max_size * 1024 * 1024  # Convert MB to bytes
+file_handler = RotatingFileHandler(
+    os.path.join(log_path, "app.log"),
+    maxBytes=max_bytes,
+    backupCount=settings.log_backup_count
+)
+file_handler.setLevel(log_level)
+
+# Create console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(log_level)
+
+# Create formatter
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+file_handler.setFormatter(formatter)
+console_handler.setFormatter(formatter)
+
+# Get root logger and add handlers
+root_logger = logging.getLogger()
+root_logger.setLevel(log_level)
+root_logger.addHandler(file_handler)
+root_logger.addHandler(console_handler)
+
+# Configure specific loggers
+logging.getLogger("uvicorn").setLevel(log_level)
+logging.getLogger("uvicorn.error").addHandler(file_handler)
+logging.getLogger("uvicorn.access").addHandler(file_handler)
+logging.getLogger("sqlalchemy").addHandler(file_handler)
 
 
 @asynccontextmanager
