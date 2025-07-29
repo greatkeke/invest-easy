@@ -93,8 +93,8 @@ class AkshareService:
                 if isinstance(latest_update, datetime)
                 else datetime.fromisoformat(latest_update.isoformat())
             )
-            if (datetime.now() - latest_update_dt) < timedelta(days=1):
-                logging.info("InstrumentAK table is up-to-date (less than 1 day old)")
+            if (datetime.now() - latest_update_dt) < timedelta(days=7):
+                logging.info("InstrumentAK table is up-to-date (less than 7 day old)")
                 return 0
 
         # Get data from AkShare
