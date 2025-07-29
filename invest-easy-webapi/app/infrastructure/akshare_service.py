@@ -123,7 +123,7 @@ class AkshareService:
         # If no related instrument then ignore this record.
         existing_instruments = await self.session.execute(
             select(Instrument).where(
-                Instrument.code.in_(parsed_codes), Instrument.is_active == True
+                Instrument.market == self.market, Instrument.is_active == True
             )
         )
         existing_instruments = {i.code: i for i in existing_instruments.scalars()}
@@ -175,7 +175,8 @@ class AkshareService:
                 "turnover": record.get("成交额"),
                 "amplitude": record.get("振幅"),
                 "turnover_rate": record.get("换手率"),
-                "code": parsed_code,
+                "futu_code": parsed_code,
+                "code": record.get("代码")
             }
 
             if existing:

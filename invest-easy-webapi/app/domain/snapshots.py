@@ -11,6 +11,8 @@ class Snapshots(Base):
     id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     instrument_id = mapped_column(UUID(as_uuid=True), nullable=False)
     market = mapped_column(String, nullable=False)
+    code = mapped_column(String, nullable=False, index=True)  # Code for historical data
+    futu_code = mapped_column(String, nullable=False)
     name_cn = mapped_column(String, nullable=False, index=True)
     latest_price = mapped_column(Float)  # Unit: USD
     change_amount = mapped_column(Float)  # Unit: USD
@@ -25,7 +27,6 @@ class Snapshots(Base):
     turnover = mapped_column(Float)  # Unit: USD
     amplitude = mapped_column(Float)  # Unit: %
     turnover_rate = mapped_column(Float)  # Unit: %
-    code = mapped_column(String, nullable=False, index=True)  # Code for historical data
     updated_at = mapped_column(DateTime, default=datetime.now(), index=True)
 
     def _format_value(self, field, value):
