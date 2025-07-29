@@ -11,6 +11,7 @@ class Instrument(Base):
     id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     code = mapped_column(String, nullable=False, index=True)
     name = mapped_column(String, nullable=False, index=True)
+    market = mapped_column(String, nullable=False)
     lot_size = mapped_column(Integer)
     stock_type = mapped_column(
         String, nullable=True, default="None"

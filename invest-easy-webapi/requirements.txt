@@ -13,3 +13,4 @@ python-dotenv
 futu-api
 newsapi-python
 asyncer
+akshare

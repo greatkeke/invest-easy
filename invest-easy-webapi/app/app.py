@@ -13,6 +13,7 @@ from .infrastructure.db import create_tables, get_async_session
 from .infrastructure.users import fastapi_users, auth_backend, current_active_user
 from .infrastructure.schemas import UserRead, UserCreate, UserUpdate
 from .infrastructure.futu_api_service import FutuApiService
+from .infrastructure.akshare_service import AkshareService
 from .endpoints import (
     balance_api,
     accounts_api,
@@ -77,7 +78,9 @@ async def lifespan(app: FastAPI):
     async for session in get_async_session():
         try:
             futu_service = FutuApiService(session=session)
+            akshare_service = AkshareService(session=session)
             await futu_service.initialize_all_markets_instruments()
+            await akshare_service.initialize_snapshots_table()
             await predefined_settings(session)
         finally:
             await session.close()

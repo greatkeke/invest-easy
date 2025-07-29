@@ -219,6 +219,7 @@ class FutuApiService:
                     update_count += 1
                 else:
                     existing = Instrument()
+                    existing.market = market
                     existing.upsert(record)
                     self.session.add(existing)
                     insert_count += 1

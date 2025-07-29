@@ -1,0 +1,10 @@
+{
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.cwd": "${workspaceFolder}/invest-easy-webapi",
+    "python.defaultInterpreterPath": "/opt/homebrew/Caskroom/miniconda/base/envs/easy/bin/python",
+    "python.terminal.activateEnvironment": true
+}
