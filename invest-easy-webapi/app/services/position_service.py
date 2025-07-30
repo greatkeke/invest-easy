@@ -72,7 +72,7 @@ class PositionService:
 
                 market_data = {
                     item["code"]: item
-                    for item in self.market_service.get_market_snapshot(
+                    for item in await self.market_service.get_market_snapshot(
                         instrument_codes
                     )
                 }

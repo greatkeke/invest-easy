@@ -74,16 +74,7 @@ export class SecuritiesQueryComponent implements OnInit {
   }
 
   selectResult(code: string): void {
-    if (code.startsWith("US")) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Trade Restricted',
-        detail: 'You don\'t have permit to US trade.'
-      });
-    }
-    else {
-      this.resultSelected.emit(code);
-    }
+    this.resultSelected.emit(code);
   }
 
   ngOnInit(): void {
