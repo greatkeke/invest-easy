@@ -54,15 +54,12 @@ class TestMarketService:
         # Mock database response
         mock_snapshot = Mock(spec=Snapshots)
         mock_snapshot.futu_code = "US.AAPL"
-        mock_snapshot.name_cn = "Apple"
         mock_snapshot.latest_price = 150.0
         mock_snapshot.change_percent = 1.0
         mock_snapshot.change_amount = 1.5
         
         mock_exec = Mock()
-        mock_scalars = Mock()
-        mock_scalars.all.return_value = [mock_snapshot]
-        mock_exec.scalars.return_value = mock_scalars
+        mock_exec.all.return_value = [(mock_snapshot, "Apple")]
         mock_session.execute.return_value = mock_exec
 
         code_list = ["US.AAPL", "US.GOOG"]
@@ -100,12 +97,11 @@ class TestMarketService:
         # Mock database response for US codes
         mock_snapshot = Mock(spec=Snapshots)
         mock_snapshot.futu_code = "US.AAPL"
-        mock_snapshot.name_cn = "Apple"
         mock_snapshot.latest_price = 150.0
         mock_snapshot.change_percent = 1.0
         
         mock_db_result = Mock()
-        mock_db_result.scalars().all.return_value = [mock_snapshot]
+        mock_db_result.all.return_value = [(mock_snapshot, "Apple")]
         mock_session.execute.return_value = mock_db_result
 
         # Mock Futu API response for non-US codes
@@ -156,11 +152,10 @@ class TestMarketService:
         # Mock database response for US codes
         mock_snapshot = Mock(spec=Snapshots)
         mock_snapshot.futu_code = "US.AAPL"
-        mock_snapshot.name_cn = "Apple"
         mock_snapshot.latest_price = 150.0
         
         mock_db_result = Mock()
-        mock_db_result.scalars().all.return_value = [mock_snapshot]
+        mock_db_result.all.return_value = [(mock_snapshot, "Apple")]
         mock_session.execute.return_value = mock_db_result
 
         # Mock Futu API error
