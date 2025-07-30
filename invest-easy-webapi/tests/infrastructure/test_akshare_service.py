@@ -121,7 +121,7 @@ class TestAkshareService:
     ):
         """Test initialize_snapshots_table when no data is returned from API."""
         # Mock old update time
-        old_time = datetime.now() - timedelta(days=2)
+        old_time = datetime.now() - timedelta(days=8)
         # Create a proper async mock for the execute result
         mock_session.execute.side_effect = [
             AsyncMock(
@@ -144,7 +144,7 @@ class TestAkshareService:
     ):
         """Test initialize_snapshots_table with successful data processing."""
         # Mock old update time
-        old_time = datetime.now() - timedelta(days=2)
+        old_time = datetime.now() - timedelta(days=8)
         mock_session.execute.return_value.scalar_one_or_none.return_value = old_time
 
         # Mock API response
@@ -201,7 +201,7 @@ class TestAkshareService:
     ):
         """Test initialize_snapshots_table with existing snapshots that need updating."""
         # Mock old update time
-        old_time = datetime.now() - timedelta(days=2)
+        old_time = datetime.now() - timedelta(days=8)
         mock_session.execute.return_value.scalar_one_or_none.return_value = old_time
 
         # Mock API response
@@ -281,7 +281,7 @@ class TestAkshareService:
     ):
         """Test initialize_snapshots_table handles database errors."""
         # Mock old update time
-        old_time = datetime.now() - timedelta(days=2)
+        old_time = datetime.now() - timedelta(days=8)
 
         # Mock database commit error
         mock_session.commit.side_effect = Exception("DB Error")
@@ -310,6 +310,84 @@ class TestAkshareService:
         result = await akshare_service.initialize_snapshots_table()
         mock_session.rollback.assert_called_once()
         assert result == 0
+
+    @patch("app.infrastructure.akshare_service.ak")
+    def test_get_rtdata_success(self, mock_ak, akshare_service):
+        """Test get_rtdata method with successful API call."""
+        # Create mock DataFrame
+        mock_df = pd.DataFrame(
+            {
+                "时间": ["2025-07-30 09:30:00", "2025-07-30 09:31:00"],
+                "开盘": [100.0, 100.5],
+                "收盘": [100.5, 101.0],
+                "最高": [101.0, 101.5],
+                "最低": [100.0, 100.5],
+                "成交量": [1000, 1500],
+                "成交额": [100000.0, 150000.0],
+                "最新价": [900, 901]
+            }
+        )
+        mock_ak.stock_us_hist_min_em.return_value = mock_df
+
+        result = akshare_service.get_rtdata("105.ATER")
+
+        assert len(result) == 2
+        assert result[0]["time"] == "2025-07-30 09:30:00"
+        mock_ak.stock_us_hist_min_em.assert_called_once_with(
+            symbol="105.ATER", 
+           start_date=datetime.now().strftime("%Y/%m/%d 00:00:00"),
+            end_date=datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        )
+
+    @patch("app.infrastructure.akshare_service.ak")
+    def test_get_rtdata_with_dates(self, mock_ak, akshare_service):
+        """Test get_rtdata method with custom dates."""
+        # Create mock DataFrame
+        mock_df = pd.DataFrame({"时间": ["2025-07-30 09:30:00"], "开盘": [100.0]})
+        mock_ak.stock_us_hist_min_em.return_value = mock_df
+
+        result = akshare_service.get_rtdata(
+            "105.ATER", "2025/07/30", "2025/07/30"
+        )
+
+        assert len(result) == 1
+        mock_ak.stock_us_hist_min_em.assert_called_once_with(
+            symbol="105.ATER", start_date="2025/07/30", end_date="2025/07/30"
+        )
+
+    @patch("app.infrastructure.akshare_service.ak")
+    def test_get_rtdata_internal_format(self, mock_ak, akshare_service):
+        """Test get_rtdata method with internal format symbol."""
+        # Create mock DataFrame
+        mock_df = pd.DataFrame({"时间": ["2025-07-30 09:30:00"], "开盘": [100.0]})
+        mock_ak.stock_us_hist_min_em.return_value = mock_df
+
+        result = akshare_service.get_rtdata("105.ATER")
+
+        assert len(result) == 1
+        mock_ak.stock_us_hist_min_em.assert_called_once_with(
+            symbol="105.ATER",
+            start_date=datetime.now().strftime("%Y/%m/%d 00:00:00"),
+            end_date=datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        )
+
+    @patch("app.infrastructure.akshare_service.ak")
+    def test_get_rtdata_api_error(self, mock_ak, akshare_service):
+        """Test get_rtdata method handles API errors."""
+        mock_ak.stock_us_hist_min_em.side_effect = Exception("API Error")
+
+        with pytest.raises(RuntimeError) as exc_info:
+            akshare_service.get_rtdata("ATER")
+
+        assert "AkShare API error for symbol" in str(exc_info.value)
+
+    def test_get_rtdata_empty_symbol(self, akshare_service):
+        """Test get_rtdata method with empty symbol."""
+        with pytest.raises(ValueError) as exc_info:
+            akshare_service.get_rtdata("")
+
+        assert "Symbol cannot be empty" in str(exc_info.value)
+
 
 
 if __name__ == "__main__":

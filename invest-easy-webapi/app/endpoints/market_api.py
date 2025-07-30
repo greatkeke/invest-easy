@@ -34,7 +34,7 @@ async def get_rt_data(
     Returns:
         List of dicts containing real-time tick data
     """
-    return svc.get_rt_data(code=code)
+    return await svc.get_rt_data(code=code)
 
 
 @router.get("/search")

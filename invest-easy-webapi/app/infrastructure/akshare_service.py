@@ -176,7 +176,7 @@ class AkshareService:
                 "amplitude": record.get("振幅"),
                 "turnover_rate": record.get("换手率"),
                 "futu_code": parsed_code,
-                "code": record.get("代码")
+                "code": record.get("代码"),
             }
 
             if existing:
@@ -200,3 +200,66 @@ class AkshareService:
             await self.session.rollback()
             logging.error(f"Failed to upsert snapshots records: {str(e)}")
             return 0
+
+    def get_rtdata(
+        self,
+        symbol: str,
+        start_date: str | None = None,
+        end_date: str | None = None,
+    ) -> List[Dict[str, Any]]:
+        """
+        Get US stock historical minute data from AkShare.
+
+        Args:
+            symbol: Stock symbol (e.g., "105.ATER" or "ATER")
+            start_date: Start date in format "YYYY/MM/DD" (default: today)
+            end_date: End date in format "YYYY/MM/DD" (default: today)
+
+        Returns:
+            List of dicts containing US stock historical minute data with English field names
+
+        Raises:
+            ValueError: If input parameters are invalid
+            RuntimeError: If AkShare API call fails
+        """
+        if not symbol:
+            raise ValueError("Symbol cannot be empty")
+
+        # Set default dates to today if not provided
+        if not start_date:
+            start_date = datetime.now().strftime("%Y/%m/%d 00:00:00")
+        if not end_date:
+            end_date = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+
+        # Chinese to English field name mapping
+        field_mapping = {
+            "时间": "time",
+            "开盘": "open",
+            "收盘": "close",
+            "最高": "high",
+            "最低": "low",
+            "成交量": "volume",
+            "成交额": "turnover",
+            "最新价": "cur_price"
+        }
+
+        try:
+            # Get US stock historical minute data
+            stock_us_hist_min_em_df = ak.stock_us_hist_min_em(
+                symbol=symbol, start_date=start_date, end_date=end_date
+            )
+
+            if isinstance(stock_us_hist_min_em_df, DataFrame):
+                records = stock_us_hist_min_em_df.to_dict("records")
+                return [
+                    {
+                        field_mapping.get(str(k), str(k)): None if (isinstance(v, float) and np.isnan(v)) else v
+                        for k, v in record.items()
+                    }
+                    for record in records
+                ]
+            return []
+        except Exception as e:
+            error_msg = f"AkShare API error for symbol {symbol}: {str(e)}"
+            logging.error(error_msg)
+            raise RuntimeError(error_msg)

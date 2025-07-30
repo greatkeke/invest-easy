@@ -11,6 +11,7 @@ from ..domain.positions import Position
 from ..domain.accounts import UserAccount
 from ..domain.snapshots import Snapshots
 from ..services.watchlist_service import WatchlistService
+import logging
 
 
 class MarketService:
@@ -134,7 +135,7 @@ class MarketService:
             logging.error(f"Failed to get US snapshots from database: {str(e)}")
             return []
 
-    def get_rt_data(self, code: str):
+    async def get_rt_data(self, code: str):
         """
         Get real-time tick data for a stock
 
@@ -144,8 +145,34 @@ class MarketService:
         Returns:
             List of dicts containing real-time tick data
         """
-        data = self.futu_api_svc.get_rt_data(code=code)
-        return data
+        if code.startswith("US."):
+            # For US stocks, query snapshots table to get the symbol and call akshare
+            try:
+                # Query snapshots from database to get the raw symbol code
+                stmt = (
+                    select(Snapshots)
+                    .where(
+                        Snapshots.futu_code == code,
+                        Snapshots.is_active == True,
+                    )
+                    .limit(1)
+                )
+                result = await self.session.execute(stmt)
+                snapshot = result.scalar_one_or_none()
+                
+                if snapshot and snapshot.code:
+                    # Call akshare service with the raw symbol code
+                    data = self.akshare_svc.get_rtdata(symbol=snapshot.code)
+                    return data
+                else:
+                   return []
+            except Exception as e:
+                logging.error(f"Failed to get US real-time data from akshare for {code}: {str(e)}")
+                # Fallback to Futu API on error
+                return []
+        else:
+            # For non-US stocks, use existing Futu API logic
+            return self.futu_api_svc.get_rt_data(code=code)
 
     async def search_stocks(self, query: str):
         """

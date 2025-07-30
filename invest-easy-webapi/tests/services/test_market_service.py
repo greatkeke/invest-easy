@@ -168,6 +168,105 @@ class TestMarketService:
         assert len(result) == 1
         assert result[0]['code'] == "US.AAPL"
 
+    @patch('app.services.market_service.select')
+    def test_get_rt_data_us_stock_success(self, mock_select, market_service, mock_akshare_service, mock_session):
+        """Test get_rt_data for US stock with successful database lookup and akshare call."""
+        # Mock database response
+        mock_snapshot = Mock(spec=Snapshots)
+        mock_snapshot.code = "105.AAPL"  # Raw symbol code for akshare
+        
+        mock_exec = Mock()
+        mock_exec.scalar_one_or_none.return_value = mock_snapshot
+        mock_session.execute.return_value = mock_exec
+
+        # Mock akshare response
+        mock_rt_data = [
+            {
+                "time": "2023-01-01 10:00:00",
+                "open": 150.0,
+                "close": 151.0,
+                "high": 152.0,
+                "low": 149.0,
+                "volume": 1000,
+                "turnover": 150000,
+                "cur_price": 151.0
+            }
+        ]
+        mock_akshare_service.get_rtdata.return_value = mock_rt_data
+
+        result = asyncio.run(market_service.get_rt_data("US.AAPL"))
+
+        assert result == mock_rt_data
+        mock_session.execute.assert_called_once()
+        mock_akshare_service.get_rtdata.assert_called_once_with(symbol="105.AAPL")
+
+    @patch('app.services.market_service.select')
+    def test_get_rt_data_us_stock_no_snapshot(self, mock_select, market_service, mock_futu_service, mock_session):
+        """Test get_rt_data for US stock when no snapshot found in database."""
+        # Mock database response - no snapshot found
+        mock_exec = Mock()
+        mock_exec.scalar_one_or_none.return_value = None
+        mock_session.execute.return_value = mock_exec
+
+        # Mock Futu API response (fallback)
+        mock_rt_data = []
+        mock_futu_service.get_rt_data.return_value = mock_rt_data
+
+        result = asyncio.run(market_service.get_rt_data("US.AAPL"))
+
+        assert result == mock_rt_data
+        mock_session.execute.assert_called_once()
+
+    @patch('app.services.market_service.select')
+    def test_get_rt_data_us_stock_db_error(self, mock_select, market_service, mock_futu_service, mock_session):
+        """Test get_rt_data for US stock when database query fails."""
+        # Mock database error
+        mock_session.execute.side_effect = Exception("Database error")
+
+        # Mock Futu API response (fallback)
+        mock_rt_data = []
+        mock_futu_service.get_rt_data.return_value = mock_rt_data
+
+        result = asyncio.run(market_service.get_rt_data("US.AAPL"))
+
+        assert result == mock_rt_data
+        mock_session.execute.assert_called_once()
+
+    @patch('app.services.market_service.select')
+    def test_get_rt_data_us_stock_akshare_error(self, mock_select, market_service, mock_akshare_service, mock_futu_service, mock_session):
+        """Test get_rt_data for US stock when akshare call fails."""
+        # Mock database response
+        mock_snapshot = Mock(spec=Snapshots)
+        mock_snapshot.code = "105.AAPL"
+        
+        mock_exec = Mock()
+        mock_exec.scalar_one_or_none.return_value = mock_snapshot
+        mock_session.execute.return_value = mock_exec
+
+        # Mock akshare error
+        mock_akshare_service.get_rtdata.side_effect = Exception("Akshare error")
+
+        # Mock Futu API response (fallback)
+        mock_rt_data = []
+        mock_futu_service.get_rt_data.return_value = mock_rt_data
+
+        result = asyncio.run(market_service.get_rt_data("US.AAPL"))
+
+        assert result == mock_rt_data
+        mock_session.execute.assert_called_once()
+        mock_akshare_service.get_rtdata.assert_called_once_with(symbol="105.AAPL")
+
+    def test_get_rt_data_non_us_stock(self, market_service, mock_futu_service):
+        """Test get_rt_data for non-US stock (should use Futu API directly)."""
+        # Mock Futu API response
+        mock_rt_data = [{"time": "2023-01-01 10:00:00", "price": 300.0}]
+        mock_futu_service.get_rt_data.return_value = mock_rt_data
+
+        result = asyncio.run(market_service.get_rt_data("HK.00700"))
+
+        assert result == mock_rt_data
+        mock_futu_service.get_rt_data.assert_called_once_with(code="HK.00700")
+
 
 if __name__ == "__main__":
     pytest.main([__file__])
