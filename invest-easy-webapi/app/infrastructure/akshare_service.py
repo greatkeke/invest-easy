@@ -93,8 +93,8 @@ class AkshareService:
                 if isinstance(latest_update, datetime)
                 else datetime.fromisoformat(latest_update.isoformat())
             )
-            if (datetime.now() - latest_update_dt) < timedelta(days=7):
-                logging.info("InstrumentAK table is up-to-date (less than 7 day old)")
+            if (datetime.now() - latest_update_dt) < timedelta(days=1):
+                logging.info("InstrumentAK table is up-to-date (less than 1 day old)")
                 return 0
 
         # Get data from AkShare
@@ -146,7 +146,7 @@ class AkshareService:
         existing_snapshots = await self.session.execute(
             select(Snapshots).where(Snapshots.code.in_(parsed_codes))
         )
-        existing_snapshots = {i.code: i for i in existing_snapshots.scalars()}
+        existing_snapshots = {i.futu_code: i for i in existing_snapshots.scalars()}
 
         # Process API data and map fields
         update_count = 0
