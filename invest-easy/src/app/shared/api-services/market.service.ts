@@ -20,7 +20,7 @@ export class MarketService {
   constructor(private http: HttpClient) { }
 
   getMarketIndices(): Observable<MarketIndex[]> {
-    const codes = ['HK.800000', 'HK.03032', 'SH.000001', 'SH.000300', 'SZ.399001', 'SZ.399006'];
+    const codes = ['HK.800000', 'HK.03032', 'US.QQQ', 'SH.000001', 'SH.000300', 'SZ.399001', 'SZ.399006'];
     return this.getMarketSnapshot(codes).pipe(
       map((snapshots: MarketSnapshot[]) => snapshots.map(snapshot => ({
         name: snapshot.name,
