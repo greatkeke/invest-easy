@@ -1,5 +1,6 @@
 from typing import Annotated, List
 from uuid import UUID
+from asyncer import asyncify
 from fastapi import Depends
 from ..infrastructure.futu_api_service import FutuApiService
 from ..infrastructure.akshare_service import AkshareService
@@ -172,7 +173,7 @@ class MarketService:
                 return []
         else:
             # For non-US stocks, use existing Futu API logic
-            return self.futu_api_svc.get_rt_data(code=code)
+            return await asyncify(self.futu_api_svc.get_rt_data)(code=code)
 
     async def search_stocks(self, query: str):
         """
