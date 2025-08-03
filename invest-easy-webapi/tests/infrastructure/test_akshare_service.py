@@ -233,8 +233,9 @@ class TestAkshareService:
 
         # Mock existing snapshot
         mock_snapshot = Mock(spec=Snapshots)
-        mock_snapshot.code = "US.DBGI"
+        mock_snapshot.code = "105.DBGI"
         mock_snapshot.futu_code = "US.DBGI"
+        mock_snapshot.name_cn = "stock_a"
         mock_snapshot.upsert = Mock()
 
         mock_session.execute.side_effect = [

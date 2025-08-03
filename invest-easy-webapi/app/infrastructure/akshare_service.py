@@ -144,7 +144,9 @@ class AkshareService:
 
         # Get existing snapshots from database
         existing_snapshots = await self.session.execute(
-            select(Snapshots).where(Snapshots.code.in_(parsed_codes))
+            select(Snapshots).where(
+                Snapshots.futu_code.in_(parsed_codes), Snapshots.is_active == True
+            )
         )
         existing_snapshots = {i.futu_code: i for i in existing_snapshots.scalars()}
 
@@ -240,7 +242,7 @@ class AkshareService:
             "最低": "low",
             "成交量": "volume",
             "成交额": "turnover",
-            "最新价": "cur_price"
+            "最新价": "cur_price",
         }
 
         try:
@@ -253,7 +255,9 @@ class AkshareService:
                 records = stock_us_hist_min_em_df.to_dict("records")
                 return [
                     {
-                        field_mapping.get(str(k), str(k)): None if (isinstance(v, float) and np.isnan(v)) else v
+                        field_mapping.get(str(k), str(k)): (
+                            None if (isinstance(v, float) and np.isnan(v)) else v
+                        )
                         for k, v in record.items()
                     }
                     for record in records
