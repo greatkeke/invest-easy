@@ -13,7 +13,7 @@
       (onClick)="navigateTo('/exchange')"></p-button>
   </div>
 
-  <div class="dashboard asset-dashboard shadow-md hover:shadow-lg" (click)="navigateTo('/asset-detail')">
+  <div class="dashboard asset-dashboard shadow-md hover:shadow-lg mb-0!" (click)="navigateTo('/asset-detail')">
     <div class="dashboard-header">
       <h3 class="cursor-pointer text-md font-semibold">Total Asset</h3>
       <button class="toggle-metrics" (click)="toggleMetrics($event)">
@@ -48,10 +48,14 @@
     </div>
   </div>
 
-  <div class="my-2">
-    <h3 class="text-md font-semibold">Positions</h3>
-    @if(positions && positions.length > 0){
-    <p-table [value]="positions" [rowHover]="true" [responsive]="true" styleClass="p-datatable-sm p-datatable-striped"
+  @for(group of groupPositions | keyvalue; track group.key){
+  <div class="mt-4">
+    <h3 class="text-md font-semibold">
+      <span>Positions</span>
+      <i class="ml-2" [ngClass]="'fi fi-' + getFlag(group.key)"></i>
+    </h3>
+    @if(group.value && group.value.length > 0){
+    <p-table [value]="group.value" [rowHover]="true" [responsive]="true" styleClass="p-datatable-sm p-datatable-striped"
       [scrollable]="true" #scrolling>
       <ng-template pTemplate="header">
         <tr>
@@ -90,6 +94,7 @@
     </p-table>
     }
   </div>
+  }
 
   <div class="mt-6">
     <h3 class="text-md font-semibold">Recent Orders</h3>

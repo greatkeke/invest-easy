@@ -1,5 +1,5 @@
 import { Component, effect, inject, Signal, viewChild } from '@angular/core';
-import { CommonModule, ViewportScroller } from '@angular/common';
+import { CommonModule, KeyValuePipe, ViewportScroller } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { Router, Scroll } from '@angular/router';
@@ -9,11 +9,12 @@ import { Position, PositionService } from '../shared/api-services/position.servi
 import { OrdersComponent } from '../orders/orders.component';
 import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Flag } from '../shared/flag';
 
 @Component({
   selector: 'app-trade',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, ButtonModule, TableModule, OrdersComponent],
+  imports: [CommonModule, HeaderComponent, ButtonModule, TableModule, OrdersComponent, KeyValuePipe],
   templateUrl: './trade.component.html',
   styleUrls: ['./trade.component.scss']
 })
@@ -55,6 +56,11 @@ export class TradeComponent {
         const element = this.positions[index];
         this.totalPL += element.pl;
         this.totalTodayPL += element.todayPL;
+        if (this.groupPositions.has(element.ccy)) {
+          this.groupPositions.get(element.ccy)?.push(element);
+        } else {
+          this.groupPositions.set(element.ccy, [element]);
+        }
       }
     } catch (error) {
       console.error('Failed to load data', error);
@@ -65,6 +71,10 @@ export class TradeComponent {
     this.router.navigate([target], { queryParams: params })
   }
 
+  getFlag(ccy: string) {
+    return new Flag(ccy).flag;
+  }
+
   showMetrics = true;
 
   toggleMetrics(event: Event) {
@@ -73,4 +83,5 @@ export class TradeComponent {
   }
 
   positions: Position[] = [];
+  groupPositions: Map<string, Position[]> = new Map<string, Position[]>();
 }

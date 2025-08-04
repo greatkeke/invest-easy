@@ -8,6 +8,8 @@ export interface Position {
   avg_price: number;
   instrument_code: string;
   instrument_name: string;
+  instrument_market: string;
+  ccy: string;
   marketValue: number;
   price: number;
   cost: number;

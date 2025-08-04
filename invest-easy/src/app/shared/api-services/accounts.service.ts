@@ -13,6 +13,7 @@ export interface AccountBalance extends Account {
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
+import { Flag } from '../flag';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class AccountsService {
   }
 
   private getFlagFromCcy(ccy: string): string {
-    return ccy.slice(0, 2).toLocaleLowerCase();
+    return new Flag(ccy).flag;
   }
 
   async fetchAccountBalances(): Promise<AccountBalance[]> {

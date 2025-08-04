@@ -24,6 +24,8 @@ class PositionResponse(BaseModel):
     percentage: float
     instrument_code: str
     instrument_name: str
+    instrument_market: str
+    ccy: str
 
 
 class PositionService:
@@ -87,14 +89,17 @@ class PositionService:
                 balances = await self.balance_service.get_balances(
                     user_id, uaccount.account_id
                 )
+                ccy = ""
                 if not balances or len(balances) != 1:
                     account_balance = 0.0
                 else:
                     balance = balances[0]
                     if isinstance(balance, dict):
                         account_balance = balance.get("balance", 0.0)  # Dict case
+                        ccy = balance.get("ccy", "")
                     else:
                         account_balance = balance.balance  # Object case
+                        ccy = balance.ccy
 
                 # Calculate denominator for percentage (total market value + balance)
                 denominator = total_market_value + account_balance
@@ -118,6 +123,8 @@ class PositionService:
                         * position.quantity,
                         instrument_code=instrument.code,
                         instrument_name=instrument.name,
+                        instrument_market = instrument.market,
+                        ccy = ccy,
                         percentage=(
                             (position.quantity * position.avg_price) / denominator
                             if denominator != 0
