@@ -23,10 +23,30 @@
     <div class="metrics px-6 py-6" *ngIf="overviewAccount">
       <div class="metric-row">
         <div class="metric">
+          <span class="label text-normal">Total asset</span>
+        </div>
+        <div class="metric">
+          <span class="value font-bold" *ngIf="showMetrics">{{ overviewAccount.balance + totalMV | currency:
+            overviewAccount.ccy }}</span>
+          <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
+        </div>
+      </div>
+      <div class="metric-row">
+        <div class="metric">
           <span class="label text-sm">{{overviewAccount.name}}</span>
         </div>
         <div class="metric">
-          <span class="value font-bold" *ngIf="showMetrics">{{ overviewAccount.balance | currency:
+          <span class="value font-normal" *ngIf="showMetrics">{{ overviewAccount.balance | currency:
+            overviewAccount.ccy }}</span>
+          <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
+        </div>
+      </div>
+      <div class="metric-row">
+        <div class="metric">
+          <span class="label text-sm">Market value</span>
+        </div>
+        <div class="metric">
+          <span class="value text-sm" *ngIf="showMetrics">{{ totalMV | currency:
             overviewAccount.ccy }}</span>
           <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
         </div>

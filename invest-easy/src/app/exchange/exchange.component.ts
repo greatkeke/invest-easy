@@ -10,6 +10,7 @@ import { SelectModule } from 'primeng/select';
 import { AccountSelectorComponent } from '../shared/account-selector/account-selector.component';
 import { AccountBalance, AccountsService } from '../shared/api-services/accounts.service';
 import { ExchangeService } from '../shared/api-services/exchange.service';
+import { FxrateService } from '../shared/api-services/fxrate.service';
 import { RouterModule } from '@angular/router';
 
 
@@ -45,7 +46,11 @@ export class ExchangeComponent implements OnInit {
   dialogMessage = '';
   completedDate = new Date();
 
-  constructor(private accountSvc: AccountsService, private exchangeSvc: ExchangeService) { }
+  constructor(
+    private accountSvc: AccountsService,
+    private exchangeSvc: ExchangeService,
+    private fxrateSvc: FxrateService
+  ) { }
 
   async ngOnInit(): Promise<void> {
     this.accounts = await this.accountSvc.fetchAccountBalances();
@@ -60,25 +65,10 @@ export class ExchangeComponent implements OnInit {
     }
   }
 
-
-  getExchangeRate(from?: string, to?: string): number {
-    if (!!!from || !!!to) {
-      return 1;
-    }
-    // Simplified exchange rates - in real app would fetch from API
-    const rates: Record<string, number> = {
-      'HKD': 1,
-      'CNH': 0.97,
-      'USD': 0.13,
-      'EUR': 0.12,
-      'GBP': 0.10,
-      'JPY': 18.5,
-      'CNY': 0.92
-    };
-
-    if (from === to) return 1;
-    return rates[to] / rates[from];
+  getExchangeRate(fromCcy?: string, toCcy?: string) {
+    return this.fxrateSvc.getExchangeRate(fromCcy, toCcy);
   }
+
 
   calculateAmount(isFrom = true) {
     let rate = this.getExchangeRate(this.fromAccount?.ccy, this.toAccount?.ccy)

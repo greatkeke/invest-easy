@@ -10,6 +10,7 @@ import { OrdersComponent } from '../orders/orders.component';
 import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Flag } from '../shared/flag';
+import { FxrateService } from '../shared/api-services/fxrate.service';
 
 @Component({
   selector: 'app-trade',
@@ -22,6 +23,7 @@ export class TradeComponent {
   overviewAccount: AccountBalance | undefined;
   totalPL?: number;
   totalTodayPL?: number;
+  totalMV: number = 0.0;
 
   viewportScroller = inject(ViewportScroller);
   scrollingRef = viewChild<HTMLElement>('scrolling');
@@ -29,7 +31,8 @@ export class TradeComponent {
   constructor(
     private router: Router,
     private accountSvc: AccountsService,
-    private positionSvc: PositionService
+    private positionSvc: PositionService,
+    private fxrateSvc: FxrateService
   ) {
     const scrollingPosition: Signal<[number, number] | undefined> = toSignal(
       inject(Router).events.pipe(
@@ -56,6 +59,7 @@ export class TradeComponent {
         const element = this.positions[index];
         this.totalPL += element.pl;
         this.totalTodayPL += element.todayPL;
+        this.totalMV += element.marketValue * this.fxrateSvc.getExchangeRate(element.ccy, this.overviewAccount.ccy);
         if (this.groupPositions.has(element.ccy)) {
           this.groupPositions.get(element.ccy)?.push(element);
         } else {
