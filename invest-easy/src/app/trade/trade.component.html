@@ -53,18 +53,33 @@
     <h3 class="text-md font-semibold">
       <span>Positions</span>
       <i class="ml-2" [ngClass]="'fi fi-' + getFlag(group.key)"></i>
+      <span class="ml-2">{{sumMV(group.value) | currency: group.key}}</span>
     </h3>
+    <div class="flex flex-row justify-between">
+      <div class="flex flex-col">
+        <small class="mr-2">Market Value</small>
+        <small>{{sumMV(group.value) | number:'1.2-2'}}</small>
+      </div>
+      <div class="flex flex-col">
+        <small class="mr-2">P/L</small>
+        <small>{{sumPL(group.value) | number:'1.2-2'}}</small>
+      </div>
+      <div class="flex flex-col">
+        <small class="mr-2">Today's P/L</small>
+        <small>{{sumTodayPL(group.value) | number:'1.2-2'}}</small>
+      </div>
+    </div>
     @if(group.value && group.value.length > 0){
     <p-table [value]="group.value" [rowHover]="true" [responsive]="true" styleClass="p-datatable-sm p-datatable-striped"
       [scrollable]="true" #scrolling>
       <ng-template pTemplate="header">
         <tr>
-          <th class="text-sm text-nowrap" pFrozenColumn>Security</th>
-          <th class="text-sm text-nowrap">MV/Qty</th>
-          <th class="text-sm text-nowrap">Price/Cost</th>
-          <th class="text-sm text-nowrap">Today's P/L</th>
-          <th class="text-sm text-nowrap">P/L</th>
-          <th class="text-sm text-nowrap">% Portfolio</th>
+          <th class="text-sm font-light! text-nowrap" pFrozenColumn>Security</th>
+          <th class="text-sm font-light! text-nowrap">MV/Qty</th>
+          <th class="text-sm font-light! text-nowrap">Price/Cost</th>
+          <th class="text-sm font-light! text-nowrap">Today's P/L</th>
+          <th class="text-sm font-light! text-nowrap">P/L</th>
+          <th class="text-sm font-light! text-nowrap">% Portfolio</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-position>

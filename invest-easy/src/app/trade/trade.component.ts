@@ -84,4 +84,22 @@ export class TradeComponent {
 
   positions: Position[] = [];
   groupPositions: Map<string, Position[]> = new Map<string, Position[]>();
+
+  sumPL(positions: Position[]) {
+    if (!!!positions) 
+      return 0.0;
+    return positions.reduce((acc, cur) => acc + cur.pl, 0);
+  }
+
+  sumTodayPL(positions: Position[]) {
+    if (!!!positions)
+      return 0.0;
+    return positions.reduce((acc, cur) => acc + cur.todayPL, 0);
+  }
+
+  sumMV(positions: Position[]) {
+    if (!!!positions)
+      return 0.0;
+    return positions.reduce((acc, cur) => acc + cur.marketValue, 0);
+  }
 }
