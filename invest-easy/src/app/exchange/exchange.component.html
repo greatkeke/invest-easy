@@ -13,7 +13,7 @@
               (selectChange)="onSelectChange($event, true)" name="fromAccount"></app-account-selector>
 
             <p-inputNumber [(ngModel)]="fromAmount" name="fromAmount" placeholder="Amount" mode="decimal"
-              (onInput)="calculateAmount()"></p-inputNumber>
+              (onInput)="calculateAmount($event)"></p-inputNumber>
           </div>
 
           <div class="flex flex-col gap-2 text-sm">
@@ -39,7 +39,7 @@
               (selectChange)="onSelectChange($event)"></app-account-selector>
 
             <p-inputNumber [(ngModel)]="toAmount" name="toAmount" placeholder="Amount" mode="decimal"
-              (onInput)="calculateAmount(false)"></p-inputNumber>
+              (onInput)="calculateAmount($event, false)"></p-inputNumber>
           </div>
 
           <div class="flex flex-col gap-2 text-sm">

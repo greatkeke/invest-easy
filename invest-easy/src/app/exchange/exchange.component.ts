@@ -70,9 +70,9 @@ export class ExchangeComponent implements OnInit {
   }
 
 
-  calculateAmount(isFrom = true) {
+  calculateAmount(event:any, isFrom = true) {
+    let a: number = event.value;
     let rate = this.getExchangeRate(this.fromAccount?.ccy, this.toAccount?.ccy)
-    let a = isFrom ? this.fromAmount : this.toAmount;
     let b = isFrom ? a * rate : a / rate;
     if (isFrom) {
       this.toAmount = b;
