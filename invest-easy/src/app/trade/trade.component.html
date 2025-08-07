@@ -23,9 +23,6 @@
     <div class="metrics px-6 py-6" *ngIf="overviewAccount">
       <div class="metric-row">
         <div class="metric">
-          <span class="label text-normal">Total asset</span>
-        </div>
-        <div class="metric">
           <span class="value font-bold" *ngIf="showMetrics">{{ overviewAccount.balance + totalMV | currency:
             overviewAccount.ccy }}</span>
           <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
@@ -34,18 +31,12 @@
       <div class="metric-row">
         <div class="metric">
           <span class="label text-sm">{{overviewAccount.name}}</span>
-        </div>
-        <div class="metric">
-          <span class="value font-normal" *ngIf="showMetrics">{{ overviewAccount.balance | currency:
+          <span class="value text-sm" *ngIf="showMetrics">{{ overviewAccount.balance | currency:
             overviewAccount.ccy }}</span>
           <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
         </div>
-      </div>
-      <div class="metric-row">
         <div class="metric">
-          <span class="label text-sm">Market value</span>
-        </div>
-        <div class="metric">
+          <span class="label text-sm">Market Value</span>
           <span class="value text-sm" *ngIf="showMetrics">{{ totalMV | currency:
             overviewAccount.ccy }}</span>
           <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
@@ -53,13 +44,13 @@
       </div>
       <div class="metric-row" *ngIf="totalPL && totalTodayPL">
         <div class="metric">
-          <span class="label text-sm">Current PL</span>
+          <span class="label text-sm">Current P/L</span>
           <span class="value text-sm" *ngIf="showMetrics" [class.positive]="totalPL>0"
             [class.negative]="totalPL<0">{{totalPL | currency: overviewAccount.ccy }}</span>
           <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
         </div>
         <div class="metric">
-          <span class="label text-sm">Today PL</span>
+          <span class="label text-sm">Today's P/L</span>
           <span class="value text-sm" *ngIf="showMetrics" [class.positive]="totalTodayPL>0"
             [class.negative]="totalTodayPL<0">{{totalTodayPL | currency: overviewAccount.ccy}}</span>
           <span class="value text-sm" *ngIf="!showMetrics">••••••</span>
@@ -82,11 +73,13 @@
       </div>
       <div class="flex flex-col">
         <small class="mr-2">P/L</small>
-        <small>{{sumPL(group.value) | number:'1.2-2'}}</small>
+        @let sumpl = sumPL(group.value);
+        <small [class.positive]="sumpl>0" [class.negative]="sumpl<0">{{sumpl | number:'1.2-2'}}</small>
       </div>
       <div class="flex flex-col">
         <small class="mr-2">Today's P/L</small>
-        <small>{{sumTodayPL(group.value) | number:'1.2-2'}}</small>
+        @let sum_tpl = sumTodayPL(group.value);
+        <small [class.positive]="sum_tpl>0" [class.negative]="sum_tpl<0">{{sum_tpl | number:'1.2-2'}}</small>
       </div>
     </div>
     @if(group.value && group.value.length > 0){

@@ -57,9 +57,10 @@ export class TradeComponent {
       this.totalTodayPL = 0;
       for (let index = 0; index < this.positions.length; index++) {
         const element = this.positions[index];
-        this.totalPL += element.pl;
-        this.totalTodayPL += element.todayPL;
-        this.totalMV += element.marketValue * this.fxrateSvc.getExchangeRate(element.ccy, this.overviewAccount.ccy);
+        let fxrate = this.fxrateSvc.getExchangeRate(element.ccy, this.overviewAccount.ccy);
+        this.totalPL += element.pl * fxrate;
+        this.totalTodayPL += element.todayPL * fxrate;
+        this.totalMV += element.marketValue * fxrate;
         if (this.groupPositions.has(element.ccy)) {
           this.groupPositions.get(element.ccy)?.push(element);
         } else {
