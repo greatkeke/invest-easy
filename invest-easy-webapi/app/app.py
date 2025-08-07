@@ -80,7 +80,8 @@ async def lifespan(app: FastAPI):
             futu_service = FutuApiService(session=session)
             akshare_service = AkshareService(session=session)
             await futu_service.initialize_all_markets_instruments()
-            await akshare_service.initialize_snapshots_table()
+            if settings.enable_ak_initialization:
+                await akshare_service.initialize_snapshots_table()
             await predefined_settings(session)
         finally:
             await session.close()

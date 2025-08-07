@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"  # Default log level
     log_max_size: int = 50  # Default max log size in MB
     log_backup_count: int = 5  # Default backup count
+    enable_ak_initialization: bool = False  # Default value, will be overridden by .env
 
     model_config = SettingsConfigDict(
         env_file=os.path.abspath(
