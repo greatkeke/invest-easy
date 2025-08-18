@@ -23,7 +23,7 @@
             (click)="addToWatchlist()" [disabled]="!marketSnapshot"></p-button>
         </div>
         <div class="flex w-full justify-between">
-          <span class="text-md">{{marketSnapshot.last_price | currency:'USD':'symbol':'1.2-2'}}</span>
+          <span class="text-md">{{marketSnapshot.last_price | number:'1.2-2'}}</span>
           <span *ngIf="marketSnapshot.prev_close_price" class="text-md" [ngClass]="{
                   'text-red-500': marketSnapshot.last_price >= marketSnapshot.prev_close_price,
                   'text-green-500': marketSnapshot.last_price < marketSnapshot.prev_close_price
@@ -46,27 +46,27 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="flex justify-between">
           <span class="text-xs text-gray-700">Open</span>
-          <span class="text-xs">{{marketSnapshot.open_price | currency:'USD':'symbol':'1.2-2'}}</span>
+          <span class="text-xs">{{marketSnapshot.open_price | number:'1.2-2'}}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-xs text-gray-700">Prev. close</span>
-          <span class="text-xs">{{marketSnapshot.prev_close_price | currency:'USD':'symbol':'1.2-2'}}</span>
+          <span class="text-xs">{{marketSnapshot.prev_close_price | number:'1.2-2'}}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-xs text-gray-700">Day low</span>
-          <span class="text-xs">{{marketSnapshot.low_price | currency:'USD':'symbol':'1.2-2'}}</span>
+          <span class="text-xs">{{marketSnapshot.low_price | number:'1.2-2'}}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-xs text-gray-700">Day high</span>
-          <span class="text-xs">{{marketSnapshot.high_price | currency:'USD':'symbol':'1.2-2'}}</span>
+          <span class="text-xs">{{marketSnapshot.high_price | number:'1.2-2'}}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-xs text-gray-700">52 wk low</span>
-          <span class="text-xs">{{marketSnapshot.lowest52weeks_price | currency:'USD':'symbol':'1.2-2'}}</span>
+          <span class="text-xs">{{marketSnapshot.lowest52weeks_price | number:'1.2-2'}}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-xs text-gray-700">52 wk high</span>
-          <span class="text-xs">{{marketSnapshot.highest52weeks_price | currency:'USD':'symbol':'1.2-2'}}</span>
+          <span class="text-xs">{{marketSnapshot.highest52weeks_price | number:'1.2-2'}}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-xs text-gray-700">Turnover</span>
@@ -90,7 +90,7 @@
         </div>
         <div class="flex justify-between">
           <span class="text-xs text-gray-700">Spread</span>
-          <span class="text-xs">{{marketSnapshot.price_spread | currency:'USD':'symbol':'1.2-2'}}</span>
+          <span class="text-xs">{{marketSnapshot.price_spread | number:'1.2-2'}}</span>
         </div>
       </div>
     </div>
@@ -120,13 +120,13 @@
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Price</label>
-          <p-inputNumber [(ngModel)]="orderForm.price" name="price" mode="currency" currency="USD" [min]="0"
-            [max]="10000" [step]="0.01" [showButtons]="true" size="small"></p-inputNumber>
+          <p-inputNumber [(ngModel)]="orderForm.price" name="price" mode="currency" [currency]="orderForm.payFrom.ccy" [min]="0"
+            [max]="1000000" [step]="0.01" [showButtons]="true" size="small"></p-inputNumber>
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Quantity</label>
-          <p-inputNumber [(ngModel)]="orderForm.quantity" name="quantity" [min]="1" [max]="10000" [showButtons]="true"
+          <p-inputNumber [(ngModel)]="orderForm.quantity" name="quantity" [min]="1" [max]="1000000" [showButtons]="true"
             buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" size="small"
             inputStyleClass="max-w-20"></p-inputNumber>
         </div>
@@ -170,9 +170,9 @@
           <label class="block text-sm text-gray-700">Order Type</label>
           <p class="font-medium">{{orderForm.type.label}}</p>
         </div>
-        <div *ngIf="orderForm.type.label === 'limit'">
+        <div *ngIf="orderForm.type.value === 'limit'">
           <label class="block text-sm text-gray-700">Price</label>
-          <p class="font-medium">{{orderForm.price | currency:'USD'}}</p>
+          <p class="font-medium">{{orderForm.price | currency: orderForm.payFrom.ccy}}</p>
         </div>
         <div>
           <label class="block text-sm text-gray-700">Quantity</label>
