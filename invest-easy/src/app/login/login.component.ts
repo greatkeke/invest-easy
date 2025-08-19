@@ -93,7 +93,7 @@ export class LoginComponent {
   login(form: NgForm): void {
     const apiUrl = 'auth/jwt/login';
 
-    const authData = { username: this.username, password: this.password };
+    const authData = { username: this.email, password: this.password };
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'

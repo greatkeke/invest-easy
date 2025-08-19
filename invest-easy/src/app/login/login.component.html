@@ -13,7 +13,7 @@
         {{ errorMessage }}
       </div>
 
-      <div *ngIf="isSignUp" class="animate-fadeIn">
+      <div>
         <p-iftalabel>
           <p-iconfield>
             <p-inputicon class="pi pi-envelope" />
@@ -31,7 +31,7 @@
         </p-iftalabel>
       </div>
 
-      <div>
+      <div *ngIf="isSignUp" class="animate-fadeIn">
         <p-iftalabel>
           <p-iconfield>
             <p-inputicon class="pi pi-user" />
