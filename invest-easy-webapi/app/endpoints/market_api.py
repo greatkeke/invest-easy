@@ -1,5 +1,5 @@
 from typing import Annotated, List
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from ..infrastructure.users import current_active_user
 from ..infrastructure.users import User
 from ..services.market_service import MarketService
@@ -68,3 +68,26 @@ async def get_instruments_by_user(
     return await market_svc.get_user_instruments(
         user_id=user.id,
     )
+
+
+@router.get("/instrument/{code}")
+async def get_instrument_by_code(
+    code: str,
+    svc: Annotated[MarketService, Depends(MarketService)],
+):
+    """
+    Get instrument by code with computed ccy property
+    
+    Args:
+        code: Instrument code (e.g. 'HK.00700')
+        
+    Returns:
+        Dict containing instrument data with ccy property
+        
+    Raises:
+        HTTPException: If instrument not found (404)
+    """
+    instrument = await svc.get_instrument_by_code(code=code)
+    if not instrument:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+    return instrument

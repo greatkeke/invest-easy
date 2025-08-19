@@ -254,3 +254,81 @@ class MarketService:
                 i["code"]: i for i in position_instruments + watchlist_instruments
             }.values()
         )
+
+    def _get_ccy_from_market(self, market: str) -> str:
+        """
+        Get currency code from market code.
+        
+        Args:
+            market: Market code (e.g. 'HK', 'US', 'SH', 'SZ')
+            
+        Returns:
+            Currency code (e.g. 'HKD', 'USD', 'CNH')
+        """
+        market_to_ccy = {
+            'HK': 'HKD',
+            'US': 'USD',
+            'SH': 'CNH',
+            'SZ': 'CNH'
+        }
+        return market_to_ccy.get(market.upper(), market.upper())
+
+    async def get_instrument_by_code(self, code: str) -> dict | None:
+        """
+        Get instrument by code with computed ccy property.
+        
+        Args:
+            code: Instrument code (e.g. 'HK.00700')
+            
+        Returns:
+            Dict containing instrument data with ccy property
+        """
+        try:
+            # Query instrument from database
+            stmt = select(Instrument).where(
+                Instrument.code == code,
+                Instrument.is_active == True
+            ).limit(1)
+            
+            result = await self.session.execute(stmt)
+            instrument = result.scalar_one_or_none()
+            
+            if not instrument:
+                return None
+                
+            # Convert instrument to dict and add ccy property
+            instrument_data = {
+                "id": str(instrument.id),
+                "code": instrument.code,
+                "name": instrument.name,
+                "market": instrument.market,
+                "ccy": self._get_ccy_from_market(instrument.market),
+                "lot_size": instrument.lot_size,
+                "stock_type": instrument.stock_type,
+                "stock_child_type": instrument.stock_child_type,
+                "stock_owner": instrument.stock_owner,
+                "option_type": instrument.option_type,
+                "strike_time": instrument.strike_time.isoformat() if instrument.strike_time else None,
+                "strike_price": instrument.strike_price,
+                "suspension": instrument.suspension,
+                "listing_date": instrument.listing_date.isoformat() if instrument.listing_date else None,
+                "stock_id": instrument.stock_id,
+                "delisting": instrument.delisting,
+                "index_option_type": instrument.index_option_type,
+                "main_contract": instrument.main_contract,
+                "last_trade_time": instrument.last_trade_time.isoformat() if instrument.last_trade_time else None,
+                "exchange_type": instrument.exchange_type,
+                "updated_at": instrument.updated_at.isoformat() if instrument.updated_at else None
+            }
+            
+            # Remove None values
+            instrument_data = {
+                k: v for k, v in instrument_data.items() if v is not None
+            }
+            
+            return instrument_data
+            
+        except Exception as e:
+            import logging
+            logging.error(f"Failed to get instrument by code {code}: {str(e)}")
+            return None
