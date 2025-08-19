@@ -77,10 +77,27 @@ export class TradeStocksComponent implements OnInit {
 
   dialogVisible = false;
   options: any = {};
+  instrument: any = {};
 
   platformId = inject(PLATFORM_ID);
+  displayPreview = false;
+  // Trading info is now dynamically loaded from market snapshot
 
-  ngOnInit() {
+  // Form data
+  orderTypes = [
+    { label: 'Limit price', value: 'limit' },
+    { label: 'Market price', value: 'market' }
+  ];
+  accounts: AccountBalance[] = [];
+  orderForm = {
+    type: this.orderTypes[0],
+    price: 0,
+    quantity: 100,
+    goodUntil: new Date(),
+    payFrom: this.accounts.length > 0 ? this.accounts[0] : { id: '', name: '', balance: 0.0, ccy: "HKD", flag: 'hk' }
+  };
+
+  async ngOnInit() {
     this.initChart();
     let params = this.route.snapshot?.queryParams;
     if (params['trade'] === 'sell') {
@@ -94,7 +111,17 @@ export class TradeStocksComponent implements OnInit {
       this.loadRTData(this.security_code);
       this.checkIfWatched();
     }
-    this.loadAccounts();
+    await this.loadAccounts();
+    this.marketService.getInstrumentByCode(this.security_code).subscribe({
+      next: (data: any[]) => {
+        this.instrument = data;
+        let ccy = this.instrument.ccy;
+        let matched = this.accounts.filter(x => x.ccy === ccy);
+        if (!!matched) {
+          this.orderForm.payFrom = matched[0];
+        }
+      }
+    })
   }
 
   initChart() {
@@ -226,8 +253,6 @@ export class TradeStocksComponent implements OnInit {
     });
   }
 
-  displayPreview = false;
-
   // Chart data
   chartData: ChartData = {
     labels: [],
@@ -239,22 +264,6 @@ export class TradeStocksComponent implements OnInit {
         tension: 0.4
       }
     ]
-  };
-
-  // Trading info is now dynamically loaded from market snapshot
-
-  // Form data
-  orderTypes = [
-    { label: 'Limit price', value: 'limit' },
-    { label: 'Market price', value: 'market' }
-  ];
-  accounts: AccountBalance[] = [];
-  orderForm = {
-    type: this.orderTypes[0],
-    price: 0,
-    quantity: 100,
-    goodUntil: new Date(),
-    payFrom: this.accounts.length > 0 ? this.accounts[0] : { id: '', name: '', balance: 0.0, ccy: "HKD", flag: 'hk' }
   };
 
   // Calculate estimated total

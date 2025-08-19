@@ -47,4 +47,8 @@ export class MarketService {
   getInstrumentsByUser(): Observable<any[]> {
     return this.http.get<any[]>('/market/instruments-by-user');
   }
+
+  getInstrumentByCode(code:string): Observable<any>{
+    return this.http.get<any>(`/market/instrument/${code}`)
+  }
 }
