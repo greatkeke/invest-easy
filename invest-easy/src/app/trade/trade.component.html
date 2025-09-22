@@ -69,17 +69,17 @@
     <div class="flex flex-row justify-between px-2">
       <div class="flex flex-col">
         <small class="mr-2">Market Value</small>
-        <small>{{sumMV(group.value) | number:'1.2-2'}}</small>
+        <small>{{sumMV(group.value) | number:'1.3-3'}}</small>
       </div>
       <div class="flex flex-col">
         <small class="mr-2">P/L</small>
         @let sumpl = sumPL(group.value);
-        <small [class.positive]="sumpl>0" [class.negative]="sumpl<0">{{sumpl | number:'1.2-2'}}</small>
+        <small [class.positive]="sumpl>0" [class.negative]="sumpl<0">{{sumpl | number:'1.3-3'}}</small>
       </div>
       <div class="flex flex-col">
         <small class="mr-2">Today's P/L</small>
         @let sum_tpl = sumTodayPL(group.value);
-        <small [class.positive]="sum_tpl>0" [class.negative]="sum_tpl<0">{{sum_tpl | number:'1.2-2'}}</small>
+        <small [class.positive]="sum_tpl>0" [class.negative]="sum_tpl<0">{{sum_tpl | number:'1.3-3'}}</small>
       </div>
     </div>
     @if(group.value && group.value.length > 0){
@@ -101,22 +101,22 @@
             <div class="line-clamp-2 text-ellipsis">{{ position.instrument_name }}</div>
           </td>
           <td class="text-sm">
-            <div>{{ position.marketValue | number:'1.2-2'}}</div>
+            <div>{{ position.marketValue | number:'1.3-3'}}</div>
             <div>{{ position.quantity }}</div>
           </td>
           <td class="text-sm">
-            <div>{{ position.price | number:'1.2-2' }}</div>
-            <div>{{ position.cost | number:'1.2-2' }}</div>
+            <div>{{ position.price | number:'1.3-3' }}</div>
+            <div>{{ position.cost | number:'1.3-3' }}</div>
           </td>
           <td class="text-sm" [class.positive]="position.todayPL > 0" [class.negative]="position.todayPL < 0">
-            <div>{{ position.todayPL | number:'1.2-2' }}</div>
-            <div>{{ position.todayPL_p | percent:'1.2-2' }}</div>
+            <div>{{ position.todayPL | number:'1.3-3' }}</div>
+            <div>{{ position.todayPL_p | percent:'1.3-3' }}</div>
           </td>
           <td class="text-sm" [class.positive]="position.pl > 0" [class.negative]="position.pl < 0">
-            <div>{{ position.pl | number:'1.2-2' }}</div>
-            <div>{{ position.pl_p | percent:'1.2-2' }}</div>
+            <div>{{ position.pl | number:'1.3-3' }}</div>
+            <div>{{ position.pl_p | percent:'1.3-3' }}</div>
           </td>
-          <td class="text-sm">{{ position.portfolioPercent | percent:'1.2-2' }}</td>
+          <td class="text-sm">{{ position.portfolioPercent | percent:'1.3-3' }}</td>
         </tr>
       </ng-template>
     </p-table>

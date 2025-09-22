@@ -120,15 +120,16 @@
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Price</label>
-          <p-inputNumber [(ngModel)]="orderForm.price" name="price" mode="currency" [currency]="orderForm.payFrom.ccy" [min]="0"
-            [max]="1000000" [step]="0.01" [showButtons]="true" size="small"></p-inputNumber>
+          <p-inputNumber [(ngModel)]="orderForm.price" name="price" mode="currency" [currency]="orderForm.payFrom.ccy"
+            [min]="0" [max]="1000000" [step]="0.001" [showButtons]="true" size="small" [minFractionDigits]="2"
+            [maxFractionDigits]="3"></p-inputNumber>
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Quantity</label>
-          <p-inputNumber [(ngModel)]="orderForm.quantity" name="quantity" [min]="1" [max]="1000000" [showButtons]="true"
-            buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" size="small"
-            inputStyleClass="max-w-20"></p-inputNumber>
+          <p-inputNumber [(ngModel)]="orderForm.quantity" name="quantity" [min]="100" [max]="1000000"
+            [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus" size="small" inputStyleClass="max-w-20" [step]="100"></p-inputNumber>
         </div>
 
         <div>
@@ -184,7 +185,8 @@
         </div>
         <div>
           <label class="block text-sm text-gray-700">Pay From</label>
-          <p class="font-medium"><i [ngClass]="'fi fi-' + orderForm.payFrom.flag" class="mr-2"></i>{{orderForm.payFrom.name}}</p>
+          <p class="font-medium"><i [ngClass]="'fi fi-' + orderForm.payFrom.flag"
+              class="mr-2"></i>{{orderForm.payFrom.name}}</p>
         </div>
         <div>
           <label class="block text-sm text-gray-700">Estimated Total</label>
