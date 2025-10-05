@@ -17,14 +17,14 @@ from ..domain.instruments import Instrument
 class AkshareService:
     def __init__(self, session: Annotated[AsyncSession, Depends(get_async_session)]):
         self.session = session
-        self.market = "US"
 
-    def _parse_code(self, code: str) -> str:
+    def _parse_code(self, code: str, market: str) -> str:
         """
         Parse code from format like "105.DBGI" to "DBGI" and combine with market.
 
         Args:
             code: Raw code from AkShare API
+            market: Market identifier (US, SH, SZ, HK)
 
         Returns:
             Parsed code in format "market.parsed_code" (e.g., "US.DBGI")
@@ -38,7 +38,7 @@ class AkshareService:
         else:
             parsed_code = code
 
-        return f"{self.market}.{parsed_code}"
+        return f"{market}.{parsed_code}"
 
     def get_us_stock_spot(self) -> List[Dict[str, Any]]:
         """
@@ -69,50 +69,120 @@ class AkshareService:
             logging.error(error_msg)
             raise RuntimeError(error_msg)
 
-    async def initialize_snapshots_table(self) -> int:
+    def get_sh_stock_spot(self) -> List[Dict[str, Any]]:
         """
-        Initialize snapshots table with US stock spot data.
-        Only initialize if the latest update_at is older than 1 day.
-        For existing items, update changed fields; for new items, insert them.
+        Get SH stock spot data from AkShare
 
         Returns:
-            Number of snapshots inserted or updated
+            List of dicts containing SH stock spot data
 
         Raises:
-            RuntimeError: If AkShare API call fails or database operation fails
+            RuntimeError: If AkShare API call fails
         """
-        # Check last update time
-        latest_update = (
-            await self.session.execute(select(func.max(Snapshots.updated_at)))
-        ).scalar_one_or_none()
+        try:
+            # Get SH stock spot data
+            stock_sh_a_spot_em_df = ak.stock_sh_a_spot_em()
 
-        if latest_update is not None:
-            # Ensure latest_update is a datetime object
-            latest_update_dt = (
-                latest_update
-                if isinstance(latest_update, datetime)
-                else datetime.fromisoformat(latest_update.isoformat())
-            )
-            if (datetime.now() - latest_update_dt) < timedelta(hours=12):
-                logging.info("Snapshots table is up-to-date (less than 12 hours old)")
-                return 0
+            if isinstance(stock_sh_a_spot_em_df, DataFrame):
+                records = stock_sh_a_spot_em_df.to_dict("records")
+                return [
+                    {
+                        str(k): None if (isinstance(v, float) and np.isnan(v)) else v
+                        for k, v in record.items()
+                    }
+                    for record in records
+                ]
+            return []
+        except Exception as e:
+            error_msg = f"AkShare API error for SH market: {str(e)}"
+            logging.error(error_msg)
+            raise RuntimeError(error_msg)
 
+    def get_sz_stock_spot(self) -> List[Dict[str, Any]]:
+        """
+        Get SZ stock spot data from AkShare
+
+        Returns:
+            List of dicts containing SZ stock spot data
+
+        Raises:
+            RuntimeError: If AkShare API call fails
+        """
+        try:
+            # Get SZ stock spot data
+            stock_sz_a_spot_em_df = ak.stock_sz_a_spot_em()
+
+            if isinstance(stock_sz_a_spot_em_df, DataFrame):
+                records = stock_sz_a_spot_em_df.to_dict("records")
+                return [
+                    {
+                        str(k): None if (isinstance(v, float) and np.isnan(v)) else v
+                        for k, v in record.items()
+                    }
+                    for record in records
+                ]
+            return []
+        except Exception as e:
+            error_msg = f"AkShare API error for SZ market: {str(e)}"
+            logging.error(error_msg)
+            raise RuntimeError(error_msg)
+
+    def get_hk_stock_spot(self) -> List[Dict[str, Any]]:
+        """
+        Get HK stock spot data from AkShare
+
+        Returns:
+            List of dicts containing HK stock spot data
+
+        Raises:
+            RuntimeError: If AkShare API call fails
+        """
+        try:
+            # Get HK stock spot data
+            stock_hk_spot_em_df = ak.stock_hk_spot_em()
+
+            if isinstance(stock_hk_spot_em_df, DataFrame):
+                records = stock_hk_spot_em_df.to_dict("records")
+                return [
+                    {
+                        str(k): None if (isinstance(v, float) and np.isnan(v)) else v
+                        for k, v in record.items()
+                    }
+                    for record in records
+                ]
+            return []
+        except Exception as e:
+            error_msg = f"AkShare API error for HK market: {str(e)}"
+            logging.error(error_msg)
+            raise RuntimeError(error_msg)
+
+    async def _initialize_market_snapshots(self, market: str, get_spot_method) -> int:
+        """
+        Initialize snapshots table for a specific market.
+
+        Args:
+            market: Market identifier (US, SH, SZ, HK)
+            get_spot_method: Method to get spot data for the market
+
+        Returns:
+            Number of snapshots inserted or updated for this market
+        """
         # Get data from AkShare
         try:
-            records = self.get_us_stock_spot()
+            records = get_spot_method()
         except Exception as e:
-            logging.error(f"Failed to get US stock spot data: {str(e)}")
+            logging.error(f"Failed to get {market} stock spot data: {str(e)}")
             return 0
 
         if not records:
-            logging.warning("No US stock spot data received from AkShare")
+            logging.warning(f"No {market} stock spot data received from AkShare")
             return 0
 
         # Parse all codes upfront to avoid multiple calls to _parse_code
         for record in records:
             raw_code = record.get("代码")
             if raw_code:
-                record["parsed_code"] = self._parse_code(raw_code)
+                record["parsed_code"] = self._parse_code(raw_code, market)
 
         # Get parsed codes for database queries
         parsed_codes = [
@@ -123,7 +193,7 @@ class AkshareService:
         # If no related instrument then ignore this record.
         existing_instruments = await self.session.execute(
             select(Instrument).where(
-                Instrument.market == self.market, Instrument.is_active == True
+                Instrument.market == market, Instrument.is_active == True
             )
         )
         existing_instruments = {i.code: i for i in existing_instruments.scalars()}
@@ -187,20 +257,69 @@ class AkshareService:
             else:
                 new_snapshot = Snapshots()
                 new_snapshot.instrument_id = record["instrument_id"]
-                new_snapshot.market = self.market
+                new_snapshot.market = market
                 new_snapshot.upsert(mapped_record)
                 self.session.add(new_snapshot)
                 insert_count += 1
 
+        logging.info(
+            f"Inserted {insert_count} new snapshots, updated {update_count} existing snapshots for {market} market"
+        )
+        return insert_count + update_count
+
+    async def initialize_snapshots_table(self) -> int:
+        """
+        Initialize snapshots table with stock spot data from all markets.
+        Only initialize if the latest update_at is older than 12 hours.
+        For existing items, update changed fields; for new items, insert them.
+
+        Returns:
+            Number of snapshots inserted or updated across all markets
+
+        Raises:
+            RuntimeError: If AkShare API call fails or database operation fails
+        """
+        # Check last update time
+        latest_update = (
+            await self.session.execute(select(func.max(Snapshots.updated_at)))
+        ).scalar_one_or_none()
+
+        if latest_update is not None:
+            # Ensure latest_update is a datetime object
+            latest_update_dt = (
+                latest_update
+                if isinstance(latest_update, datetime)
+                else datetime.fromisoformat(latest_update.isoformat())
+            )
+            if (datetime.now() - latest_update_dt) < timedelta(hours=12):
+                logging.info("Snapshots table is up-to-date (less than 12 hours old)")
+                return 0
+
+        total_count = 0
+
+        # Initialize snapshots for each market
+        market_methods = [
+            ("US", self.get_us_stock_spot),
+            ("SH", self.get_sh_stock_spot),
+            ("SZ", self.get_sz_stock_spot),
+            ("HK", self.get_hk_stock_spot),
+        ]
+
+        for market, method in market_methods:
+            try:
+                count = await self._initialize_market_snapshots(market, method)
+                total_count += count
+            except Exception as e:
+                logging.error(f"Failed to initialize {market} market snapshots: {str(e)}")
+                continue
+
         try:
             await self.session.commit()
-            logging.info(
-                f"Inserted {insert_count} new snapshots, updated {update_count} existing snapshots in snapshots table"
-            )
-            return insert_count + update_count
+            logging.info(f"Total snapshots processed across all markets: {total_count}")
+            return total_count
         except Exception as e:
             await self.session.rollback()
-            logging.error(f"Failed to upsert snapshots records: {str(e)}")
+            logging.error(f"Failed to commit snapshots records: {str(e)}")
             return 0
 
     def get_rtdata(
