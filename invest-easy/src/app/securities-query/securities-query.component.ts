@@ -31,6 +31,7 @@ import { MessageService } from 'primeng/api';
 })
 export class SecuritiesQueryComponent implements OnInit {
   @Input() autofocus = false;
+  @Input() placeholder = '';
   @ViewChild('searchInput') searchInput!: ElementRef;
 
   searchQuery = '';

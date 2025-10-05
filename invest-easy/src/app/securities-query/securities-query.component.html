@@ -3,7 +3,7 @@
     <p-iconfield class="grow">
       <p-inputicon styleClass="pi pi-search" />
       <input type="text" class="w-full" pInputText [(ngModel)]="searchQuery" (input)="onSearch()"
-        [pAutoFocus]="autofocus" (focus)="onFocus()" (blur)="onBlur()" placeholder="Search securites"
+        [pAutoFocus]="autofocus" (focus)="onFocus()" (blur)="onBlur()" [placeholder]="!!!placeholder ? 'Search securites' : placeholder"
         i18n-placeholder />
     </p-iconfield>
     <p-button *ngIf="searchResults.length > 0" icon="pi pi-times" (click)="clearSearch()" variant="outlined"
