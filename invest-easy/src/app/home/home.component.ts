@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/advertisement', { adType }]);
   }
 
-  checkSecurity(code:string) {
-    console.log(code);
+  checkSecurity(code: string) {
+    this.router.navigate(['/report', { code }]);
   }
 }

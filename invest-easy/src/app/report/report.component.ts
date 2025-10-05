@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { RouterModule } from '@angular/router';
-import { HeaderComponent } from '../shared/header/header.component';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 
 @Component({
@@ -16,7 +15,6 @@ import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.
   imports: [
     CommonModule,
     FormsModule,
-    HeaderComponent,
     CardModule,
     ButtonModule,
     TableModule,
@@ -27,10 +25,19 @@ import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.
 export class ReportComponent implements OnInit {
   reports: any[] = [];
   loading = false;
+  code: string | null = null;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      const codeParam = params.get('code');
+      if (codeParam) {
+        this.code = codeParam;
+      }
+    });
+
+    console.log('Extracted code parameter:', this.code);
     this.loadReports();
   }
 
