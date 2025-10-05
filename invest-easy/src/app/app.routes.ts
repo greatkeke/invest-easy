@@ -16,6 +16,7 @@ import { AuthGuard } from './shared/auth.guard';
 import { AdvertisementComponent } from './advertisement/advertisement.component';
 import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
 import { ContactDetailComponent } from './user-panel/contact-detail/contact-detail.component';
+import { ReportComponent } from './report/report.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -99,6 +100,11 @@ export const routes: Routes = [
   {
     path: 'order-detail',
     component: OrderDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'report',
+    component: ReportComponent,
     canActivate: [AuthGuard]
   }
 ];
