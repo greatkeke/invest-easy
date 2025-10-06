@@ -10,7 +10,7 @@ from ..infrastructure.db import get_async_session
 from langchain.chat_models import init_chat_model
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain.prompts import ChatPromptTemplate
-from ..infrastructure.akshare_tools import QueryStockValue
+from ..infrastructure.akshare_tools import QueryStockValue,QueryUSStockFinacialReport
 from ..config import settings
 
 class ReportService:
@@ -35,7 +35,7 @@ class ReportService:
         # 7. 根据6块内容，按照价值投资的方法，分析四要素：盈利能力、竞争优势、财务健康、进场时机。
         prompt = ChatPromptTemplate.from_messages(
             [
-                ("system", "你是金融专家，请根据用户的股票代码，给出相应的股票估值"),
+                ("system", "你是金融专家，请根据用户的股票代码，查询美股财务报表数据"),
                 ("human", "{input}"),
                 (
                     "placeholder",
@@ -44,7 +44,7 @@ class ReportService:
             ]
         )
 
-        tools = [QueryStockValue]
+        tools = [QueryStockValue, QueryUSStockFinacialReport]
 
         agent = create_tool_calling_agent(
             llm=self.model, tools=tools, prompt=prompt
@@ -52,6 +52,6 @@ class ReportService:
 
         executer = AgentExecutor(agent=agent,tools=tools,verbose=True)
 
-        response = executer.invoke({"input": "请查询" + report_code + "的估值"})
+        response = executer.invoke({"input": "请查询" + report_code + "的年度现金流量表"})
         logging.info(response)
         return {"status":"ok"}
