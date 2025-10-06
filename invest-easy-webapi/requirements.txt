@@ -14,3 +14,7 @@ futu-api
 newsapi-python
 asyncer
 akshare
+langchain
+langchain_deepseek
+langchain-community 
+langchain-experimental
