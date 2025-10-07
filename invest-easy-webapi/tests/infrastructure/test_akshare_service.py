@@ -26,20 +26,28 @@ class TestAkshareService:
 
     def test_parse_code(self, akshare_service):
         """Test _parse_code method."""
-        # Test normal code parsing
-        result = akshare_service._parse_code("105.DBGI")
+        # Test normal code parsing for US market
+        result = akshare_service._parse_code("105.DBGI", "US")
         assert result == "US.DBGI"
 
-        # Test code without dot
-        result = akshare_service._parse_code("DBGI")
-        assert result == "US.DBGI"
+        # Test code without dot for SH market
+        result = akshare_service._parse_code("600000", "SH")
+        assert result == "SH.600000"
+
+        # Test code with dot for HK market
+        result = akshare_service._parse_code("00700", "HK")
+        assert result == "HK.00700"
+
+        # Test code without dot for SZ market
+        result = akshare_service._parse_code("000001", "SZ")
+        assert result == "SZ.000001"
 
         # Test empty code
-        result = akshare_service._parse_code("")
+        result = akshare_service._parse_code("", "US")
         assert result == ""
 
         # Test None code
-        result = akshare_service._parse_code(None)
+        result = akshare_service._parse_code(None, "US")
         assert result is None
 
     @patch("app.infrastructure.akshare_service.ak")

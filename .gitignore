@@ -1,1 +1,3 @@
 invest-easy-webapi/logs/*
+cache/*
+**/*/cache

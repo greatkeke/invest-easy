@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     log_max_size: int = 50  # Default max log size in MB
     log_backup_count: int = 5  # Default backup count
     enable_ak_initialization: bool = False  # Default value, will be overridden by .env
+    deepseek_api_key: str = ""
 
     model_config = SettingsConfigDict(
         env_file=os.path.abspath(

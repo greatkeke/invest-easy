@@ -20,6 +20,10 @@
   </div>
 </div>
 
+<div class="px-4">
+  <app-securities-query [placeholder]="'Select a security to check by AI'" (resultSelected)="checkSecurity($event)"></app-securities-query>
+</div>
+
 <div class="quicksteps-section">
   <h5 i18n class="font-semibold">QuickSteps</h5>
   <div class="quicksteps-grid">
