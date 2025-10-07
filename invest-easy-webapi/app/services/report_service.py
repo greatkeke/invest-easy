@@ -1,3 +1,4 @@
+import json
 import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated, Dict, Any, Optional
@@ -20,6 +21,7 @@ from ..infrastructure.akshare_tools import (
 )
 from ..infrastructure.easy_tools import write_file, read_file
 from ..config import settings
+from langchain_core.agents import AgentFinish
 
 
 class ReportService:
@@ -99,6 +101,30 @@ class ReportService:
 
         executer = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-        return executer.invoke(
-            {"input": "请分析股票" + report_code + "的四要素，并总结是否值得关注。"}
-        )
+        async for event in executer.astream_events(
+            {"input": "请分析股票" + report_code + "的四要素，并总结是否值得关注。"},
+            version="v2",
+        ):
+            event_type = event["event"]
+            if event_type == "on_chat_model_stream":
+                chunk =  event["data"]["chunk"]
+                yield chunk.content
+            if event_type == "on_chat_model_end":
+                yield "\n\n\n"
+            elif event["event"] == "on_tool_start":
+                yield f"\n\n[工具调用] {event['name']} with {event["data"]["input"]}\n\n"
+            # elif event_type == "on_tool_end":
+            #     tool_output = event["data"].get("output")
+            #     yield f"✅ 工具调用结束, 结果: {tool_output}"
+            # elif event_type == "on_chat_model_end":
+            #     # 这通常是 AgentExecutor 的最终输出
+            #     final_output = event["data"].get("output")
+            #     yield f"最终回答: {final_output.content}"
+            elif event_type == "on_chain_end":
+                output = event['data'].get('output')
+                if isinstance(output, AgentFinish):
+                    returns_value = output.return_values
+                    if returns_value and 'output' in returns_value:
+                        yield f"[[Final Answer Start]]"
+                        yield returns_value['output']
+                        yield f"[[Final Answer End]]"

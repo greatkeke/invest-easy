@@ -9,6 +9,7 @@ import { HttpClient, HttpEventType } from '@angular/common/http';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { Subscription } from 'rxjs';
 import { marked } from 'marked';
+import { SseClient } from 'ngx-sse-client';
 
 @Component({
   selector: 'app-report',
@@ -34,7 +35,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private sseClient: SseClient
   ) { }
 
   ngOnInit(): void {
@@ -53,6 +55,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     }
   }
 
+  final_answer: Boolean = false;
+
   async generateReport(): Promise<void> {
     if (!this.code) {
       console.error('No report code provided');
@@ -63,19 +67,33 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.reportContent = '';
     this.renderedContent = '';
 
-    // 调用后端API生成报告
-    this.subscription = this.http.post(`reports/generate/${this.code}`, {}
-    ).subscribe({
-      next: async (event: any) => {
-        this.reportContent = event.output;
-        this.renderedContent = await this.renderMarkdown(event.output);
+
+    this.sseClient.stream(`reports/generate/${this.code}`, { keepAlive: false, reconnectionDelay: 1_000, responseType: 'event' }, {}, 'GET').subscribe(async (event) => {
+      if (event.type === 'error') {
+        const errorEvent = event as ErrorEvent;
+        console.error(errorEvent.error, errorEvent.message);
         this.loading = false;
-      },
-      error: async (error) => {
-        this.loading = false;
-        console.error('Error generating report:', error);
         this.reportContent = '报告生成失败，请稍后重试。';
         this.renderedContent = await this.renderMarkdown('报告生成失败，请稍后重试。');
+      } else {
+        const messageEvent = event as MessageEvent<string>;
+        if (messageEvent.data.trim().startsWith('[[Final Answer')) {
+          if (this.final_answer == false)
+            this.reportContent = "";
+          this.final_answer = !this.final_answer;
+        } else if (messageEvent.data.trimStart().startsWith("[工具调用]")) {
+          this.reportContent += "\n";
+          this.reportContent += messageEvent.data;
+          this.reportContent += "\n";
+        } else {
+          if (this.final_answer && messageEvent.data.trim() == "") {
+            this.reportContent += "\n\n";
+          } else {
+            this.reportContent += messageEvent.data;
+          }
+        }
+        this.renderedContent = await this.renderMarkdown(this.reportContent);
+        this.loading = false;
       }
     });
   }
@@ -87,7 +105,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         breaks: true, // 将换行符转换为 <br>
         gfm: true,    // 启用 GitHub Flavored Markdown
       });
-      
+
       return await marked.parse(content);
     } catch (error) {
       console.error('Error rendering markdown:', error);

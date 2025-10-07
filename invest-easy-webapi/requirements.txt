@@ -18,3 +18,4 @@ langchain
 langchain_deepseek
 langchain-community 
 langchain-experimental
+sse-starlette
