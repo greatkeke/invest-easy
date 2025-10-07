@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { RouterModule, ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
+import { Subscription } from 'rxjs';
+import { marked } from 'marked';
 
 @Component({
   selector: 'app-report',
@@ -22,68 +25,73 @@ import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.
     TopNavigationComponent
   ]
 })
-export class ReportComponent implements OnInit {
-  reports: any[] = [];
+export class ReportComponent implements OnInit, OnDestroy {
+  reportContent: string = '';
+  renderedContent: string = '';
   loading = false;
   code: string | null = null;
+  private subscription: Subscription | null = null;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const codeParam = params.get('code');
       if (codeParam) {
         this.code = codeParam;
+        this.generateReport();
       }
     });
-
-    console.log('Extracted code parameter:', this.code);
-    this.loadReports();
   }
 
-  loadReports(): void {
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  async generateReport(): Promise<void> {
+    if (!this.code) {
+      console.error('No report code provided');
+      return;
+    }
+
     this.loading = true;
-    // 模拟加载报告数据
-    setTimeout(() => {
-      this.reports = [
-        {
-          id: 1,
-          title: '投资组合分析报告',
-          date: '2025-01-05',
-          type: '投资分析',
-          status: '已完成'
-        },
-        {
-          id: 2,
-          title: '市场趋势分析',
-          date: '2025-01-04',
-          type: '市场分析',
-          status: '已完成'
-        },
-        {
-          id: 3,
-          title: '风险评估报告',
-          date: '2025-01-03',
-          type: '风险评估',
-          status: '进行中'
-        }
-      ];
-      this.loading = false;
-    }, 1000);
+    this.reportContent = '';
+    this.renderedContent = '';
+
+    // 调用后端API生成报告
+    this.subscription = this.http.post(`reports/generate/${this.code}`, {}
+    ).subscribe({
+      next: async (event: any) => {
+        this.reportContent = event.output;
+        this.renderedContent = await this.renderMarkdown(event.output);
+        this.loading = false;
+      },
+      error: async (error) => {
+        this.loading = false;
+        console.error('Error generating report:', error);
+        this.reportContent = '报告生成失败，请稍后重试。';
+        this.renderedContent = await this.renderMarkdown('报告生成失败，请稍后重试。');
+      }
+    });
   }
 
-  generateReport(): void {
-    // 生成新报告的逻辑
-    console.log('生成新报告');
-  }
-
-  viewReport(report: any): void {
-    // 查看报告详情
-    console.log('查看报告:', report);
-  }
-
-  downloadReport(report: any): void {
-    // 下载报告
-    console.log('下载报告:', report);
+  private async renderMarkdown(content: string): Promise<string> {
+    try {
+      // 配置 marked 选项
+      marked.setOptions({
+        breaks: true, // 将换行符转换为 <br>
+        gfm: true,    // 启用 GitHub Flavored Markdown
+      });
+      
+      return await marked.parse(content);
+    } catch (error) {
+      console.error('Error rendering markdown:', error);
+      return content; // 如果渲染失败，返回原始内容
+    }
   }
 }

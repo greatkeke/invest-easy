@@ -10,9 +10,17 @@ from ..infrastructure.db import get_async_session
 from langchain.chat_models import init_chat_model
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain.prompts import ChatPromptTemplate
-from ..infrastructure.akshare_tools import QueryStockFinacialReport,QueryStockHistoricalData,QueryStockNews,QueryStockPeerComparison,QueryStockSpotData,QueryStockValue
+from ..infrastructure.akshare_tools import (
+    QueryStockFinacialReport,
+    QueryStockHistoricalData,
+    QueryStockNews,
+    QueryStockPeerComparison,
+    QueryStockSpotData,
+    QueryStockValue,
+)
 from ..infrastructure.easy_tools import write_file, read_file
 from ..config import settings
+
 
 class ReportService:
     def __init__(self, session: Annotated[AsyncSession, Depends(get_async_session)]):
@@ -21,29 +29,32 @@ class ReportService:
             model="deepseek-chat",
             model_provider="deepseek",
             api_key=settings.deepseek_api_key,
+            streaming=True,
         )
 
-    async def get_report_by_code(self, code: str) -> Optional[str]:
-        return ""
+    async def generate_report(self, user: User, report_code: str):
+        """
+        生成股票分析报告，支持流式响应
 
-    async def generate_report(self, user: User, report_code: str) -> Dict[str, Any]:
-        # 1. Call akshare to get news
-        # 2. Call akshare to get zygc
-        # 3. Call akshare to get growth comparision
-        # 4. history price
-        # 5. balance
-        # 6. profit
-        # 7. 根据6块内容，按照价值投资的方法，分析四要素：盈利能力、竞争优势、财务健康、进场时机。
+        Args:
+            user: 用户对象
+            report_code: 股票代码
+
+        Returns:
+            生成器，逐块返回报告内容
+        """
         prompt = ChatPromptTemplate.from_messages(
             [
-                ("system", """你是金融专家，会使用很多金融工具：
+                (
+                    "system",
+                    """你是金融专家，会使用很多金融工具：
 1.QueryStockFinacialReport：查询财报
 2.QueryStockHistoricalData：查询历史行情数据
 3.QueryStockNews：查询股票相关新闻
 4.QueryStockPeerComparison：查询和同行业比较的数据
 5.QueryStockSpotData：查询当前行情
 6.QueryStockValue：查询个股估值情况
-请根据用户的股票代码，使用合适的工具，结合价值投资的理念分析这家公司的四要素:
+请根据用户的股票代码，使用合适的工具查询最近的季度或者报告期的相关数据，结合价值投资的理念分析这家公司的四要素:
 ### 盈利能力
 1. 净利率是否稳定，避免忽高忽低。
 2. 毛利率越高说明有溢价空间，例如茅台常年90%+的毛利。
@@ -65,7 +76,8 @@ class ReportService:
 2. 市净率 PB，适合重资产行业，例如银行，低于1时结合资产结构进行判断。
 
 最后评估该股票是否值得关注，主要亮点和风险是什么？
-                 """),
+                 """,
+                ),
                 ("human", "{input}"),
                 (
                     "placeholder",
@@ -74,14 +86,19 @@ class ReportService:
             ]
         )
 
-        tools = [QueryStockFinacialReport,QueryStockHistoricalData,QueryStockNews,QueryStockPeerComparison,QueryStockSpotData,QueryStockValue]
+        tools = [
+            QueryStockFinacialReport,
+            QueryStockHistoricalData,
+            QueryStockNews,
+            QueryStockPeerComparison,
+            QueryStockSpotData,
+            QueryStockValue,
+        ]
 
-        agent = create_tool_calling_agent(
-            llm=self.model, tools=tools, prompt=prompt
+        agent = create_tool_calling_agent(llm=self.model, tools=tools, prompt=prompt)
+
+        executer = AgentExecutor(agent=agent, tools=tools, verbose=True)
+
+        return executer.invoke(
+            {"input": "请分析股票" + report_code + "的四要素，并总结是否值得关注。"}
         )
-
-        executer = AgentExecutor(agent=agent,tools=tools,verbose=True)
-
-        response = executer.invoke({"input": "请分析股票" + report_code + "的四要素，并总结是否值得关注。"})
-        logging.info(response)
-        return {"status":"ok"}

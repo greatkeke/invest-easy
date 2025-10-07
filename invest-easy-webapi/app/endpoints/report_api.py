@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, Query
 from typing import Dict, Any, Optional
 from ..infrastructure.users import current_active_user, User
 from ..services.report_service import ReportService
-
+from fastapi.responses import StreamingResponse
+from langchain.chat_models import init_chat_model
+from ..config import settings
 
 router = APIRouter(
     prefix="/reports",
@@ -10,7 +12,6 @@ router = APIRouter(
     dependencies=[Depends(current_active_user)],
     responses={404: {"description": "Not found"}},
 )
-
 
 @router.post("/generate/{report_code}")
 async def generate_report_endpoint(
@@ -20,10 +21,10 @@ async def generate_report_endpoint(
 ):
     """
     Generate a report according to the specified report code and parameters.
+    This endpoint supports streaming response for real-time report generation.
     
     Parameters:
     - report_code: The code identifying the report type to generate
     """
-    result = await reportSvc.generate_report(user, report_code)
-    return result
-
+    # 返回流式响应，设置正确的媒体类型
+    return await reportSvc.generate_report(user, report_code)

@@ -1,103 +1,48 @@
-<app-top-navigation title="Security Report"></app-top-navigation>
+<app-top-navigation title="AI估值报告"></app-top-navigation>
 
 <div class="report-container">
-  <!-- <app-header title="报告中心" subtitle="查看和管理您的投资报告"></app-header> -->
-
   <div class="content-section">
     <div class="header-actions">
-      <h2>我的报告</h2>
+      <h2>报告生成</h2>
       <p-button 
-        label="生成新报告" 
-        icon="pi pi-plus" 
+        *ngIf="!loading"
+        label="重新生成" 
+        icon="pi pi-refresh" 
         (onClick)="generateReport()"
         styleClass="p-button-primary">
       </p-button>
     </div>
 
     <p-card>
-      <div class="reports-table">
-        <p-table 
-          [value]="reports" 
-          [loading]="loading"
-          styleClass="p-datatable-sm"
-          [paginator]="true" 
-          [rows]="10"
-          [showCurrentPageReport]="true"
-          currentPageReportTemplate="显示 {first} 到 {last} 共 {totalRecords} 条记录">
-          
-          <ng-template pTemplate="header">
-            <tr>
-              <th>报告标题</th>
-              <th>日期</th>
-              <th>类型</th>
-              <th>状态</th>
-              <th>操作</th>
-            </tr>
-          </ng-template>
+      <div class="report-content-section">
+        <div class="loading-indicator" *ngIf="loading">
+          <div class="loading-spinner">
+            <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            <p>正在生成报告，请稍候...</p>
+          </div>
+        </div>
 
-          <ng-template pTemplate="body" let-report>
-            <tr>
-              <td>{{ report.title }}</td>
-              <td>{{ report.date }}</td>
-              <td>
-                <span [class]="'report-type-badge ' + report.type">{{ report.type }}</span>
-              </td>
-              <td>
-                <span [class]="'status-badge ' + report.status">{{ report.status }}</span>
-              </td>
-              <td>
-                <div class="action-buttons">
-                  <p-button 
-                    icon="pi pi-eye" 
-                    styleClass="p-button-text p-button-info"
-                    (onClick)="viewReport(report)"
-                    pTooltip="查看报告"
-                    tooltipPosition="top">
-                  </p-button>
-                  <p-button 
-                    icon="pi pi-download" 
-                    styleClass="p-button-text p-button-success"
-                    (onClick)="downloadReport(report)"
-                    pTooltip="下载报告"
-                    tooltipPosition="top">
-                  </p-button>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
+        <div class="report-output" *ngIf="renderedContent">
+          <div class="report-header">
+            <h3>报告内容</h3>
+            <small>报告代码: {{ code }}</small>
+          </div>
+          <div class="report-text">
+            <div class="markdown-content" [innerHTML]="renderedContent"></div>
+          </div>
+        </div>
 
-          <ng-template pTemplate="emptymessage">
-            <tr>
-              <td colspan="5" class="empty-message">
-                <div class="empty-state">
-                  <i class="pi pi-file" style="font-size: 3rem; color: #ccc;"></i>
-                  <p>暂无报告数据</p>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
+        <div class="empty-state" *ngIf="!loading && !reportContent">
+          <i class="pi pi-file" style="font-size: 3rem; color: #ccc;"></i>
+          <p>等待生成报告...</p>
+          <p-button 
+            label="开始生成" 
+            icon="pi pi-play" 
+            (onClick)="generateReport()"
+            styleClass="p-button-primary">
+          </p-button>
+        </div>
       </div>
     </p-card>
-  </div>
-
-  <div class="info-section">
-    <div class="grid">
-      <div class="col-12 md:col-4">
-        <p-card header="投资分析报告">
-          <p>详细分析您的投资组合表现，包括收益、风险和资产配置建议。</p>
-        </p-card>
-      </div>
-      <div class="col-12 md:col-4">
-        <p-card header="市场趋势分析">
-          <p>基于市场数据和技术指标，提供市场趋势分析和投资机会识别。</p>
-        </p-card>
-      </div>
-      <div class="col-12 md:col-4">
-        <p-card header="风险评估报告">
-          <p>评估您的投资风险承受能力，提供风险管理和资产保护建议。</p>
-        </p-card>
-      </div>
-    </div>
   </div>
 </div>
