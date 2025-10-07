@@ -164,3 +164,153 @@ def QueryStockSpotData(symbol: str) -> Dict[str, Any]:
         RuntimeError: 当akshare API调用失败时
     """
     return GetStockSpotData(symbol)
+
+
+@tool
+def QueryStockPeerComparison(symbol: str) -> Dict[str, Any]:
+    """
+    获取股票同行比较数据
+
+    根据股票代码自动识别市场类型并调用相应的同行比较接口：
+    - A股: 6位数字代码，如 "000001" 或带交易所前缀如 "SZ000001"
+    - 港股: 5位数字代码，如 "00700" 或带交易所前缀如 "HK00700"
+
+    返回包含成长性、估值、杜邦分析和公司规模四个维度的同行比较数据。
+
+    Args:
+        symbol: 股票代码
+            - A股: 6位数字代码，如 "000001" 或带交易所前缀如 "SZ000001"
+            - 港股: 5位数字代码，如 "00700" 或带交易所前缀如 "HK00700"
+
+    Returns:
+        Dict[str, Any]: 包含同行比较数据的字典，结构如下：
+            {
+                "symbol": "股票代码",
+                "market": "市场类型(A股/港股)",
+                "growth_comparison": {...},  # 成长性比较数据
+                "valuation_comparison": {...},  # 估值比较数据
+                "dupont_comparison": {...},  # 杜邦分析比较数据
+                "scale_comparison": {...},  # 公司规模比较数据
+                "units": {...}  # 数据单位说明
+            }
+            如果查询失败则返回错误信息
+
+    Raises:
+        ValueError: 当symbol为空或格式不正确时
+        RuntimeError: 当akshare API调用失败时
+    """
+    if not symbol:
+        raise ValueError("股票代码不能为空")
+
+    try:
+        logging.info(f"正在查询股票 {symbol} 的同行比较数据")
+
+        # 标准化symbol格式，移除交易所前缀
+        clean_symbol = symbol.upper()
+        if clean_symbol.startswith("SZ") or clean_symbol.startswith("SH"):
+            # A股带交易所前缀，提取纯数字代码
+            clean_symbol = clean_symbol[2:]
+        elif clean_symbol.startswith("HK"):
+            # 港股带交易所前缀，提取纯数字代码
+            clean_symbol = clean_symbol[2:]
+
+        # 根据股票代码格式判断市场类型
+        if clean_symbol.isdigit():
+            if len(clean_symbol) == 6:
+                # A股 - 6位数字代码
+                logging.info(f"识别为A股代码: {clean_symbol}")
+                return _get_a_stock_peer_comparison(clean_symbol)
+            elif len(clean_symbol) == 5:
+                # 港股 - 5位数字代码
+                logging.info(f"识别为港股代码: {clean_symbol}")
+                return _get_hk_stock_peer_comparison(clean_symbol)
+            else:
+                error_msg = f"无法识别的股票代码格式: {symbol}，应为6位数字(A股)或5位数字(港股)"
+                logging.error(error_msg)
+                return {"error": error_msg, "symbol": symbol}
+        else:
+            error_msg = f"无法识别的股票代码格式: {symbol}，应为数字代码"
+            logging.error(error_msg)
+            return {"error": error_msg, "symbol": symbol}
+
+    except Exception as e:
+        error_msg = f"查询股票 {symbol} 同行比较数据失败: {str(e)}"
+        logging.error(error_msg)
+        return {"error": error_msg, "symbol": symbol}
+
+
+def _get_a_stock_peer_comparison(symbol: str) -> Dict[str, Any]:
+    """
+    获取A股股票同行比较数据
+
+    Args:
+        symbol: A股股票代码，6位数字
+
+    Returns:
+        Dict[str, Any]: 包含A股同行比较数据的字典
+    """
+    from .akshare_api.peer_comparison_api import (
+        GetStockGrowthComparison,
+        GetStockValuationComparison,
+        GetStockDupontComparison,
+        GetStockScaleComparison
+    )
+
+    result = {
+        "symbol": symbol,
+        "market": "A股",
+        "growth_comparison": GetStockGrowthComparison(symbol),
+        "valuation_comparison": GetStockValuationComparison(symbol),
+        "dupont_comparison": GetStockDupontComparison(symbol),
+        "scale_comparison": GetStockScaleComparison(symbol)
+    }
+
+    # 合并单位说明
+    result["units"] = {
+        "growth_comparison": result["growth_comparison"].get("units", {}),
+        "valuation_comparison": result["valuation_comparison"].get("units", {}),
+        "dupont_comparison": result["dupont_comparison"].get("units", {}),
+        "scale_comparison": result["scale_comparison"].get("units", {})
+    }
+
+    return result
+
+
+def _get_hk_stock_peer_comparison(symbol: str) -> Dict[str, Any]:
+    """
+    获取港股股票同行比较数据
+
+    Args:
+        symbol: 港股股票代码，5位数字
+
+    Returns:
+        Dict[str, Any]: 包含港股同行比较数据的字典
+    """
+    from .akshare_api.peer_comparison_api import (
+        GetHKStockGrowthComparison,
+        GetHKStockValuationComparison,
+        GetHKStockScaleComparison
+    )
+
+    result = {
+        "symbol": symbol,
+        "market": "港股",
+        "growth_comparison": GetHKStockGrowthComparison(symbol),
+        "valuation_comparison": GetHKStockValuationComparison(symbol),
+        "scale_comparison": GetHKStockScaleComparison(symbol)
+    }
+
+    # 港股没有杜邦分析比较数据
+    result["dupont_comparison"] = {
+        "error": "港股暂不支持杜邦分析比较数据",
+        "symbol": symbol
+    }
+
+    # 合并单位说明
+    result["units"] = {
+        "growth_comparison": result["growth_comparison"].get("units", {}),
+        "valuation_comparison": result["valuation_comparison"].get("units", {}),
+        "scale_comparison": result["scale_comparison"].get("units", {})
+    }
+
+    return result
