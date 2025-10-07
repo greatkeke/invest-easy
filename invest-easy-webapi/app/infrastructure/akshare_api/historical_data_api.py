@@ -1,10 +1,8 @@
 import logging
-from typing import Dict, Any, Optional, Union, List
+from typing import Dict, Any
 import akshare as ak
 from pandas import DataFrame
-from langchain_core.tools import BaseTool, tool
-from pydantic import BaseModel, Field
-from datetime import datetime, timedelta
+from datetime import datetime
 import re
 
 
@@ -74,8 +72,7 @@ def _detect_market(symbol: str) -> str:
         raise ValueError(f"无法识别股票代码 {symbol} 的市场类型")
 
 
-@tool
-def QueryStockHistoricalData(
+def GetStockHistoricalData(
     symbol: str,
     start_date: str,
     end_date: str,

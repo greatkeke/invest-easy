@@ -4,6 +4,43 @@ import akshare as ak
 from pandas import DataFrame
 from langchain_core.tools import BaseTool, tool
 from pydantic import BaseModel, Field
+from akshare_api.historical_data_api import GetStockHistoricalData
+
+@tool
+def QueryStockHistoricalData(
+    symbol: str,
+    start_date: str,
+    end_date: str,
+    adjust: str = "",
+    period: str = "auto"
+) -> Dict[str, Any]:
+    """
+    获取股票历史行情数据
+    
+    根据时间跨度自动选择数据频率：
+    - 默认获取daily数据
+    - 时间跨度大于一个月的获取weekly数据  
+    - 时间跨度大于一年的获取monthly数据
+    
+    Args:
+        symbol: 股票代码
+            - A股: 6位数字代码，如 "000001"
+            - 美股: 字母代码，如 "AAPL" 
+            - 港股: 5位数字代码，如 "00700"
+        start_date: 开始日期，格式为 "YYYYMMDD"，如 "20230101"
+        end_date: 结束日期，格式为 "YYYYMMDD"，如 "20231231"
+        adjust: 复权类型，可选值: {"", "qfq", "hfq"}，默认为 "" (不复权)
+        period: 数据频率，可选值: {"auto", "daily", "weekly", "monthly"}，默认为 "auto" (自动选择)
+        
+    Returns:
+        Dict[str, Any]: 包含历史行情数据的字典，如果查询失败则返回错误信息
+        
+    Raises:
+        ValueError: 当参数为空或格式不正确时
+        RuntimeError: 当akshare API调用失败时
+    """
+    return GetStockHistoricalData(symbol, start_date, end_date, adjust, period)
+
 
 @tool
 def QueryStockValue(symbol: str) -> Dict[str, Any]:
