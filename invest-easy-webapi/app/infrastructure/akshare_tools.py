@@ -9,7 +9,7 @@ from .akshare_api.stock_finacial_report import (
     GetUSStockFinacialReport,
 )
 from .akshare_api.snapshot_api import GetStockSpotData
-
+from .akshare_api.stock_news_api import GetStockNews
 
 @tool
 def QueryStockHistoricalData(
@@ -314,3 +314,20 @@ def _get_hk_stock_peer_comparison(symbol: str) -> Dict[str, Any]:
     }
 
     return result
+
+@tool
+def QueryStockNews(symbol: str) -> Dict[str, Any]:
+    """
+    获取指定股票的最新新闻资讯数据（东方财富接口）
+
+    Args:
+        symbol: 股票代码，例如 "603777"
+
+    Returns:
+        Dict[str, Any]: 包含新闻数据的字典，如果查询失败则返回错误信息
+
+    Raises:
+        ValueError: 当symbol为空时
+        RuntimeError: 当akshare API调用失败时
+    """
+    return GetStockNews(symbol)
