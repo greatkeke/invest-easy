@@ -6,7 +6,7 @@ from pandas import DataFrame
 def GetUSStockFinacialReport(
     stock: str, 
     symbol: str = "资产负债表", 
-    indicator: str = "年报"
+    indicator: str = "单季报"
 ) -> Dict[str, Any]:
     """
     查询美股财务报表数据
@@ -14,7 +14,7 @@ def GetUSStockFinacialReport(
     Args:
         stock: 美股代码，例如 "TSLA" 或 "BRK_A"（注意：BRK.A 需要转换为 BRK_A）
         symbol: 报表类型，可选值: {"资产负债表", "综合损益表", "现金流量表"}，默认为 "资产负债表"
-        indicator: 报告期类型，可选值: {"年报", "单季报", "累计季报"}，默认为 "年报"
+        indicator: 报告期类型，可选值: {"年报", "单季报", "累计季报"}，默认为 "单季报"
         
     Returns:
         Dict[str, Any]: 包含财务报表数据的字典，如果查询失败则返回错误信息
@@ -50,6 +50,7 @@ def GetUSStockFinacialReport(
         )
         
         if isinstance(financial_report_df, DataFrame) and not financial_report_df.empty:
+            financial_report_df = financial_report_df[:30]
             # 格式化财务报表数据
             result = _format_financial_report_data(financial_report_df, stock, symbol, indicator)
             logging.info(f"成功获取美股 {stock} 的财务报表数据，共 {len(financial_report_df)} 条记录")
@@ -157,9 +158,9 @@ def GetAStockFinacialReport(
         
         # 格式化财务报表数据
         result = _format_a_stock_financial_report_data(
-            balance_sheet_df, 
-            income_statement_df, 
-            cash_flow_df, 
+            balance_sheet_df[:10], 
+            income_statement_df[:10], 
+            cash_flow_df[:10], 
             symbol, 
             indicator
         )
@@ -240,7 +241,7 @@ def _format_a_stock_financial_report_data(
 def GetHKStockFinacialReport(
     stock: str, 
     symbol: str = "资产负债表", 
-    indicator: str = "年度"
+    indicator: str = "报告期"
 ) -> Dict[str, Any]:
     """
     查询港股财务报表数据
@@ -248,7 +249,7 @@ def GetHKStockFinacialReport(
     Args:
         stock: 港股代码，例如 "00700" (腾讯控股)
         symbol: 报表类型，可选值: {"资产负债表", "利润表", "现金流量表"}，默认为 "资产负债表"
-        indicator: 报告期类型，可选值: {"年度", "报告期"}，默认为 "年度"
+        indicator: 报告期类型，可选值: {"年度", "报告期"}，默认为 "报告期"
         
     Returns:
         Dict[str, Any]: 包含财务报表数据的字典，如果查询失败则返回错误信息
@@ -282,6 +283,7 @@ def GetHKStockFinacialReport(
         
         if isinstance(financial_report_df, DataFrame) and not financial_report_df.empty:
             # 格式化财务报表数据
+            financial_report_df = financial_report_df[:100]
             result = _format_hk_financial_report_data(financial_report_df, stock, symbol, indicator)
             logging.info(f"成功获取港股 {stock} 的财务报表数据，共 {len(financial_report_df)} 条记录")
             return result
