@@ -65,7 +65,7 @@ def _format_valuation_data(raw_data: Dict[str, Any], symbol: str) -> Dict[str, A
 
 def GetStockValue(symbol: str) -> Dict[str, Any]:
     """
-    执行个股估值查询
+    执行个股估值查询，仅支持A股。
     
     Args:
         symbol: A股代码，例如 "002044" 或 "300766"

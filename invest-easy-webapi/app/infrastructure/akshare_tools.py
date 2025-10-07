@@ -1,4 +1,6 @@
 import logging
+import json
+from datetime import date, datetime
 from typing import Dict, Any
 from langchain_core.tools import tool
 from .akshare_api.historical_data_api import GetStockHistoricalData
@@ -10,6 +12,15 @@ from .akshare_api.stock_finacial_report import (
 )
 from .akshare_api.snapshot_api import GetStockSpotData
 from .akshare_api.stock_news_api import GetStockNews
+from .easy_tools import read_file, write_file
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    """自定义JSON编码器，处理datetime和date对象"""
+    def default(self, o):
+        if isinstance(o, (datetime, date)):
+            return o.isoformat()
+        return super().default(o)
 
 @tool
 def QueryStockHistoricalData(
@@ -40,13 +51,31 @@ def QueryStockHistoricalData(
         ValueError: 当参数为空或格式不正确时
         RuntimeError: 当akshare API调用失败时
     """
-    return GetStockHistoricalData(symbol, start_date, end_date, adjust, period)
+    # 生成缓存key，包含所有参数
+    cache_key = f"{symbol}_{start_date}_{end_date}_{adjust}_{period}"
+    
+    # 先尝试从缓存读取
+    cached_data = read_file("QueryStockHistoricalData", cache_key)
+    if cached_data:
+        logging.info(f"从缓存读取股票 {symbol} 历史行情数据")
+        return json.loads(cached_data)
+    
+    # 缓存不存在，调用API获取数据
+    logging.info(f"调用API获取股票 {symbol} 历史行情数据")
+    result = GetStockHistoricalData(symbol, start_date, end_date, adjust, period)
+    
+    # 将结果写入缓存
+    if result and "error" not in result:
+        write_file("QueryStockHistoricalData", cache_key, json.dumps(result, ensure_ascii=False, cls=DateTimeEncoder))
+        logging.info(f"已将股票 {symbol} 历史行情数据写入缓存")
+    
+    return result
 
 
 @tool
 def QueryStockValue(symbol: str) -> Dict[str, Any]:
     """
-    执行个股估值查询
+    执行个股估值查询，仅支持A股。
 
     Args:
         symbol: A股代码，例如 "002044" 或 "300766"
@@ -58,7 +87,22 @@ def QueryStockValue(symbol: str) -> Dict[str, Any]:
         ValueError: 当symbol为空或格式不正确时
         RuntimeError: 当akshare API调用失败时
     """
-    return GetStockValue(symbol)
+    # 先尝试从缓存读取
+    cached_data = read_file("QueryStockValue", symbol)
+    if cached_data:
+        logging.info(f"从缓存读取股票 {symbol} 估值数据")
+        return json.loads(cached_data)
+    
+    # 缓存不存在，调用API获取数据
+    logging.info(f"调用API获取股票 {symbol} 估值数据")
+    result = GetStockValue(symbol)
+    
+    # 将结果写入缓存
+    if result and "error" not in result:
+        write_file("QueryStockValue", symbol, json.dumps(result, ensure_ascii=False, cls=DateTimeEncoder))
+        logging.info(f"已将股票 {symbol} 估值数据写入缓存")
+    
+    return result
 
 
 @tool
@@ -98,6 +142,15 @@ def QueryStockFinacialReport(
         raise ValueError("股票代码不能为空")
 
     try:
+        # 生成缓存key，包含所有参数
+        cache_key = f"{stock}_{symbol}_{indicator}"
+        
+        # 先尝试从缓存读取
+        cached_data = read_file("QueryStockFinacialReport", cache_key)
+        if cached_data:
+            logging.info(f"从缓存读取股票 {stock} 财务报表数据")
+            return json.loads(cached_data)
+        
         logging.info(f"正在查询股票 {stock} 的财务报表数据，报表类型: {symbol}，报告期: {indicator}")
 
         # 根据股票代码格式判断市场类型
@@ -116,7 +169,7 @@ def QueryStockFinacialReport(
                 elif indicator in {"按报告期", "按年度", "按单季度"}:
                     a_stock_indicator = indicator
                 
-                return GetAStockFinacialReport(symbol=stock, indicator=a_stock_indicator)
+                result = GetAStockFinacialReport(symbol=stock, indicator=a_stock_indicator)
             elif len(stock) == 5:
                 # 港股 - 5位数字代码
                 logging.info(f"识别为港股代码: {stock}")
@@ -130,16 +183,23 @@ def QueryStockFinacialReport(
                 elif indicator in {"年度", "报告期"}:
                     hk_indicator = indicator
                 
-                return GetHKStockFinacialReport(stock=stock, symbol=symbol, indicator=hk_indicator)
+                result = GetHKStockFinacialReport(stock=stock, symbol=symbol, indicator=hk_indicator)
             else:
                 error_msg = f"无法识别的股票代码格式: {stock}，应为6位数字(A股)或5位数字(港股)"
                 logging.error(error_msg)
-                return {"error": error_msg, "stock": stock}
+                result = {"error": error_msg, "stock": stock}
         else:
             # 美股 - 字母代码
             logging.info(f"识别为美股代码: {stock}")
             # 美股的参数直接使用，因为默认值已经匹配
-            return GetUSStockFinacialReport(stock=stock, symbol=symbol, indicator=indicator)
+            result = GetUSStockFinacialReport(stock=stock, symbol=symbol, indicator=indicator)
+
+        # 将结果写入缓存
+        if result and "error" not in result:
+            write_file("QueryStockFinacialReport", cache_key, json.dumps(result, ensure_ascii=False, cls=DateTimeEncoder))
+            logging.info(f"已将股票 {stock} 财务报表数据写入缓存")
+        
+        return result
 
     except Exception as e:
         error_msg = f"查询股票 {stock} 财务报表数据失败: {str(e)}"
@@ -163,7 +223,22 @@ def QueryStockSpotData(symbol: str) -> Dict[str, Any]:
         ValueError: 当symbol为空时
         RuntimeError: 当akshare API调用失败时
     """
-    return GetStockSpotData(symbol)
+    # 先尝试从缓存读取
+    cached_data = read_file("QueryStockSpotData", symbol)
+    if cached_data:
+        logging.info(f"从缓存读取股票 {symbol} 实时行情数据")
+        return json.loads(cached_data)
+    
+    # 缓存不存在，调用API获取数据
+    logging.info(f"调用API获取股票 {symbol} 实时行情数据")
+    result = GetStockSpotData(symbol)
+    
+    # 将结果写入缓存
+    if result and "error" not in result:
+        write_file("QueryStockSpotData", symbol, json.dumps(result, ensure_ascii=False, cls=DateTimeEncoder))
+        logging.info(f"已将股票 {symbol} 实时行情数据写入缓存")
+    
+    return result
 
 
 @tool
@@ -203,6 +278,12 @@ def QueryStockPeerComparison(symbol: str) -> Dict[str, Any]:
         raise ValueError("股票代码不能为空")
 
     try:
+        # 先尝试从缓存读取
+        cached_data = read_file("QueryStockPeerComparison", symbol)
+        if cached_data:
+            logging.info(f"从缓存读取股票 {symbol} 同行比较数据")
+            return json.loads(cached_data)
+        
         logging.info(f"正在查询股票 {symbol} 的同行比较数据")
 
         # 标准化symbol格式，移除交易所前缀
@@ -219,19 +300,26 @@ def QueryStockPeerComparison(symbol: str) -> Dict[str, Any]:
             if len(clean_symbol) == 6:
                 # A股 - 6位数字代码
                 logging.info(f"识别为A股代码: {clean_symbol}")
-                return _get_a_stock_peer_comparison(clean_symbol)
+                result = _get_a_stock_peer_comparison(clean_symbol)
             elif len(clean_symbol) == 5:
                 # 港股 - 5位数字代码
                 logging.info(f"识别为港股代码: {clean_symbol}")
-                return _get_hk_stock_peer_comparison(clean_symbol)
+                result = _get_hk_stock_peer_comparison(clean_symbol)
             else:
                 error_msg = f"无法识别的股票代码格式: {symbol}，应为6位数字(A股)或5位数字(港股)"
                 logging.error(error_msg)
-                return {"error": error_msg, "symbol": symbol}
+                result = {"error": error_msg, "symbol": symbol}
         else:
             error_msg = f"无法识别的股票代码格式: {symbol}，应为数字代码"
             logging.error(error_msg)
-            return {"error": error_msg, "symbol": symbol}
+            result = {"error": error_msg, "symbol": symbol}
+
+        # 将结果写入缓存
+        if result and "error" not in result:
+            write_file("QueryStockPeerComparison", symbol, json.dumps(result, ensure_ascii=False, cls=DateTimeEncoder))
+            logging.info(f"已将股票 {symbol} 同行比较数据写入缓存")
+        
+        return result
 
     except Exception as e:
         error_msg = f"查询股票 {symbol} 同行比较数据失败: {str(e)}"
@@ -330,4 +418,19 @@ def QueryStockNews(symbol: str) -> Dict[str, Any]:
         ValueError: 当symbol为空时
         RuntimeError: 当akshare API调用失败时
     """
-    return GetStockNews(symbol)
+    # 先尝试从缓存读取
+    cached_data = read_file("QueryStockNews", symbol)
+    if cached_data:
+        logging.info(f"从缓存读取股票 {symbol} 新闻数据")
+        return json.loads(cached_data)
+    
+    # 缓存不存在，调用API获取数据
+    logging.info(f"调用API获取股票 {symbol} 新闻数据")
+    result = GetStockNews(symbol)
+    
+    # 将结果写入缓存
+    if result and "error" not in result:
+        write_file("QueryStockNews", symbol, json.dumps(result, ensure_ascii=False, cls=DateTimeEncoder))
+        logging.info(f"已将股票 {symbol} 新闻数据写入缓存")
+    
+    return result

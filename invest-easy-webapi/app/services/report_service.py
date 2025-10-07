@@ -11,6 +11,7 @@ from langchain.chat_models import init_chat_model
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain.prompts import ChatPromptTemplate
 from ..infrastructure.akshare_tools import QueryStockFinacialReport,QueryStockHistoricalData,QueryStockNews,QueryStockPeerComparison,QueryStockSpotData,QueryStockValue
+from ..infrastructure.easy_tools import write_file, read_file
 from ..config import settings
 
 class ReportService:
@@ -42,7 +43,7 @@ class ReportService:
 4.QueryStockPeerComparison：查询和同行业比较的数据
 5.QueryStockSpotData：查询当前行情
 6.QueryStockValue：查询个股估值情况
-请根据用户的股票代码，结合价值投资的理念分析这家公司的四要素:
+请根据用户的股票代码，使用合适的工具，结合价值投资的理念分析这家公司的四要素:
 ### 盈利能力
 1. 净利率是否稳定，避免忽高忽低。
 2. 毛利率越高说明有溢价空间，例如茅台常年90%+的毛利。
