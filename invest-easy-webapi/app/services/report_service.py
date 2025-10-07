@@ -10,7 +10,7 @@ from ..infrastructure.db import get_async_session
 from langchain.chat_models import init_chat_model
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain.prompts import ChatPromptTemplate
-from ..infrastructure.akshare_tools import QueryStockValue,QueryUSStockFinacialReport
+from ..infrastructure.akshare_tools import QueryStockValue,QueryUSStockFinacialReport,QueryHKStockFinacialReport
 from ..config import settings
 
 class ReportService:

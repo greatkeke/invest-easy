@@ -223,3 +223,118 @@ def _format_financial_report_data(
     }
     
     return result
+
+
+@tool
+def QueryHKStockFinacialReport(
+    stock: str, 
+    symbol: str = "资产负债表", 
+    indicator: str = "年度"
+) -> Dict[str, Any]:
+    """
+    查询港股财务报表数据
+    
+    Args:
+        stock: 港股代码，例如 "00700" (腾讯控股)
+        symbol: 报表类型，可选值: {"资产负债表", "利润表", "现金流量表"}，默认为 "资产负债表"
+        indicator: 报告期类型，可选值: {"年度", "报告期"}，默认为 "年度"
+        
+    Returns:
+        Dict[str, Any]: 包含财务报表数据的字典，如果查询失败则返回错误信息
+        
+    Raises:
+        ValueError: 当参数为空或格式不正确时
+        RuntimeError: 当akshare API调用失败时
+    """
+    if not stock:
+        raise ValueError("股票代码不能为空")
+    
+    # 验证报表类型参数
+    valid_symbols = {"资产负债表", "利润表", "现金流量表"}
+    if symbol not in valid_symbols:
+        raise ValueError(f"报表类型不正确: {symbol}，应为 {valid_symbols}")
+    
+    # 验证报告期类型参数
+    valid_indicators = {"年度", "报告期"}
+    if indicator not in valid_indicators:
+        raise ValueError(f"报告期类型不正确: {indicator}，应为 {valid_indicators}")
+    
+    try:
+        logging.info(f"正在查询港股 {stock} 的财务报表数据，报表类型: {symbol}，报告期: {indicator}")
+        
+        # 调用akshare的stock_financial_hk_report_em接口
+        financial_report_df = ak.stock_financial_hk_report_em(
+            stock=stock,
+            symbol=symbol,
+            indicator=indicator
+        )
+        
+        if isinstance(financial_report_df, DataFrame) and not financial_report_df.empty:
+            # 格式化财务报表数据
+            result = _format_hk_financial_report_data(financial_report_df, stock, symbol, indicator)
+            logging.info(f"成功获取港股 {stock} 的财务报表数据，共 {len(financial_report_df)} 条记录")
+            return result
+        else:
+            error_msg = f"未找到港股 {stock} 的财务报表数据"
+            logging.warning(error_msg)
+            return {"error": error_msg, "stock": stock, "symbol": symbol, "indicator": indicator}
+            
+    except Exception as e:
+        error_msg = f"获取港股 {stock} 财务报表数据失败: {str(e)}"
+        logging.error(error_msg)
+        return {"error": error_msg, "stock": stock, "symbol": symbol, "indicator": indicator}
+
+
+def _format_hk_financial_report_data(
+    raw_df: DataFrame, 
+    stock: str, 
+    symbol: str, 
+    indicator: str
+) -> Dict[str, Any]:
+    """
+    格式化港股财务报表数据，转换为更易读的结构
+    
+    Args:
+        raw_df: 原始DataFrame数据
+        stock: 股票代码
+        symbol: 报表类型
+        indicator: 报告期类型
+        
+    Returns:
+        Dict[str, Any]: 格式化后的财务报表数据
+    """
+    # 转换为字典列表
+    records = raw_df.to_dict('records')
+    
+    # 按报告日期分组数据
+    grouped_data = {}
+    for record in records:
+        report_date = record.get('REPORT_DATE')
+        if report_date not in grouped_data:
+            grouped_data[report_date] = []
+        
+        # 处理每个项目的数据
+        item_data = {
+            "std_item_name": record.get('STD_ITEM_NAME'),
+            "amount": record.get('AMOUNT'),
+            "std_item_code": record.get('STD_ITEM_CODE'),
+            "fiscal_year": record.get('FISCAL_YEAR'),
+            "date_type_code": record.get('DATE_TYPE_CODE')
+        }
+        grouped_data[report_date].append(item_data)
+    
+    # 构建结果
+    result = {
+        "stock": stock,
+        "symbol": symbol,
+        "indicator": indicator,
+        "secucode": records[0].get('SECUCODE') if records else None,
+        "security_code": records[0].get('SECURITY_CODE') if records else None,
+        "security_name": records[0].get('SECURITY_NAME_ABBR') if records else None,
+        "org_code": records[0].get('ORG_CODE') if records else None,
+        "report_data": grouped_data,
+        "total_records": len(records),
+        "report_dates": list(grouped_data.keys())
+    }
+    
+    return result
