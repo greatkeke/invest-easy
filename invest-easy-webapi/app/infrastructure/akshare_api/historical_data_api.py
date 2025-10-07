@@ -94,7 +94,7 @@ def GetStockHistoricalData(
             - 港股: 5位数字代码，如 "00700"
         start_date: 开始日期，格式为 "YYYYMMDD"，如 "20230101"
         end_date: 结束日期，格式为 "YYYYMMDD"，如 "20231231"
-        adjust: 复权类型，可选值: {"", "qfq", "hfq"}，默认为 "" (不复权)
+        adjust: 复权类型，可选值: {"", "qfq", "hfq"}，默认为 "" (qfq)
         period: 数据频率，可选值: {"auto", "daily", "weekly", "monthly"}，默认为 "auto" (自动选择)
         
     Returns:
@@ -212,7 +212,11 @@ def _query_us_stock_historical_data(symbol: str, adjust: str) -> Dict[str, Any]:
     stock_hist_df = ak.stock_us_daily(symbol=symbol, adjust=adjust)
     
     if isinstance(stock_hist_df, DataFrame) and not stock_hist_df.empty:
-        # 格式化历史行情数据
+        # 按日期排序并获取最新的50条数据
+        if 'date' in stock_hist_df.columns:
+            stock_hist_df = stock_hist_df.sort_values('date', ascending=False).head(50)
+        else:
+            stock_hist_df = stock_hist_df.head(50)
         result = _format_us_stock_historical_data(stock_hist_df, symbol, adjust)
         logging.info(f"成功获取美股 {symbol} 的历史行情数据，共 {len(stock_hist_df)} 条记录")
         return result

@@ -107,7 +107,7 @@ def QueryStockValue(symbol: str) -> Dict[str, Any]:
 
 @tool
 def QueryStockFinacialReport(
-    stock: str, symbol: str = "资产负债表", indicator: str = "年报"
+    stock: str, symbol: str = "资产负债表", indicator: str = "单季报"
 ) -> Dict[str, Any]:
     """
     查询股票财务报表数据
@@ -128,8 +128,8 @@ def QueryStockFinacialReport(
             - 美股: 可选值: {"资产负债表", "综合损益表", "现金流量表"}，默认为 "资产负债表"
         indicator: 报告期类型
             - A股: 可选值: {"按报告期", "按年度", "按单季度"}，默认为 "按报告期"
-            - 港股: 可选值: {"年度", "报告期"}，默认为 "年度"
-            - 美股: 可选值: {"年报", "单季报", "累计季报"}，默认为 "年报"
+            - 港股: 可选值: {"年度", "报告期"}，默认为 "报告期"
+            - 美股: 可选值: {"年报", "单季报", "累计季报"}，默认为 "单季报"
 
     Returns:
         Dict[str, Any]: 包含财务报表数据的字典，如果查询失败则返回错误信息
