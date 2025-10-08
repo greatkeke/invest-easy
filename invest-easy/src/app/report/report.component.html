@@ -22,12 +22,32 @@
           </div>
         </div>
 
-        <div class="report-output" *ngIf="renderedContent">
+        <div class="report-output">
+          <!-- Verbose Content Section -->
+          <div class="verbose-section" *ngIf="verboseContent">
+            <div class="verbose-header">
+              <h4>详细过程</h4>
+              <button 
+                class="toggle-button" 
+                (click)="isVerboseExpanded = !isVerboseExpanded"
+                [attr.aria-expanded]="isVerboseExpanded">
+                {{ isVerboseExpanded ? '收起' : '展开' }}
+              </button>
+            </div>
+            <div 
+              #verboseContentDiv
+              class="verbose-content" 
+              [class.expanded]="isVerboseExpanded"
+              [class.collapsed]="!isVerboseExpanded">
+              <pre>{{ verboseContent }}</pre>
+            </div>
+          </div>
+
           <div class="report-header">
             <h3>报告内容</h3>
             <small>报告代码: {{ code }}</small>
           </div>
-          <div class="report-text">
+          <div class="report-text" *ngIf="reportContent">
             <div class="markdown-content" [innerHTML]="renderedContent"></div>
           </div>
         </div>

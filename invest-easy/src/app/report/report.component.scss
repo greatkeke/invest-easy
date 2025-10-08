@@ -48,6 +48,73 @@
     }
 
     .report-output {
+      .verbose-section {
+        margin-bottom: 1.5rem;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        overflow: hidden;
+
+        .verbose-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.75rem 1rem;
+          background-color: #f8f9fa;
+          border-bottom: 1px solid #e9ecef;
+
+          h4 {
+            margin: 0;
+            color: #495057;
+            font-size: 0.9rem;
+            font-weight: 600;
+          }
+
+          .toggle-button {
+            background: none;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background-color: #6c757d;
+              color: white;
+            }
+          }
+        }
+
+        .verbose-content {
+          background-color: #f8f9fa;
+          transition: max-height 0.3s ease;
+          overflow-y: auto;
+
+          &.collapsed {
+            max-height: 7.5rem;
+            overflow-y: hidden;
+          }
+
+          &.expanded {
+            max-height: 400px;
+            overflow-y: auto;
+          }
+
+          pre {
+            margin: 0;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+          }
+        }
+      }
+
       .report-header {
         display: flex;
         justify-content: space-between;
