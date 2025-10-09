@@ -16,15 +16,6 @@ router = APIRouter(
 )
 
 
-async def event_generator(sent: str):
-    for char in sent:
-        yield {"event": "message", "data": char}
-        await asyncio.sleep(0.2)
-
-@router.get("/chatbot/stream")
-async def sse_endpoint(sent: str = "default"):
-    return EventSourceResponse(event_generator(sent))
-
 @router.get("/generate/{report_code}")
 async def generate_report_endpoint(
     report_code: str,
