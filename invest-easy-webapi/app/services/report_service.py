@@ -108,12 +108,12 @@ class ReportService:
         ):
             event_type = event["event"]
             if event_type == "on_chat_model_stream":
-                chunk =  event["data"]["chunk"]
+                chunk =  event["data"]["chunk"] # type: ignore
                 yield chunk.content
             if event_type == "on_chat_model_end":
                 yield "\n\n\n"
             elif event["event"] == "on_tool_start":
-                yield f"\n\n[工具调用] {event['name']} with {event["data"]["input"]}\n\n"
+                yield f"\n\n[工具调用] {event['name']} with {event["data"]["input"]}\n\n" # type: ignore
             # elif event_type == "on_tool_end":
             #     tool_output = event["data"].get("output")
             #     yield f"✅ 工具调用结束, 结果: {tool_output}"
