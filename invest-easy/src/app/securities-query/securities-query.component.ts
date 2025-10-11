@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, ViewChild, ElementRef, inject, input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, inject, input, output } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -42,7 +42,7 @@ export class SecuritiesQueryComponent implements OnInit {
   loading = false;
   showLatestInstruments = false;
 
-  @Output() resultSelected = new EventEmitter<string>();
+  readonly resultSelected = output<string>();
 
   onSearch(): void {
     if (!this.searchQuery.trim()) {

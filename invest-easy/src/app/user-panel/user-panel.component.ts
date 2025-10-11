@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
@@ -34,7 +34,7 @@ export class UserPanelComponent {
     { label: 'Activity log' }
   ];
 
-  @Output() panelClosed = new EventEmitter<void>();
+  readonly panelClosed = output<void>();
 
   async ngOnInit(): Promise<void> {
     await this.fetchUsername();
@@ -53,6 +53,7 @@ export class UserPanelComponent {
   }
 
   closePanel() {
+    // TODO: The 'emit' function requires a mandatory void argument
     this.panelClosed.emit();
     this.location.back();
   }

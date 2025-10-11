@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, input } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
@@ -14,8 +14,8 @@ export class TopNavigationComponent {
 
   readonly title = input('');
   isLoading = false;
-  @Output() back = new EventEmitter<void>();
-  @Output() refresh = new EventEmitter<void>();
+  readonly back = output<void>();
+  readonly refresh = output<void>();
 
   refreshData() {
     this.isLoading = true;
@@ -23,6 +23,7 @@ export class TopNavigationComponent {
     setTimeout(() => {
       this.isLoading = false;
     }, 1000);
+    // TODO: The 'emit' function requires a mandatory void argument
     this.refresh.emit();
   }
 
