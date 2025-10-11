@@ -1,10 +1,9 @@
 <div class="min-h-screen">
-  <app-top-navigation title="Trade Stocks" (refresh)="refreshData()">
-  </app-top-navigation>
+  <app-top-navigation title="Trade Stocks" (refresh)="refreshData()" />
 
   <p-dialog header="Select Security" [(visible)]="dialogVisible" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
     [style]="{width: '50vw'}" [modal]="true" (visibleChange)="closeQuery()" [focusOnShow]="true">
-    <app-securities-query (resultSelected)="onSecuritySelected($event)" [autofocus]="true"></app-securities-query>
+    <app-securities-query (resultSelected)="onSecuritySelected($event)" [autofocus]="true" />
   </p-dialog>
 
   <div class="p-4 space-y-4">
@@ -23,7 +22,7 @@
             <h2 class="text-md font-bold mb-2">{{marketSnapshot.name || 'N/A'}}</h2>
             <p-button [icon]="isWatched ? 'pi pi-heart-fill' : 'pi pi-heart'"
               [styleClass]="isWatched ? 'p-button-rounded p-button-text p-button-sm p-button-danger' : 'p-button-rounded p-button-text p-button-sm'"
-            (click)="addToWatchlist()" [disabled]="!marketSnapshot"></p-button>
+            (click)="addToWatchlist()" [disabled]="!marketSnapshot" />
           </div>
           <div class="flex w-full justify-between">
             <span class="text-md">{{marketSnapshot.last_price | number:'1.2-2'}}</span>
@@ -41,7 +40,7 @@
           </div>
         </div>
         <div class="min-h-10">
-          <p-chart type="line" [data]="chartData" [options]="options"></p-chart>
+          <p-chart type="line" [data]="chartData" [options]="options" />
         </div>
       </div>
     }
@@ -111,11 +110,11 @@
           <label class="block text-xs text-gray-700 mb-2">Trade type</label>
           <div class="flex gap-4 mb-4">
             <div class="flex items-center">
-              <p-radioButton name="tradeType" value="buy" [(ngModel)]="tradeType" inputId="buy"></p-radioButton>
+              <p-radioButton name="tradeType" value="buy" [(ngModel)]="tradeType" inputId="buy" />
               <label for="buy" class="ml-2">Buy</label>
             </div>
             <div class="flex items-center">
-              <p-radioButton name="tradeType" value="sell" [(ngModel)]="tradeType" inputId="sell"></p-radioButton>
+              <p-radioButton name="tradeType" value="sell" [(ngModel)]="tradeType" inputId="sell" />
               <label for="sell" class="ml-2">Sell</label>
             </div>
           </div>
@@ -123,33 +122,33 @@
         <div>
           <label class="block text-xs text-gray-700 mb-2">Order Type</label>
           <p-select [options]="orderTypes" [(ngModel)]="orderForm.type" name="type" optionLabel="label"
-          [showClear]="false" placeholder="Select order type" size="small"></p-select>
+          [showClear]="false" placeholder="Select order type" size="small" />
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Price</label>
           <p-inputNumber [(ngModel)]="orderForm.price" name="price" mode="currency" [currency]="orderForm.payFrom.ccy"
             [min]="0" [max]="1000000" [step]="0.001" [showButtons]="true" size="small" [minFractionDigits]="2"
-          [maxFractionDigits]="3"></p-inputNumber>
+          [maxFractionDigits]="3" />
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Quantity</label>
           <p-inputNumber [(ngModel)]="orderForm.quantity" name="quantity" [min]="100" [max]="1000000"
             [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
-          decrementButtonIcon="pi pi-minus" size="small" inputStyleClass="max-w-20" [step]="100"></p-inputNumber>
+          decrementButtonIcon="pi pi-minus" size="small" inputStyleClass="max-w-20" [step]="100" />
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Good until</label>
           <p-datepicker [(ngModel)]="orderForm.goodUntil" name="goodUntil" [showIcon]="true" dateFormat="yy-mm-dd"
-          [minDate]="today" size="small" appendTo="body" readonlyInput></p-datepicker>
+          [minDate]="today" size="small" appendTo="body" readonlyInput />
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Pay from</label>
           <app-account-selector [options]="accounts" [(value)]="orderForm.payFrom"
-          name="payFrom"></app-account-selector>
+          name="payFrom" />
         </div>
 
         <div>
@@ -166,7 +165,7 @@
         <span class="text-sm font-bold">${{estimatedTotal | number:'1.2-2'}}</span>
       </div>
       <p-button label="Preview order" styleClass="w-full" variant="outlined" size="small"
-      (onClick)="showPreview()"></p-button>
+      (onClick)="showPreview()" />
     </div>
   </div>
 
@@ -206,14 +205,14 @@
     </div>
     <ng-template pTemplate="footer">
       <p-button label="Cancel" variant="outlined" severity="secondary" icon="pi pi-times"
-      (onClick)="cancelPreview()"></p-button>
+      (onClick)="cancelPreview()" />
       @if (tradeType === 'buy') {
         <p-button label="Buy" severity="danger" icon="pi pi-cart-plus"
-        (onClick)="confirmOrder()"></p-button>
+        (onClick)="confirmOrder()" />
       }
       @if (tradeType === 'sell') {
         <p-button label="Sell" severity="danger" icon="pi pi-shopping-bag"
-        (onClick)="confirmOrder()"></p-button>
+        (onClick)="confirmOrder()" />
       }
     </ng-template>
   </p-dialog>

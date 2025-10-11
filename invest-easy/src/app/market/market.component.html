@@ -1,7 +1,7 @@
-<app-header title="Market" bg_img="global-markets-banner.jpg"></app-header>
+<app-header title="Market" bg_img="global-markets-banner.jpg" />
 
 <div class="p-4 pb-0">
-  <app-securities-query (resultSelected)="navigateToResult($event)"></app-securities-query>
+  <app-securities-query (resultSelected)="navigateToResult($event)" />
 </div>
 
 <div class="temperature-section" *ngIf="marketTemperature">

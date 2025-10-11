@@ -1,4 +1,4 @@
-<app-header title="Home"></app-header>
+<app-header title="Home" />
 
 @if (showPromotions()) {
   <div class="promotion-carousel">
@@ -25,7 +25,7 @@
 }
 
 <div class="px-4">
-  <app-securities-query [placeholder]="'Select a security to check by AI'" (resultSelected)="checkSecurity($event)"></app-securities-query>
+  <app-securities-query [placeholder]="'Select a security to check by AI'" (resultSelected)="checkSecurity($event)" />
 </div>
 
 <div class="quicksteps-section">

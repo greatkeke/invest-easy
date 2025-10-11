@@ -1,16 +1,14 @@
-<app-top-navigation title="AI估值报告"></app-top-navigation>
+<app-top-navigation title="AI估值报告" />
 
 <div class="report-container">
   <div class="content-section">
     <div class="header-actions">
       <h2>报告生成</h2>
       @if (!loading) {
-        <p-button
-          label="重新生成"
+        <p-button label="重新生成"
           icon="pi pi-refresh"
           (onClick)="generateReport()"
-          styleClass="p-button-primary">
-        </p-button>
+          styleClass="p-button-primary" />
       }
     </div>
 
@@ -63,12 +61,10 @@
           <div class="empty-state">
             <i class="pi pi-file" style="font-size: 3rem; color: #ccc;"></i>
             <p>等待生成报告...</p>
-            <p-button
-              label="开始生成"
+            <p-button label="开始生成"
               icon="pi pi-play"
               (onClick)="generateReport()"
-              styleClass="p-button-primary">
-            </p-button>
+              styleClass="p-button-primary" />
           </div>
         }
       </div>

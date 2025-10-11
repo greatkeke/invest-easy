@@ -1,10 +1,10 @@
 <div class="ad-container">
-  <app-top-navigation [title]="adType"></app-top-navigation>
+  <app-top-navigation [title]="adType" />
 
   <div class="ad-content p-4">
     @if (isLoading) {
       <p-progressBar mode="indeterminate"
-      [style]="{'height': '6px', 'width': '100%'}"></p-progressBar>
+      [style]="{'height': '6px', 'width': '100%'}" />
     }
     @if (isLoading) {
       <div>

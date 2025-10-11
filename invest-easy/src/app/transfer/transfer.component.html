@@ -1,6 +1,6 @@
 <div class="flex flex-col h-screen">
   <!-- Top Navigation -->
-  <app-top-navigation title="Transfer"></app-top-navigation>
+  <app-top-navigation title="Transfer" />
 
   <!-- Loading Overlay -->
   @if (isLoading) {
@@ -24,16 +24,16 @@
             <div class="p-field">
               <label for="toAccount" class="block mb-2 text-sm">To Account</label>
               <app-account-selector [options]="accounts" [(value)]="inForm.toAccount"
-              name="toAccount"></app-account-selector>
+              name="toAccount" />
             </div>
             <div class="p-field">
               <label for="amount" class="block mb-2 text-sm">Amount</label>
               <p-inputNumber [(ngModel)]="inForm.amount" name="amount" required inputId="amount" mode="currency"
                 currency="USD" [min]="0" [max]="100000000" [step]="100" [showButtons]="true"
-              size="small"></p-inputNumber>
+              size="small" />
             </div>
             <p-button type="submit" label="Confirm" variant="outlined" styleClass="p-button-primary"
-            size="small"></p-button>
+            size="small" />
           </form>
         </p-tabpanel>
 
@@ -43,7 +43,7 @@
             <div class="p-field">
               <label for="fromAccount" class="block mb-2 text-sm">From Account</label>
               <app-account-selector [options]="accounts" [(value)]="outForm.fromAccount"
-              name="fromAccount"></app-account-selector>
+              name="fromAccount" />
             </div>
             <!-- <div class="p-field">
             <label for="balance" class="block mb-2 text-sm">Available Balance</label>
@@ -53,21 +53,21 @@
           <div class="p-field">
             <label for="amount" class="block mb-2 text-sm">Transfer Amount</label>
             <p-inputNumber [(ngModel)]="outForm.amount" name="amount" required inputId="amount" mode="currency"
-            currency="USD" size="small"></p-inputNumber>
+            currency="USD" size="small" />
           </div>
           <div class="p-field">
             <label for="password" class="block mb-2 text-sm">Password</label>
             <p-password [(ngModel)]="outForm.password" name="password" required inputId="password" [feedback]="false"
-            size="small"></p-password>
+            size="small" />
           </div>
           <p-button type="submit" label="Confirm" variant="outlined" styleClass="p-button-primary"
-          size="small"></p-button>
+          size="small" />
         </form>
       </p-tabpanel>
 
       <!-- Record Tab -->
       <p-tabpanel [value]="2">
-        <app-history [RecordChanges]="RecordChangesAt"></app-history>
+        <app-history [RecordChanges]="RecordChangesAt" />
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
@@ -81,11 +81,11 @@
 <p-dialog header="Transfer Successful" [(visible)]="showSuccessDialog" [modal]="true">
   <p>Transferred amount: {{ transferredAmount | currency }}</p>
   <div class="flex justify-between mt-4">
-    <p-button (click)="checkRecord()" label="Check Record" styleClass="p-button-secondary"></p-button>
-    <p-button (click)="closeDialog()" label="OK" styleClass="p-button-primary"></p-button>
+    <p-button (click)="checkRecord()" label="Check Record" styleClass="p-button-secondary" />
+    <p-button (click)="closeDialog()" label="OK" styleClass="p-button-primary" />
   </div>
 </p-dialog>
 
 <!-- Security Tip -->
-<p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }"></p-toast>
+<p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }" />
 </div>

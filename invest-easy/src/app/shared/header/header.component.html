@@ -2,9 +2,9 @@
   <h1 class="header-title grow text-white font-semibold text-lg">{{title()}}</h1>
   <div class="header-icons">
     <p-button icon="pi pi-bell" severity="secondary" [rounded]="true" size="small" (click)="goToNotifications()"
-      class=""></p-button>
+      class="" />
     <p-button icon="pi pi-user" severity="secondary" [rounded]="true" size="small" (click)="navigateTo('/user-center')"
-      class="p-button-rounded p-button-text"></p-button>
+      class="p-button-rounded p-button-text" />
   </div>
 </div>
 
@@ -14,5 +14,5 @@
   <ng-template #header>
     <div class="text-xl font-bold p-4">Notifications</div>
   </ng-template>
-  <app-notification-center></app-notification-center>
+  <app-notification-center />
 </p-dialog>

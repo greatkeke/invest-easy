@@ -1,16 +1,16 @@
-<app-header title="Trade" bg_img="finance-banner.jpg"></app-header>
+<app-header title="Trade" bg_img="finance-banner.jpg" />
 
 <div class="trade-container">
 
   <div class="trade-actions">
     <p-button variant="outlined" size="small" label="Buy" icon="pi pi-shopping-cart"
-    (onClick)="navigateTo('/trade-stocks')"></p-button>
+    (onClick)="navigateTo('/trade-stocks')" />
     <p-button variant="outlined" size="small" label="Sell" icon="pi pi-dollar"
-    (onClick)="navigateTo('/trade-stocks', {trade: 'sell'})"></p-button>
+    (onClick)="navigateTo('/trade-stocks', {trade: 'sell'})" />
     <p-button variant="outlined" size="small" label="Transfer" icon="pi pi-wallet"
-    (onClick)="navigateTo('/transfer')"></p-button>
+    (onClick)="navigateTo('/transfer')" />
     <p-button variant="outlined" size="small" label="Exchange" icon="pi pi-arrow-right-arrow-left"
-    (onClick)="navigateTo('/exchange')"></p-button>
+    (onClick)="navigateTo('/exchange')" />
   </div>
 
   <div class="dashboard asset-dashboard shadow-md hover:shadow-lg mb-0!" (click)="navigateTo('/asset-detail')">
@@ -151,7 +151,7 @@
       <div class="mt-6">
         <h3 class="text-md font-semibold">Recent Orders</h3>
         <div class="mt-2">
-          <app-orders></app-orders>
+          <app-orders />
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-<app-top-navigation title="Exchange"></app-top-navigation>
+<app-top-navigation title="Exchange" />
 
 <div class="p-4">
   <div header="Currency Exchange">
@@ -10,10 +10,10 @@
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
             <app-account-selector [options]="accounts" [(value)]="fromAccount"
-            (selectChange)="onSelectChange($event, true)" name="fromAccount"></app-account-selector>
+            (selectChange)="onSelectChange($event, true)" name="fromAccount" />
 
             <p-inputNumber [(ngModel)]="fromAmount" name="fromAmount" placeholder="Amount" mode="decimal"
-            (onInput)="calculateAmount($event)"></p-inputNumber>
+            (onInput)="calculateAmount($event)" />
           </div>
 
           <div class="flex flex-col gap-2 text-sm">
@@ -31,7 +31,7 @@
 
         <div>
           <p-button variant="outlined" icon="pi pi-arrow-right-arrow-left" styleClass="min-w-20"
-          (onClick)="exchangeFlag()"></p-button>
+          (onClick)="exchangeFlag()" />
         </div>
 
         <!-- To Group -->
@@ -40,10 +40,10 @@
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
             <app-account-selector [options]="accounts" [(value)]="toAccount" name="toAccount"
-            (selectChange)="onSelectChange($event)"></app-account-selector>
+            (selectChange)="onSelectChange($event)" />
 
             <p-inputNumber [(ngModel)]="toAmount" name="toAmount" placeholder="Amount" mode="decimal"
-            (onInput)="calculateAmount($event, false)"></p-inputNumber>
+            (onInput)="calculateAmount($event, false)" />
           </div>
 
           <div class="flex flex-col gap-2 text-sm">
@@ -71,7 +71,7 @@
       </div>
 
       <div class="flex flex-col items-center mt-6">
-        <p-button class="w-full p-4" styleClass="w-full" variant="outlined" label="Submit" type="Submit"></p-button>
+        <p-button class="w-full p-4" styleClass="w-full" variant="outlined" label="Submit" type="Submit" />
         <a [routerLink]="['/transfer']" [queryParams]="{tab:'record'}" class="text-primary-500 underline">View Exchange
         History</a>
       </div>
@@ -98,7 +98,7 @@
       }
     </div>
     <ng-template pTemplate="footer">
-      <p-button label="OK" (onClick)="showDialog = false" variant="outlined"></p-button>
+      <p-button label="OK" (onClick)="showDialog = false" variant="outlined" />
     </ng-template>
   </p-dialog>
 </div>

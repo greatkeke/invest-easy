@@ -8,7 +8,7 @@
       @if (loading) {
         <div
           class="absolute inset-0 bg-opacity-70 flex items-center justify-center z-50 rounded-lg">
-          <p-progressSpinner styleClass="w-12 h-12" strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+          <p-progressSpinner styleClass="w-12 h-12" strokeWidth="4" animationDuration=".5s" />
         </div>
       }
       @if (errorMessage) {
@@ -58,7 +58,7 @@
           <div>
             <p-iftalabel>
               <p-password id="password" [(ngModel)]="password" name="password" [toggleMask]="true" [feedback]="isSignUp"
-              required #passwordField="ngModel" placeholder="Enter your password"></p-password>
+              required #passwordField="ngModel" placeholder="Enter your password" />
               @if (passwordField.invalid && (passwordField.dirty || passwordField.touched)) {
                 <small class="text-red-500 block mt-1">
                   @if (passwordField.errors?.['required']) {
@@ -74,7 +74,7 @@
             <div class="animate-fadeIn">
               <p-iftalabel>
                 <p-password id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" [toggleMask]="true"
-                required #confirmPasswordField="ngModel" placeholder="Confirm your password"></p-password>
+                required #confirmPasswordField="ngModel" placeholder="Confirm your password" />
                 @if (confirmPasswordField.invalid && (confirmPasswordField.dirty || confirmPasswordField.touched)) {
                   <small class="text-red-500 block mt-1">
                     @if (confirmPasswordField.errors?.['required']) {
@@ -96,11 +96,11 @@
 
           <div class="flex flex-col gap-2">
             <p-button type="submit" [label]="isSignUp ? 'Sign Up' : 'Login'" styleClass="p-button-raised p-button-primary"
-            [disabled]="loading"></p-button>
+            [disabled]="loading" />
 
             @if (!isSignUp) {
               <p-button type="button" label="Forgot password?" styleClass="p-button-text p-button-plain text-sm"
-              ></p-button>
+               />
             }
           </div>
 

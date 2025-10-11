@@ -1,6 +1,5 @@
 <div class="min-h-screen">
-  <app-top-navigation title="My Assets" (back)="goBack()" (refresh)="refreshData()">
-  </app-top-navigation>
+  <app-top-navigation title="My Assets" (back)="goBack()" (refresh)="refreshData()" />
 
   @if (isLoading) {
     <div>
@@ -68,7 +67,7 @@
     <div class="">
       <h2 class="text-md font-medium mb-4">Record History</h2>
       <div class="space-y-4">
-        <app-history></app-history>
+        <app-history />
       </div>
     </div>
   </div>
