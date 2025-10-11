@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -33,6 +33,10 @@ import { RouterModule } from '@angular/router';
   styleUrl: './exchange.component.scss'
 })
 export class ExchangeComponent implements OnInit {
+  private accountSvc = inject(AccountsService);
+  private exchangeSvc = inject(ExchangeService);
+  private fxrateSvc = inject(FxrateService);
+
   accounts: AccountBalance[] = [];
 
   fromAccount?: AccountBalance;
@@ -45,12 +49,6 @@ export class ExchangeComponent implements OnInit {
   dialogSuccess = false;
   dialogMessage = '';
   completedDate = new Date();
-
-  constructor(
-    private accountSvc: AccountsService,
-    private exchangeSvc: ExchangeService,
-    private fxrateSvc: FxrateService
-  ) { }
 
   async ngOnInit(): Promise<void> {
     this.accounts = await this.accountSvc.fetchAccountBalances();

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
@@ -10,12 +10,12 @@ import { ButtonModule } from 'primeng/button';
   styles: []
 })
 export class TopNavigationComponent {
+  private location = inject(Location);
+
   @Input() title = '';
   isLoading = false;
   @Output() back = new EventEmitter<void>();
   @Output() refresh = new EventEmitter<void>();
-
-  constructor(private location: Location) { }
 
   refreshData() {
     this.isLoading = true;

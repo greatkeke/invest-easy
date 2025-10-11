@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -13,6 +13,9 @@ import { SkeletonModule } from 'primeng/skeleton';
   imports: [TopNavigationComponent, ProgressBarModule, ProgressSpinnerModule, SkeletonModule]
 })
 export class AdvertisementComponent {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   isLoading: boolean = true;
   adType: string = '';
 
@@ -92,8 +95,6 @@ export class AdvertisementComponent {
       image: '/230413-hsbc-and-wealth-768x576.jpg'
     }
   };
-
-  constructor(private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.params.subscribe(pm => {

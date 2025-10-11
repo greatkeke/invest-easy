@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
@@ -16,6 +16,10 @@ import { AUTH_TOKEN_KEY } from '../shared/api-interceptor';
 ]
 })
 export class UserPanelComponent {
+  private router = inject(Router);
+  private location = inject(Location);
+  private http = inject(HttpClient);
+
   now: Date = new Date();
   username: string = '';
   menuItems = [
@@ -31,12 +35,6 @@ export class UserPanelComponent {
   ];
 
   @Output() panelClosed = new EventEmitter<void>();
-
-  constructor(
-    private router: Router,
-    private location: Location,
-    private http: HttpClient,
-  ) { }
 
   async ngOnInit(): Promise<void> {
     await this.fetchUsername();

@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -24,6 +24,8 @@ interface Record {
 })
 
 export class HistoryComponent {
+  private http = inject(HttpClient);
+
   BalanceType = BalanceType;
   @Input() RecordChanges: any;
   
@@ -39,9 +41,6 @@ export class HistoryComponent {
   allRecordsLoaded = false;
   currentPage = 0;
   pageSize = 3;
-
-  constructor(private http: HttpClient) {
-  }
 
   ngOnInit(): void {
     this.loadRecords();

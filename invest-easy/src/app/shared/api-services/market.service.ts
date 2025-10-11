@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,7 +17,8 @@ import { RTData } from './rt-data.model';
   providedIn: 'root'
 })
 export class MarketService {
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+
 
   getMarketIndices(): Observable<MarketIndex[]> {
     const codes = ['HK.800000', 'HK.03032', 'US.QQQ', 'SH.000001', 'SH.000300', 'SZ.399001', 'SZ.399006'];

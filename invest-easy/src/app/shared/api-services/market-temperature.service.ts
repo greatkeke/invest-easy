@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -13,9 +13,9 @@ interface MarketTemperature {
   providedIn: 'root'
 })
 export class MarketTemperatureService {
-  private apiUrl = 'https://api.youzhiyouxing.com/market/temperature'; // TODO: Confirm actual API endpoint
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
+  private apiUrl = 'https://api.youzhiyouxing.com/market/temperature';
 
   getMarketTemperature(): Observable<MarketTemperature> {
     // TODO: Implement actual API call

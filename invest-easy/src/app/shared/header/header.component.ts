@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, Location, NgStyle } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,16 +14,14 @@ import { HttpParams } from '@angular/common/http';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private location = inject(Location);
+
   @Input() title = 'Invest-Easy'; // Default value
   @Input() bg_img = 'financial-regulation-header.jpg';
   displayUserPanel = false;
   displayNotificationCenter = false;
-
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private location: Location
-  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {

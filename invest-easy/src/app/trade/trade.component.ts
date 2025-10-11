@@ -20,6 +20,11 @@ import { FxrateService } from '../shared/api-services/fxrate.service';
   styleUrls: ['./trade.component.scss']
 })
 export class TradeComponent {
+  private router = inject(Router);
+  private accountSvc = inject(AccountsService);
+  private positionSvc = inject(PositionService);
+  private fxrateSvc = inject(FxrateService);
+
   overviewAccount: AccountBalance | undefined;
   totalPL?: number;
   totalTodayPL?: number;
@@ -28,12 +33,7 @@ export class TradeComponent {
   viewportScroller = inject(ViewportScroller);
   scrollingRef = viewChild<HTMLElement>('scrolling');
 
-  constructor(
-    private router: Router,
-    private accountSvc: AccountsService,
-    private positionSvc: PositionService,
-    private fxrateSvc: FxrateService
-  ) {
+  constructor() {
     const scrollingPosition: Signal<[number, number] | undefined> = toSignal(
       inject(Router).events.pipe(
         filter((event): event is Scroll => event instanceof Scroll),

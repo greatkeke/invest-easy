@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrdersService, OrderDetail } from '../../shared/api-services/orders.service';
 import { TopNavigationComponent } from '../../shared/top-navigation/top-navigation.component';
@@ -24,13 +24,11 @@ import { SkeletonModule } from 'primeng/skeleton';
   styleUrl: './order-detail.component.scss'
 })
 export class OrderDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private ordersService = inject(OrdersService);
+
   orderDetail?: OrderDetail;
   loading = false;
-
-  constructor(
-    private route: ActivatedRoute,
-    private ordersService: OrdersService
-  ) { }
 
   ngOnInit(): void {
     this.getOrderDetail();

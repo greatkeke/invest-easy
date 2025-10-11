@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../shared/header/header.component';
 import { NewsItem, NewsService } from '../shared/api-services/news.service';
@@ -12,12 +12,12 @@ import { SkeletonModule } from 'primeng/skeleton';
   styleUrls: ['./news.component.scss']
 })
 export class NewsComponent implements OnInit {
+  private newsService = inject(NewsService);
+
   marketNews: NewsItem[] = [];
   currentPage = 1;
   isLoading = false;
   hasMore = true;
-
-  constructor(private newsService: NewsService) { }
 
   async ngOnInit() {
     window.addEventListener('scroll', this.scrolling, true)

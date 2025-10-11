@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input, ViewChild, ElementRef, inject } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -29,6 +29,9 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./securities-query.component.scss']
 })
 export class SecuritiesQueryComponent implements OnInit {
+  private marketService = inject(MarketService);
+  private messageService = inject(MessageService);
+
   @Input() autofocus = false;
   @Input() placeholder = '';
   @ViewChild('searchInput') searchInput!: ElementRef;
@@ -40,11 +43,6 @@ export class SecuritiesQueryComponent implements OnInit {
   showLatestInstruments = false;
 
   @Output() resultSelected = new EventEmitter<string>();
-
-  constructor(
-    private marketService: MarketService,
-    private messageService: MessageService
-  ) { }
 
   onSearch(): void {
     if (!this.searchQuery.trim()) {

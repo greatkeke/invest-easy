@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -35,18 +35,18 @@ import { ToastModule } from 'primeng/toast';
   providers: [MessageService]
 })
 export class GeneralSettingsComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private settingsService = inject(SettingsService);
+  private route = inject(ActivatedRoute);
+  private messageService = inject(MessageService);
+
   @Input() items: DefinedItem[] = [];
   form: FormGroup;
   groupName: string = "";
   isLoading = false;
   error: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private settingsService: SettingsService,
-    private route: ActivatedRoute,
-    private messageService: MessageService
-  ) {
+  constructor() {
     this.form = this.fb.group({});
   }
 

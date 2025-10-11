@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -36,7 +36,9 @@ interface SignUpResponse {
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  constructor(private http: HttpClient, private router: Router) { }
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
   username = '';
   email = '';
   password = '';

@@ -55,22 +55,20 @@ interface ChartData {
   providers: [MessageService]
 })
 export class TradeStocksComponent implements OnInit {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private messageService = inject(MessageService);
+  private marketService = inject(MarketService);
+  private accountsService = inject(AccountsService);
+  private tradeService = inject(TradeService);
+  private watchlistService = inject(WatchlistService);
+  private location = inject(Location);
+
   today = new Date();
   marketSnapshot: MarketSnapshot | null = null;
   loading = true;
   isWatched = false;
   documentStyle!: CSSStyleDeclaration;
-
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private messageService: MessageService,
-    private marketService: MarketService,
-    private accountsService: AccountsService,
-    private tradeService: TradeService,
-    private watchlistService: WatchlistService,
-    private location: Location,
-  ) { }
 
   tradeType = 'buy';
   security_code = '';

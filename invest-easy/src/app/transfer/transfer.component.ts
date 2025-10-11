@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HistoryComponent } from '../history/history.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -39,6 +39,13 @@ import { AccountSelectorComponent } from '../shared/account-selector/account-sel
   providers: [MessageService]
 })
 export class TransferComponent implements OnInit {
+  private messageService = inject(MessageService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private http = inject(HttpClient);
+  private location = inject(Location);
+  private accountsService = inject(AccountsService);
+
   accounts: Account[] = [];
 
   inForm = {
@@ -58,15 +65,6 @@ export class TransferComponent implements OnInit {
   activeTabIndex = 0;
   isLoading = false;
   RecordChangesAt = new Date();
-
-  constructor(
-    private messageService: MessageService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private http: HttpClient,
-    private location: Location,
-    private accountsService: AccountsService
-  ) { }
 
   ngOnInit() {
     const tab = this.route.snapshot.queryParamMap.get('tab');

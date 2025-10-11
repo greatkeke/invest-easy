@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -13,13 +13,13 @@ import { OrdersService } from '../shared/api-services/orders.service';
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent {
+  private ordersService = inject(OrdersService);
+  private router = inject(Router);
+
   orders: any[] = [];
   loading = false;
   allLoaded = false;
   currentPage = 1;
-
-  constructor(private ordersService: OrdersService, private router: Router) {
-  }
 
   ngOnInit() {
     this.loadOrders();

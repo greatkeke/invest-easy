@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MarketIndex, MarketService } from '../shared/api-services/market.service';
 import { WatchlistItem, WatchlistService } from '../shared/api-services/watchlist.service';
 import { MarketTemperatureService } from '../shared/api-services/market-temperature.service';
@@ -32,15 +32,15 @@ import { SkeletonModule } from 'primeng/skeleton';
   ]
 })
 export class MarketComponent implements OnInit {
+  private marketService = inject(MarketService);
+  private watchlistService = inject(WatchlistService);
+  private marketTempService = inject(MarketTemperatureService);
+  private router = inject(Router);
+
   indices: MarketIndex[] = [];
   watchlist: WatchlistItem[] = [];
   marketTemperature: any = null;
   loading = true;
-
-  constructor(private marketService: MarketService,
-    private watchlistService: WatchlistService,
-    private marketTempService: MarketTemperatureService,
-    private router: Router) { }
 
   ngOnInit(): void {
     this.loadMarketData();

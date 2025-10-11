@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewChecked, inject } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
@@ -26,6 +26,10 @@ import { SseClient } from 'ngx-sse-client';
 ]
 })
 export class ReportComponent implements OnInit, OnDestroy, AfterViewChecked {
+  private route = inject(ActivatedRoute);
+  private http = inject(HttpClient);
+  private sseClient = inject(SseClient);
+
   reportContent: string = '';
   renderedContent: string = '';
   verboseContent: string = '';
@@ -36,12 +40,6 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewChecked {
   private verboseContentChanged = false;
 
   @ViewChild('verboseContentDiv') verboseContentElement!: ElementRef;
-
-  constructor(
-    private route: ActivatedRoute,
-    private http: HttpClient,
-    private sseClient: SseClient
-  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

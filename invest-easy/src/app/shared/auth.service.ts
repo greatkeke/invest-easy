@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
-import { Inject } from '@angular/core';
+
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, Observable, of } from 'rxjs';
 
@@ -9,8 +9,10 @@ import { lastValueFrom, Observable, of } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+  private platformId = inject<Object>(PLATFORM_ID);
+  private http = inject(HttpClient);
+
   private auth_at?: Date;
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: HttpClient) { }
 
   async isAuthenticated(): Promise<boolean> {
     if (this.auth_at) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, Signal, WritableSignal, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,9 @@ import { SecuritiesQueryComponent } from '../securities-query/securities-query.c
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  private router = inject(Router);
+  private accountSvc = inject(AccountsService);
+
   showPromotions = signal(true);
   promotions = signal([
     {
@@ -30,11 +33,6 @@ export class HomeComponent implements OnInit {
   toggleBalanceVisibility() {
     this.showBalance.set(!this.showBalance());
   }
-
-  constructor(
-    private router: Router,
-    private accountSvc: AccountsService
-  ) { }
 
   async ngOnInit() {
     await this.fetchOverviewAccount();

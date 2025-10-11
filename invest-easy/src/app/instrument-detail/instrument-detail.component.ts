@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -15,15 +15,13 @@ import { ToastModule } from 'primeng/toast';
   providers: [MessageService]
 })
 export class InstrumentDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private messageService = inject(MessageService);
+  private router = inject(Router);
+
   instrument: any;
   loading = true;
   isFavorite = false;
-
-  constructor(
-    private route: ActivatedRoute,
-    private messageService: MessageService,
-    private router: Router
-  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {

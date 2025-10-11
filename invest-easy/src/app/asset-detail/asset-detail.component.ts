@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -17,13 +17,11 @@ import { SkeletonModule } from 'primeng/skeleton';
   styleUrl: './asset-detail.component.scss'
 })
 export class AssetDetailComponent {
+  private accountsService = inject(AccountsService);
+
   isLoading = false;
   accountBalances: AccountBalance[] = [];
   expand_id: string = "";
-
-  constructor(
-    private accountsService: AccountsService
-  ) { }
 
   goBack() {
 
