@@ -45,10 +45,9 @@ export class HomeComponent implements OnInit {
   }
 
   closePromotion(index: number) {
-    const currentPromotions = this.promotions();
-    const updatedPromotions = [...currentPromotions];
-    updatedPromotions[index] = { ...updatedPromotions[index], visible: false };
-    this.promotions.set(updatedPromotions);
+    this.promotions.update(x => x.map((v, i) =>
+      i === index ? { ...v, visible: !v.visible } : v
+    ))
   }
 
   navigateTo(route: string, queryParams?: Record<string, any>) {
