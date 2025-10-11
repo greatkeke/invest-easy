@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges, inject } from '@angular/core';
+import { Component, SimpleChanges, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -27,7 +27,7 @@ export class HistoryComponent {
   private http = inject(HttpClient);
 
   BalanceType = BalanceType;
-  @Input() RecordChanges: any;
+  readonly RecordChanges = input<any>();
   
   ngOnChanges(changes: SimpleChanges) {
     if (!changes['RecordChanges'].firstChange) {

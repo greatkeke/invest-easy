@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, Input, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, ViewChild, ElementRef, inject, input } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -32,8 +32,8 @@ export class SecuritiesQueryComponent implements OnInit {
   private marketService = inject(MarketService);
   private messageService = inject(MessageService);
 
-  @Input() autofocus = false;
-  @Input() placeholder = '';
+  readonly autofocus = input(false);
+  readonly placeholder = input('');
   @ViewChild('searchInput') searchInput!: ElementRef;
 
   searchQuery = '';
@@ -68,7 +68,7 @@ export class SecuritiesQueryComponent implements OnInit {
   clearSearch(): void {
     this.searchQuery = '';
     this.searchResults = [];
-    this.showLatestInstruments = this.autofocus ? true : false;
+    this.showLatestInstruments = this.autofocus() ? true : false;
   }
 
   selectResult(code: string): void {
@@ -83,7 +83,7 @@ export class SecuritiesQueryComponent implements OnInit {
     this.marketService.getInstrumentsByUser().subscribe({
       next: (instruments) => {
         this.instruments = instruments;
-        if (this.autofocus) {
+        if (this.autofocus()) {
           this.showLatestInstruments = true;
         }
       },
@@ -98,7 +98,7 @@ export class SecuritiesQueryComponent implements OnInit {
   }
 
   onBlur(): void {
-    if (!this.autofocus) {
+    if (!this.autofocus()) {
       this.showLatestInstruments = false;
     }
   }

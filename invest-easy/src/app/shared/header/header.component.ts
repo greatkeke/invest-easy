@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, Location, NgStyle } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,8 +18,8 @@ export class HeaderComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private location = inject(Location);
 
-  @Input() title = 'Invest-Easy'; // Default value
-  @Input() bg_img = 'financial-regulation-header.jpg';
+  readonly title = input('Invest-Easy'); // Default value
+  readonly bg_img = input('financial-regulation-header.jpg');
   displayUserPanel = false;
   displayNotificationCenter = false;
 

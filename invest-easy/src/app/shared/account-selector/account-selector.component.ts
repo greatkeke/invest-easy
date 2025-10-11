@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Account } from '../api-services/accounts.service';
@@ -12,8 +12,8 @@ import { SelectModule } from 'primeng/select';
   styleUrls: ['./account-selector.component.scss']
 })
 export class AccountSelectorComponent {
-  @Input() options: Account[] = [];
-  @Input() name: string = '';
+  readonly options = input<Account[]>([]);
+  readonly name = input<string>('');
   _value: any;
   @Output() valueChange = new EventEmitter<Account>();
   @Output() selectChange = new EventEmitter<Account>();
