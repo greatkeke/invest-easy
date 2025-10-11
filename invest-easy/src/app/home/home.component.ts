@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, Signal, WritableSignal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
@@ -15,20 +15,20 @@ import { SecuritiesQueryComponent } from '../securities-query/securities-query.c
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  showPromotions = true;
-  promotions = [
+  showPromotions = signal(true);
+  promotions = signal([
     {
       title: 'Welcome Bonus',
       description: 'Receive ¥100 investment credit upon signup',
       visible: true
     }
-  ];
+  ]);
 
-  showBalance = true;
-  account: AccountBalance | undefined;
+  showBalance = signal(true);
+  account: WritableSignal<AccountBalance | undefined> = signal(undefined);
 
   toggleBalanceVisibility() {
-    this.showBalance = !this.showBalance;
+    this.showBalance.set(!this.showBalance());
   }
 
   constructor(
@@ -41,11 +41,14 @@ export class HomeComponent implements OnInit {
   }
 
   async fetchOverviewAccount() {
-    this.account = await this.accountSvc.fetchOverviewAccountBalances();
+    this.account.set(await this.accountSvc.fetchOverviewAccountBalances());
   }
 
   closePromotion(index: number) {
-    this.promotions[index].visible = false;
+    const currentPromotions = this.promotions();
+    const updatedPromotions = [...currentPromotions];
+    updatedPromotions[index] = { ...updatedPromotions[index], visible: false };
+    this.promotions.set(updatedPromotions);
   }
 
   navigateTo(route: string, queryParams?: Record<string, any>) {

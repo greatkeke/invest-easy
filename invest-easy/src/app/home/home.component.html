@@ -1,8 +1,8 @@
 <app-header title="Home"></app-header>
 
-<div *ngIf="showPromotions" class="promotion-carousel">
+<div *ngIf="showPromotions()" class="promotion-carousel">
   <div class="carousel-container">
-    <ng-container *ngFor="let promo of promotions; let i = index">
+    <ng-container *ngFor="let promo of promotions(); let i = index">
       <p-card *ngIf="promo.visible" class="promo-card">
         <button pButton icon="pi pi-times" class="p-button-rounded p-button-text close-btn"
           (click)="closePromotion(i)"></button>
@@ -47,19 +47,19 @@
 <div class="accounts-section">
   <div class="accounts-header">
     <h5 i18n class="font-semibold">Your Account</h5>
-    <button pButton icon="{{showBalance ? 'pi pi-eye' : 'pi pi-eye-slash'}}"
+    <button pButton icon="{{showBalance() ? 'pi pi-eye' : 'pi pi-eye-slash'}}"
       class="p-button-rounded p-button-text balance-toggle" (click)="toggleBalanceVisibility()"></button>
   </div>
-  <div class="accounts-grid" *ngIf="account">
+  <div class="accounts-grid" *ngIf="account()">
     <p-card (click)="navigateTo('asset-detail')">
       <div class="card-header">
-        <h3 class="text-sm">{{account.name}}</h3>
+        <h3 class="text-sm">{{account()?.name}}</h3>
       </div>
       <div class="card-content">
-        <div class="balance text-lg font-semibold text-right" *ngIf="showBalance">
-          {{account.balance | currency:account.ccy}}
+        <div class="balance text-lg font-semibold text-right" *ngIf="showBalance()">
+          {{account()?.balance | currency:account()?.ccy}}
         </div>
-        <div class="balance-hidden text-right" *ngIf="!showBalance">
+        <div class="balance-hidden text-right" *ngIf="!showBalance()">
           ••••••
         </div>
       </div>
