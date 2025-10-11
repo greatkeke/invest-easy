@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, inject, input, output } from '@angular/core';
+import { Component, OnInit, ElementRef, inject, input, output, viewChild } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -34,7 +34,7 @@ export class SecuritiesQueryComponent implements OnInit {
 
   readonly autofocus = input(false);
   readonly placeholder = input('');
-  @ViewChild('searchInput') searchInput!: ElementRef;
+  readonly searchInput = viewChild.required<ElementRef>('searchInput');
 
   searchQuery = '';
   searchResults: any[] = [];

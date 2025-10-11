@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewChecked, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewChecked, inject, viewChild } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
@@ -39,7 +39,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewChecked {
   private subscription: Subscription | null = null;
   private verboseContentChanged = false;
 
-  @ViewChild('verboseContentDiv') verboseContentElement!: ElementRef;
+  readonly verboseContentElement = viewChild.required<ElementRef>('verboseContentDiv');
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -58,7 +58,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    if (this.verboseContentChanged && this.verboseContentElement) {
+    if (this.verboseContentChanged && this.verboseContentElement()) {
       this.scrollToBottom();
       this.verboseContentChanged = false;
     }
@@ -66,7 +66,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   private scrollToBottom(): void {
     try {
-      const element = this.verboseContentElement.nativeElement;
+      const element = this.verboseContentElement().nativeElement;
       element.scrollTop = element.scrollHeight;
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
