@@ -33,7 +33,7 @@ const appPreset = definePreset(Material, {
       light: {
         primary: {
           color: '{red.950}',
-          inverseColor: '#ffffff',
+          contrastColor: '#ffffff',
           hoverColor: '{red.900}',
           activeColor: '{red.800}'
         },
@@ -47,7 +47,7 @@ const appPreset = definePreset(Material, {
       dark: {
         primary: {
           color: '{red.50}',
-          inverseColor: '{red.950}',
+          contrastColor: '{red.950}',
           hoverColor: '{red.100}',
           activeColor: '{red.200}'
         },
