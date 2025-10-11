@@ -5,35 +5,41 @@
       <input type="text" class="w-full" pInputText [(ngModel)]="searchQuery" (input)="onSearch()"
         [pAutoFocus]="autofocus" (focus)="onFocus()" (blur)="onBlur()" [placeholder]="!!!placeholder ? 'Search securites' : placeholder"
         i18n-placeholder />
-    </p-iconfield>
-    <p-button *ngIf="searchResults.length > 0" icon="pi pi-times" (click)="clearSearch()" variant="outlined"
-      severity="secondary" styleClass="h-full">
-    </p-button>
+      </p-iconfield>
+      @if (searchResults.length > 0) {
+        <p-button icon="pi pi-times" (click)="clearSearch()" variant="outlined"
+          severity="secondary" styleClass="h-full">
+        </p-button>
+      }
+    </div>
+
+    @if (searchResults.length > 0) {
+      <div>
+        <small>Search Results</small>
+        <p-listbox [options]="searchResults"  class="search-results"
+          (onClick)="selectResult($event.option.code)" [listStyle]="{'max-height':'15rem'}">
+          <ng-template let-result pTemplate="item">
+            <div class="result-item">
+              <div>{{result.name}} ({{result.code}})</div>
+            </div>
+          </ng-template>
+        </p-listbox>
+      </div>
+    }
+
+    @if (showLatestInstruments && instruments.length > 0) {
+      <div>
+        <small>Recent Securities</small>
+        <p-listbox [options]="instruments" class="search-results" (onClick)="selectResult($event.option.code)"
+          [listStyle]="{'max-height':'15rem'}">
+          <ng-template let-instrument pTemplate="item">
+            <div class="result-item">
+              <div>{{instrument.name}} ({{instrument.code}})</div>
+            </div>
+          </ng-template>
+        </p-listbox>
+      </div>
+    }
   </div>
 
-  <div *ngIf="searchResults.length > 0">
-    <small>Search Results</small>
-    <p-listbox [options]="searchResults"  class="search-results"
-      (onClick)="selectResult($event.option.code)" [listStyle]="{'max-height':'15rem'}">
-      <ng-template let-result pTemplate="item">
-        <div class="result-item">
-          <div>{{result.name}} ({{result.code}})</div>
-        </div>
-      </ng-template>
-    </p-listbox>
-  </div>
-
-  <div *ngIf="showLatestInstruments && instruments.length > 0">
-    <small>Recent Securities</small>
-    <p-listbox [options]="instruments" class="search-results" (onClick)="selectResult($event.option.code)"
-      [listStyle]="{'max-height':'15rem'}">
-      <ng-template let-instrument pTemplate="item">
-        <div class="result-item">
-          <div>{{instrument.name}} ({{instrument.code}})</div>
-        </div>
-      </ng-template>
-    </p-listbox>
-  </div>
-</div>
-
- <p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }" />
+  <p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }" />

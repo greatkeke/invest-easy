@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { CommonModule } from '@angular/common';
+
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { SkeletonModule } from 'primeng/skeleton';
 
@@ -10,7 +10,7 @@ import { SkeletonModule } from 'primeng/skeleton';
   selector: 'app-advertisement',
   templateUrl: './advertisement.component.html',
   styleUrls: ['./advertisement.component.scss'],
-  imports: [TopNavigationComponent, ProgressBarModule, ProgressSpinnerModule, CommonModule, SkeletonModule]
+  imports: [TopNavigationComponent, ProgressBarModule, ProgressSpinnerModule, SkeletonModule]
 })
 export class AdvertisementComponent {
   isLoading: boolean = true;

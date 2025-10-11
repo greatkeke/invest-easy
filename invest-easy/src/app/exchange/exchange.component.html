@@ -10,24 +10,28 @@
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
             <app-account-selector [options]="accounts" [(value)]="fromAccount"
-              (selectChange)="onSelectChange($event, true)" name="fromAccount"></app-account-selector>
+            (selectChange)="onSelectChange($event, true)" name="fromAccount"></app-account-selector>
 
             <p-inputNumber [(ngModel)]="fromAmount" name="fromAmount" placeholder="Amount" mode="decimal"
-              (onInput)="calculateAmount($event)"></p-inputNumber>
+            (onInput)="calculateAmount($event)"></p-inputNumber>
           </div>
 
           <div class="flex flex-col gap-2 text-sm">
-            <div *ngIf="fromAccount">Amount Available: {{fromAccount.balance | currency:
+            @if (fromAccount) {
+              <div>Amount Available: {{fromAccount.balance | currency:
               fromAccount.ccy:'symbol':'1.2-2'}}</div>
-            <div *ngIf="fromAccount && toAccount">Reference Rate: {{getExchangeRate(fromAccount.ccy, toAccount.ccy) |
-              number:'1.5-5'}}
-            </div>
+            }
+            @if (fromAccount && toAccount) {
+              <div>Reference Rate: {{getExchangeRate(fromAccount.ccy, toAccount.ccy) |
+                number:'1.5-5'}}
+              </div>
+            }
           </div>
         </div>
 
         <div>
           <p-button variant="outlined" icon="pi pi-arrow-right-arrow-left" styleClass="min-w-20"
-            (onClick)="exchangeFlag()"></p-button>
+          (onClick)="exchangeFlag()"></p-button>
         </div>
 
         <!-- To Group -->
@@ -36,18 +40,22 @@
 
           <div class="flex flex-wrap items-center gap-2 mb-4">
             <app-account-selector [options]="accounts" [(value)]="toAccount" name="toAccount"
-              (selectChange)="onSelectChange($event)"></app-account-selector>
+            (selectChange)="onSelectChange($event)"></app-account-selector>
 
             <p-inputNumber [(ngModel)]="toAmount" name="toAmount" placeholder="Amount" mode="decimal"
-              (onInput)="calculateAmount($event, false)"></p-inputNumber>
+            (onInput)="calculateAmount($event, false)"></p-inputNumber>
           </div>
 
           <div class="flex flex-col gap-2 text-sm">
-            <div *ngIf="toAccount">Amount Available: {{toAccount.balance | currency: toAccount.ccy:'symbol':'1.2-2'}}
-            </div>
-            <div *ngIf="fromAccount && toAccount">Reference Rate: {{getExchangeRate(toAccount.ccy, fromAccount.ccy) |
-              number: '1.5-5'}}
-            </div>
+            @if (toAccount) {
+              <div>Amount Available: {{toAccount.balance | currency: toAccount.ccy:'symbol':'1.2-2'}}
+              </div>
+            }
+            @if (fromAccount && toAccount) {
+              <div>Reference Rate: {{getExchangeRate(toAccount.ccy, fromAccount.ccy) |
+                number: '1.5-5'}}
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -58,14 +66,14 @@
           <li>Current page exchange rate is for reference purposes only. The actual rate will change.</li>
           <li>The processing time is for reference only. The actual processing time may vary.</li>
           <li>For the unsettled amount, it cannot be exchanged within self-accounts. Stocks costs two business days to
-            settle and futures costs one business day to settle.</li>
+          settle and futures costs one business day to settle.</li>
         </ol>
       </div>
 
       <div class="flex flex-col items-center mt-6">
         <p-button class="w-full p-4" styleClass="w-full" variant="outlined" label="Submit" type="Submit"></p-button>
         <a [routerLink]="['/transfer']" [queryParams]="{tab:'record'}" class="text-primary-500 underline">View Exchange
-          History</a>
+        History</a>
       </div>
     </form>
   </div>
@@ -76,16 +84,18 @@
     </ng-template>
     <div class="flex flex-col gap-2">
       <p>{{dialogMessage}}</p>
-      <div *ngIf="dialogSuccess && fromAccount && toAccount" class="grid grid-cols-2 gap-2 mt-2">
-        <div>From {{fromAccount.ccy}}:</div>
-        <div class="line-clamp-1 text-ellipsis">{{fromAmount | currency: fromAccount.ccy}}</div>
-        <div>To {{toAccount.ccy}}:</div>
-        <div class="line-clamp-1 text-ellipsis">{{toAmount | currency: toAccount.ccy}}</div>
-        <div>Rate:</div>
-        <div>{{getExchangeRate(fromAccount.ccy, toAccount.ccy) | number:'1.5-5'}}</div>
-        <div>Date:</div>
-        <div>{{completedDate | date:'medium'}}</div>
-      </div>
+      @if (dialogSuccess && fromAccount && toAccount) {
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <div>From {{fromAccount.ccy}}:</div>
+          <div class="line-clamp-1 text-ellipsis">{{fromAmount | currency: fromAccount.ccy}}</div>
+          <div>To {{toAccount.ccy}}:</div>
+          <div class="line-clamp-1 text-ellipsis">{{toAmount | currency: toAccount.ccy}}</div>
+          <div>Rate:</div>
+          <div>{{getExchangeRate(fromAccount.ccy, toAccount.ccy) | number:'1.5-5'}}</div>
+          <div>Date:</div>
+          <div>{{completedDate | date:'medium'}}</div>
+        </div>
+      }
     </div>
     <ng-template pTemplate="footer">
       <p-button label="OK" (onClick)="showDialog = false" variant="outlined"></p-button>

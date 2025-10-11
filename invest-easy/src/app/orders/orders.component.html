@@ -1,5 +1,5 @@
 <div class="orders-container">
-  <p-table [value]="orders" [scrollable]="true" scrollHeight="flex" [rows]="10" 
+  <p-table [value]="orders" [scrollable]="true" scrollHeight="flex" [rows]="10"
     dataKey="id" styleClass="p-datatable-striped" stripedRows>
     <ng-template #header>
       <tr>
@@ -27,13 +27,13 @@
       <tr>
         <td colspan="4" class="button-container">
           <p-button label="Quotes" size="small" variant="outlined" styleClass="mr-2"
-            (click)="navigateTo('/trade-stocks',{code: order.code})"></p-button>
+          (click)="navigateTo('/trade-stocks',{code: order.code})"></p-button>
           <p-button label="Edit" size="small" variant="outlined" styleClass="mr-2"
-            [disabled]="order.status == 'FILLED'"></p-button>
+          [disabled]="order.status == 'FILLED'"></p-button>
           <p-button label="Cancel" size="small" variant="outlined" styleClass="mr-2"
-            [disabled]="order.status == 'FILLED'"></p-button>
+          [disabled]="order.status == 'FILLED'"></p-button>
           <p-button label="Details" size="small" variant="outlined" styleClass=""
-            (click)="navigateTo('/order-detail',{id:order.id})"></p-button>
+          (click)="navigateTo('/order-detail',{id:order.id})"></p-button>
         </td>
       </tr>
     </ng-template>
@@ -48,12 +48,18 @@
   </p-table>
 
   <div class="load-more-container">
-    <div *ngIf="!allLoaded" class="load-more" (click)="loadOrders()">
-      <i *ngIf="loading" class="pi pi-spinner pi-spin text-red-500 mr-2"></i>
-      <small class="text-stone-500">Load more orders</small>
-    </div>
-    <div *ngIf="allLoaded && !loading" class="all-loaded">
-      All orders loaded
-    </div>
+    @if (!allLoaded) {
+      <div class="load-more" (click)="loadOrders()">
+        @if (loading) {
+          <i class="pi pi-spinner pi-spin text-red-500 mr-2"></i>
+        }
+        <small class="text-stone-500">Load more orders</small>
+      </div>
+    }
+    @if (allLoaded && !loading) {
+      <div class="all-loaded">
+        All orders loaded
+      </div>
+    }
   </div>
 </div>

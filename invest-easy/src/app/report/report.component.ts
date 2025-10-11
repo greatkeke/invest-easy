@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -17,14 +17,13 @@ import { SseClient } from 'ngx-sse-client';
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss'],
   imports: [
-    CommonModule,
     FormsModule,
     CardModule,
     ButtonModule,
     TableModule,
     RouterModule,
     TopNavigationComponent
-  ]
+]
 })
 export class ReportComponent implements OnInit, OnDestroy, AfterViewChecked {
   reportContent: string = '';

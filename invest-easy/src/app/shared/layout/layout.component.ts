@@ -1,14 +1,11 @@
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-layout',
-  imports: [CommonModule,
-    RouterOutlet,
-    RouterModule,
-    ButtonModule,],
+  imports: [RouterOutlet, RouterModule, ButtonModule],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })

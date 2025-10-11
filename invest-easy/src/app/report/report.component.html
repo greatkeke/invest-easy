@@ -4,64 +4,73 @@
   <div class="content-section">
     <div class="header-actions">
       <h2>报告生成</h2>
-      <p-button 
-        *ngIf="!loading"
-        label="重新生成" 
-        icon="pi pi-refresh" 
-        (onClick)="generateReport()"
-        styleClass="p-button-primary">
-      </p-button>
+      @if (!loading) {
+        <p-button
+          label="重新生成"
+          icon="pi pi-refresh"
+          (onClick)="generateReport()"
+          styleClass="p-button-primary">
+        </p-button>
+      }
     </div>
 
     <p-card>
       <div class="report-content-section">
-        <div class="loading-indicator" *ngIf="loading">
-          <div class="loading-spinner">
-            <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-            <p>正在生成报告，请稍候...</p>
+        @if (loading) {
+          <div class="loading-indicator">
+            <div class="loading-spinner">
+              <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+              <p>正在生成报告，请稍候...</p>
+            </div>
           </div>
-        </div>
+        }
 
         <div class="report-output">
           <!-- Verbose Content Section -->
-          <div class="verbose-section" *ngIf="verboseContent">
-            <div class="verbose-header">
-              <h4>详细过程</h4>
-              <button 
-                class="toggle-button" 
-                (click)="isVerboseExpanded = !isVerboseExpanded"
-                [attr.aria-expanded]="isVerboseExpanded">
-                {{ isVerboseExpanded ? '收起' : '展开' }}
-              </button>
+          @if (verboseContent) {
+            <div class="verbose-section">
+              <div class="verbose-header">
+                <h4>详细过程</h4>
+                <button
+                  class="toggle-button"
+                  (click)="isVerboseExpanded = !isVerboseExpanded"
+                  [attr.aria-expanded]="isVerboseExpanded">
+                  {{ isVerboseExpanded ? '收起' : '展开' }}
+                </button>
+              </div>
+              <div
+                #verboseContentDiv
+                class="verbose-content"
+                [class.expanded]="isVerboseExpanded"
+                [class.collapsed]="!isVerboseExpanded">
+                <pre>{{ verboseContent }}</pre>
+              </div>
             </div>
-            <div 
-              #verboseContentDiv
-              class="verbose-content" 
-              [class.expanded]="isVerboseExpanded"
-              [class.collapsed]="!isVerboseExpanded">
-              <pre>{{ verboseContent }}</pre>
-            </div>
-          </div>
+          }
 
           <div class="report-header">
             <h3>报告内容</h3>
             <small>报告代码: {{ code }}</small>
           </div>
-          <div class="report-text" *ngIf="reportContent">
-            <div class="markdown-content" [innerHTML]="renderedContent"></div>
-          </div>
+          @if (reportContent) {
+            <div class="report-text">
+              <div class="markdown-content" [innerHTML]="renderedContent"></div>
+            </div>
+          }
         </div>
 
-        <div class="empty-state" *ngIf="!loading && !reportContent">
-          <i class="pi pi-file" style="font-size: 3rem; color: #ccc;"></i>
-          <p>等待生成报告...</p>
-          <p-button 
-            label="开始生成" 
-            icon="pi pi-play" 
-            (onClick)="generateReport()"
-            styleClass="p-button-primary">
-          </p-button>
-        </div>
+        @if (!loading && !reportContent) {
+          <div class="empty-state">
+            <i class="pi pi-file" style="font-size: 3rem; color: #ccc;"></i>
+            <p>等待生成报告...</p>
+            <p-button
+              label="开始生成"
+              icon="pi pi-play"
+              (onClick)="generateReport()"
+              styleClass="p-button-primary">
+            </p-button>
+          </div>
+        }
       </div>
     </p-card>
   </div>

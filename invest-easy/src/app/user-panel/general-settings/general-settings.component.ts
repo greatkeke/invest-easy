@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TopNavigationComponent } from '../../shared/top-navigation/top-navigation.component';
@@ -19,7 +19,6 @@ import { ToastModule } from 'primeng/toast';
 @Component({
   selector: 'app-general-settings',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     TopNavigationComponent,
     InputTextModule,
@@ -30,7 +29,7 @@ import { ToastModule } from 'primeng/toast';
     CardModule,
     ButtonModule,
     ToastModule
-  ],
+],
   templateUrl: './general-settings.component.html',
   styleUrl: './general-settings.component.scss',
   providers: [MessageService]

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +15,6 @@ import { MessageService } from 'primeng/api';
   selector: 'app-securities-query',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     InputTextModule,
     ButtonModule,
@@ -24,7 +23,7 @@ import { MessageService } from 'primeng/api';
     InputIconModule,
     AutoFocusModule,
     ToastModule
-  ],
+],
   providers: [MessageService],
   templateUrl: './securities-query.component.html',
   styleUrls: ['./securities-query.component.scss']

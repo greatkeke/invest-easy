@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
 
 @Component({
   selector: 'app-top-navigation',
   templateUrl: './top-navigation.component.html',
-  imports: [CommonModule, ButtonModule],
+  imports: [ButtonModule],
   styles: []
 })
 export class TopNavigationComponent {

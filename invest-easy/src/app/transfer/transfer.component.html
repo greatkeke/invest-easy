@@ -3,9 +3,11 @@
   <app-top-navigation title="Transfer"></app-top-navigation>
 
   <!-- Loading Overlay -->
-  <div *ngIf="isLoading" class="loading-overlay">
-    <div class="loading-spinner"></div>
-  </div>
+  @if (isLoading) {
+    <div class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+  }
 
   <!-- Main Content -->
   <div class="flex-1 overflow-auto">
@@ -22,16 +24,16 @@
             <div class="p-field">
               <label for="toAccount" class="block mb-2 text-sm">To Account</label>
               <app-account-selector [options]="accounts" [(value)]="inForm.toAccount"
-                name="toAccount"></app-account-selector>
+              name="toAccount"></app-account-selector>
             </div>
             <div class="p-field">
               <label for="amount" class="block mb-2 text-sm">Amount</label>
               <p-inputNumber [(ngModel)]="inForm.amount" name="amount" required inputId="amount" mode="currency"
                 currency="USD" [min]="0" [max]="100000000" [step]="100" [showButtons]="true"
-                size="small"></p-inputNumber>
+              size="small"></p-inputNumber>
             </div>
             <p-button type="submit" label="Confirm" variant="outlined" styleClass="p-button-primary"
-              size="small"></p-button>
+            size="small"></p-button>
           </form>
         </p-tabpanel>
 
@@ -41,49 +43,49 @@
             <div class="p-field">
               <label for="fromAccount" class="block mb-2 text-sm">From Account</label>
               <app-account-selector [options]="accounts" [(value)]="outForm.fromAccount"
-                name="fromAccount"></app-account-selector>
+              name="fromAccount"></app-account-selector>
             </div>
             <!-- <div class="p-field">
-              <label for="balance" class="block mb-2 text-sm">Available Balance</label>
-              <p-inputNumber [(ngModel)]="outForm.balance" name="balance" readonly inputId="balance" mode="currency"
-                currency="USD" size="small"></p-inputNumber>
-            </div> -->
-            <div class="p-field">
-              <label for="amount" class="block mb-2 text-sm">Transfer Amount</label>
-              <p-inputNumber [(ngModel)]="outForm.amount" name="amount" required inputId="amount" mode="currency"
-                currency="USD" size="small"></p-inputNumber>
-            </div>
-            <div class="p-field">
-              <label for="password" class="block mb-2 text-sm">Password</label>
-              <p-password [(ngModel)]="outForm.password" name="password" required inputId="password" [feedback]="false"
-                size="small"></p-password>
-            </div>
-            <p-button type="submit" label="Confirm" variant="outlined" styleClass="p-button-primary"
-              size="small"></p-button>
-          </form>
-        </p-tabpanel>
+            <label for="balance" class="block mb-2 text-sm">Available Balance</label>
+            <p-inputNumber [(ngModel)]="outForm.balance" name="balance" readonly inputId="balance" mode="currency"
+            currency="USD" size="small"></p-inputNumber>
+          </div> -->
+          <div class="p-field">
+            <label for="amount" class="block mb-2 text-sm">Transfer Amount</label>
+            <p-inputNumber [(ngModel)]="outForm.amount" name="amount" required inputId="amount" mode="currency"
+            currency="USD" size="small"></p-inputNumber>
+          </div>
+          <div class="p-field">
+            <label for="password" class="block mb-2 text-sm">Password</label>
+            <p-password [(ngModel)]="outForm.password" name="password" required inputId="password" [feedback]="false"
+            size="small"></p-password>
+          </div>
+          <p-button type="submit" label="Confirm" variant="outlined" styleClass="p-button-primary"
+          size="small"></p-button>
+        </form>
+      </p-tabpanel>
 
-        <!-- Record Tab -->
-        <p-tabpanel [value]="2">
-          <app-history [RecordChanges]="RecordChangesAt"></app-history>
-        </p-tabpanel>
-      </p-tabpanels>
-    </p-tabs>
+      <!-- Record Tab -->
+      <p-tabpanel [value]="2">
+        <app-history [RecordChanges]="RecordChangesAt"></app-history>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</div>
+
+<div class="security-message">
+  <p>Be careful of security. Never tell anyone about the security code.</p>
+</div>
+
+<!-- Transfer Success Dialog -->
+<p-dialog header="Transfer Successful" [(visible)]="showSuccessDialog" [modal]="true">
+  <p>Transferred amount: {{ transferredAmount | currency }}</p>
+  <div class="flex justify-between mt-4">
+    <p-button (click)="checkRecord()" label="Check Record" styleClass="p-button-secondary"></p-button>
+    <p-button (click)="closeDialog()" label="OK" styleClass="p-button-primary"></p-button>
   </div>
+</p-dialog>
 
-  <div class="security-message">
-    <p>Be careful of security. Never tell anyone about the security code.</p>
-  </div>
-
-  <!-- Transfer Success Dialog -->
-  <p-dialog header="Transfer Successful" [(visible)]="showSuccessDialog" [modal]="true">
-    <p>Transferred amount: {{ transferredAmount | currency }}</p>
-    <div class="flex justify-between mt-4">
-      <p-button (click)="checkRecord()" label="Check Record" styleClass="p-button-secondary"></p-button>
-      <p-button (click)="closeDialog()" label="OK" styleClass="p-button-primary"></p-button>
-    </div>
-  </p-dialog>
-
-  <!-- Security Tip -->
-  <p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }"></p-toast>
+<!-- Security Tip -->
+<p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }"></p-toast>
 </div>

@@ -1,65 +1,77 @@
 <app-top-navigation [title]="groupName"></app-top-navigation>
 <div class="p-4 max-w-3xl mx-auto">
   <form [formGroup]="form" class="flex flex-col space-y-2">
-    <p-card *ngFor="let item of items" [header]="item.name">
-      <p>
-        <small>{{item.note}}</small>
-      </p>
-      <ng-container [ngSwitch]="item.type">
-
-        <!-- Text Input -->
-        <input pInputText *ngSwitchCase="'TEXT'" [id]="item.name" [formControlName]="item.name" styleClass="w-full" />
-
-        <!-- Number Input -->
-        <p-inputNumber *ngSwitchCase="'NUMBER'" [id]="item.name" [formControlName]="item.name" styleClass="w-full">
-        </p-inputNumber>
-
-        <!-- Boolean Checkbox -->
-        <div *ngSwitchCase="'BOOLEAN'">
-          <p-checkbox [binary]="true" [inputId]="item.name" trueValue="true" falseValue="false"
-            [formControlName]="item.name" [readonly]="!item.editable">
-          </p-checkbox>
-          <label [for]="item.name" class="ml-2">{{item.name}}</label>
-        </div>
-
-        <!-- Email Input -->
-        <input pInputText *ngSwitchCase="'EMAIL'" [id]="item.name" [formControlName]="item.name" class="w-full"
-          type="email" />
-
-        <!-- Phone Input -->
-        <p-inputMask *ngSwitchCase="'PHONE'" [id]="item.name" [formControlName]="item.name" mask="(999) 999-9999"
-          styleClass="w-full">
-        </p-inputMask>
-
-        <!-- Address Textarea -->
-        <textarea pTextarea *ngSwitchCase="'ADDRESS'" [id]="item.name" [formControlName]="item.name"
-          class="w-full border-solid border-1 border-gray-500 rounded-sm" rows="3" cols="30">
-        </textarea>
-
-        <!-- Options -->
-        <div *ngSwitchCase="'OPTIONS'">
-          <div [formGroupName]="item.name">
-            <div *ngFor="let option of fromOptions(item.item_value)">
-              <p-checkbox [formControlName]="option" [value]="option" [binary]="true" [inputId]="option" />
-              <label [for]="option" class="ml-2">{{option}}</label>
+    @for (item of items; track item) {
+      <p-card [header]="item.name">
+        <p>
+          <small>{{item.note}}</small>
+        </p>
+        @switch (item.type) {
+          <!-- Text Input -->
+          @case ('TEXT') {
+            <input pInputText [id]="item.name" [formControlName]="item.name" styleClass="w-full" />
+          }
+          <!-- Number Input -->
+          @case ('NUMBER') {
+            <p-inputNumber [id]="item.name" [formControlName]="item.name" styleClass="w-full">
+            </p-inputNumber>
+          }
+          <!-- Boolean Checkbox -->
+          @case ('BOOLEAN') {
+            <div>
+              <p-checkbox [binary]="true" [inputId]="item.name" trueValue="true" falseValue="false"
+                [formControlName]="item.name" [readonly]="!item.editable">
+              </p-checkbox>
+              <label [for]="item.name" class="ml-2">{{item.name}}</label>
             </div>
-          </div>
-        </div>
+          }
+          <!-- Email Input -->
+          @case ('EMAIL') {
+            <input pInputText [id]="item.name" [formControlName]="item.name" class="w-full"
+              type="email" />
+          }
+          <!-- Phone Input -->
+          @case ('PHONE') {
+            <p-inputMask [id]="item.name" [formControlName]="item.name" mask="(999) 999-9999"
+              styleClass="w-full">
+            </p-inputMask>
+          }
+          <!-- Address Textarea -->
+          @case ('ADDRESS') {
+            <textarea pTextarea [id]="item.name" [formControlName]="item.name"
+              class="w-full border-solid border-1 border-gray-500 rounded-sm" rows="3" cols="30">
+            </textarea>
+          }
+          <!-- Options -->
+          @case ('OPTIONS') {
+            <div>
+              <div [formGroupName]="item.name">
+                @for (option of fromOptions(item.item_value); track option) {
+                  <div>
+                    <p-checkbox [formControlName]="option" [value]="option" [binary]="true" [inputId]="option" />
+                    <label [for]="option" class="ml-2">{{option}}</label>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          <!-- Single -->
+          @case ('SINGLE') {
+            <div>
+              <p-select [formControlName]="item.name" [options]="getOptions(item.item_value)" [placeholder]="item.note"
+                class="w-full" />
+              </div>
+            }
+          }
+        </p-card>
+      }
 
-        <!-- Single -->
-        <div *ngSwitchCase="'SINGLE'">
-          <p-select [formControlName]="item.name" [options]="getOptions(item.item_value)" [placeholder]="item.note"
-            class="w-full" />
-        </div>
-      </ng-container>
-    </p-card>
-
-    <div class="w-full my-4">
-      <p-button label="Save" (click)="onSave()" styleClass="w-full"></p-button>
-    </div>
-  </form>
-</div>
+      <div class="w-full my-4">
+        <p-button label="Save" (click)="onSave()" styleClass="w-full"></p-button>
+      </div>
+    </form>
+  </div>
 
 
-<!-- Security Tip -->
-<p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }"></p-toast>
+  <!-- Security Tip -->
+  <p-toast [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }"></p-toast>

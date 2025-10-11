@@ -4,14 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
-import { CommonModule } from '@angular/common';
+
 import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-instrument-detail',
   templateUrl: './instrument-detail.component.html',
   styleUrls: ['./instrument-detail.component.scss'],
-  imports: [ButtonModule, CardModule, TopNavigationComponent, CommonModule, ToastModule],
+  imports: [ButtonModule, CardModule, TopNavigationComponent, ToastModule],
   providers: [MessageService]
 })
 export class InstrumentDetailComponent implements OnInit {

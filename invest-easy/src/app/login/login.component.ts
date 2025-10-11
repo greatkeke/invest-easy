@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -31,9 +31,7 @@ interface SignUpResponse {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, PasswordModule,
-    ButtonModule, InputIconModule, IconFieldModule, InputTextModule,
-    IftaLabelModule, CheckboxModule, ImageModule, ProgressSpinnerModule],
+  imports: [FormsModule, InputTextModule, PasswordModule, ButtonModule, InputIconModule, IconFieldModule, InputTextModule, IftaLabelModule, CheckboxModule, ImageModule, ProgressSpinnerModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })

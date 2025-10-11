@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { OrdersService } from '../shared/api-services/orders.service';
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule],
+  imports: [TableModule, ButtonModule],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss']
 })
