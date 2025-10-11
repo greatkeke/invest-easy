@@ -1,47 +1,47 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { GeneralSettingsComponent } from './user-panel/general-settings/general-settings.component';
-import { HomeComponent } from './home/home.component';
-import { MarketComponent } from './market/market.component';
-import { NewsComponent } from './news/news.component';
-import { TradeComponent } from './trade/trade.component';
-import { TransferComponent } from './transfer/transfer.component';
-import { AssetDetailComponent } from './asset-detail/asset-detail.component';
-import { TradeStocksComponent } from './trade/trade-stocks.component';
-import { LayoutComponent } from './shared/layout/layout.component';
-import { ExchangeComponent } from './exchange/exchange.component';
-import { InstrumentDetailComponent } from './instrument-detail/instrument-detail.component';
-import { UserPanelComponent } from './user-panel/user-panel.component';
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { AuthGuard } from './shared/auth.guard';
-import { AdvertisementComponent } from './advertisement/advertisement.component';
-import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
-import { ContactDetailComponent } from './user-panel/contact-detail/contact-detail.component';
-import { ReportComponent } from './report/report.component';
+
+
+
+
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'login', loadComponent: () => import('./login/login.component').then(m => m.LoginComponent) },
   {
     path: '',
-    component: LayoutComponent,
+    loadComponent: () => import('./shared/layout/layout.component').then(m => m.LayoutComponent),
     children: [
       {
         path: 'home',
-        component: HomeComponent,
+        loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
         canActivate: [AuthGuard]
       },
       {
         path: 'market',
-        component: MarketComponent,
+        loadComponent: () => import('./market/market.component').then(m => m.MarketComponent),
         canActivate: [AuthGuard]
       },
       {
         path: 'news',
-        component: NewsComponent,
+        loadComponent: () => import('./news/news.component').then(m => m.NewsComponent),
         canActivate: [AuthGuard]
       },
       {
         path: 'trade',
-        component: TradeComponent,
+        loadComponent: () => import('./trade/trade.component').then(m => m.TradeComponent),
         canActivate: [AuthGuard]
       },
       { path: '', redirectTo: '/home', pathMatch: 'full' }
@@ -49,62 +49,62 @@ export const routes: Routes = [
   },
   {
     path: 'user-center',
-    component: UserPanelComponent,
+    loadComponent: () => import('./user-panel/user-panel.component').then(m => m.UserPanelComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'trade-stocks',
-    component: TradeStocksComponent,
+    loadComponent: () => import('./trade/trade-stocks.component').then(m => m.TradeStocksComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'asset-detail',
-    component: AssetDetailComponent,
+    loadComponent: () => import('./asset-detail/asset-detail.component').then(m => m.AssetDetailComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'transfer/:tab',
-    component: TransferComponent,
+    loadComponent: () => import('./transfer/transfer.component').then(m => m.TransferComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'transfer',
-    component: TransferComponent,
+    loadComponent: () => import('./transfer/transfer.component').then(m => m.TransferComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'exchange',
-    component: ExchangeComponent,
+    loadComponent: () => import('./exchange/exchange.component').then(m => m.ExchangeComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'instrument/:symbol',
-    component: InstrumentDetailComponent,
+    loadComponent: () => import('./instrument-detail/instrument-detail.component').then(m => m.InstrumentDetailComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'contact-detail',
-    component: ContactDetailComponent,
+    loadComponent: () => import('./user-panel/contact-detail/contact-detail.component').then(m => m.ContactDetailComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'advertisement',
-    component: AdvertisementComponent,
+    loadComponent: () => import('./advertisement/advertisement.component').then(m => m.AdvertisementComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'general-settings',
-    component: GeneralSettingsComponent,
+    loadComponent: () => import('./user-panel/general-settings/general-settings.component').then(m => m.GeneralSettingsComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'order-detail',
-    component: OrderDetailComponent,
+    loadComponent: () => import('./orders/order-detail/order-detail.component').then(m => m.OrderDetailComponent),
     canActivate: [AuthGuard]
   },
   {
     path: 'report',
-    component: ReportComponent,
+    loadComponent: () => import('./report/report.component').then(m => m.ReportComponent),
     canActivate: [AuthGuard]
   }
 ];
