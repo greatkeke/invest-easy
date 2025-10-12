@@ -1,4 +1,4 @@
-<app-top-navigation [title]="groupName" />
+<app-top-navigation [title]="groupName()" />
 <div class="p-4 max-w-3xl mx-auto">
   <form [formGroup]="form" class="flex flex-col space-y-2">
     @for (item of items; track item) {

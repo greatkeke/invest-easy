@@ -3,7 +3,7 @@
   <app-top-navigation title="Transfer" />
 
   <!-- Loading Overlay -->
-  @if (isLoading) {
+  @if (isLoading()) {
     <div class="loading-overlay">
       <div class="loading-spinner"></div>
     </div>
@@ -11,7 +11,7 @@
 
   <!-- Main Content -->
   <div class="flex-1 overflow-auto">
-    <p-tabs [value]="activeTabIndex" (valueChange)="onTabChange($event)" scrollable>
+    <p-tabs [value]="activeTabIndex()" (valueChange)="onTabChange($event)" scrollable>
       <p-tablist>
         <p-tab [value]="0">To Payees/FPS</p-tab>
         <p-tab [value]="1">To HSBC accounts</p-tab>
@@ -23,12 +23,12 @@
           <form (ngSubmit)="submitIn()" class="space-y-4">
             <div class="p-field">
               <label for="toAccount" class="block mb-2 text-sm">To Account</label>
-              <app-account-selector [options]="accounts" [(value)]="inForm.toAccount"
+              <app-account-selector [options]="accounts()" [(value)]="inForm().toAccount"
               name="toAccount" />
             </div>
             <div class="p-field">
               <label for="amount" class="block mb-2 text-sm">Amount</label>
-              <p-inputNumber [(ngModel)]="inForm.amount" name="amount" required inputId="amount" mode="currency"
+              <p-inputNumber [(ngModel)]="inForm().amount" name="amount" required inputId="amount" mode="currency"
                 currency="USD" [min]="0" [max]="100000000" [step]="100" [showButtons]="true"
               size="small" />
             </div>
@@ -42,22 +42,22 @@
           <form (ngSubmit)="submitOut()" class="space-y-4">
             <div class="p-field">
               <label for="fromAccount" class="block mb-2 text-sm">From Account</label>
-              <app-account-selector [options]="accounts" [(value)]="outForm.fromAccount"
+              <app-account-selector [options]="accounts()" [(value)]="outForm().fromAccount"
               name="fromAccount" />
             </div>
             <!-- <div class="p-field">
             <label for="balance" class="block mb-2 text-sm">Available Balance</label>
-            <p-inputNumber [(ngModel)]="outForm.balance" name="balance" readonly inputId="balance" mode="currency"
+            <p-inputNumber [(ngModel)]="outForm().balance" name="balance" readonly inputId="balance" mode="currency"
             currency="USD" size="small"></p-inputNumber>
           </div> -->
           <div class="p-field">
             <label for="amount" class="block mb-2 text-sm">Transfer Amount</label>
-            <p-inputNumber [(ngModel)]="outForm.amount" name="amount" required inputId="amount" mode="currency"
+            <p-inputNumber [(ngModel)]="outForm().amount" name="amount" required inputId="amount" mode="currency"
             currency="USD" size="small" />
           </div>
           <div class="p-field">
             <label for="password" class="block mb-2 text-sm">Password</label>
-            <p-password [(ngModel)]="outForm.password" name="password" required inputId="password" [feedback]="false"
+            <p-password [(ngModel)]="outForm().password" name="password" required inputId="password" [feedback]="false"
             size="small" />
           </div>
           <p-button type="submit" label="Confirm" variant="outlined" styleClass="p-button-primary"
@@ -67,7 +67,7 @@
 
       <!-- Record Tab -->
       <p-tabpanel [value]="2">
-        <app-history [RecordChanges]="RecordChangesAt" />
+        <app-history [RecordChanges]="RecordChangesAt()" />
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
@@ -78,8 +78,8 @@
 </div>
 
 <!-- Transfer Success Dialog -->
-<p-dialog header="Transfer Successful" [(visible)]="showSuccessDialog" [modal]="true">
-  <p>Transferred amount: {{ transferredAmount | currency }}</p>
+<p-dialog header="Transfer Successful" [visible]="showSuccessDialog()" (visibleChange)="showSuccessDialog.set($event)" [modal]="true">
+  <p>Transferred amount: {{ transferredAmount() | currency }}</p>
   <div class="flex justify-between mt-4">
     <p-button (click)="checkRecord()" label="Check Record" styleClass="p-button-secondary" />
     <p-button (click)="closeDialog()" label="OK" styleClass="p-button-primary" />

@@ -17,63 +17,63 @@
     <div class="dashboard-header">
       <h3 class="cursor-pointer text-md font-semibold">Total Asset</h3>
       <button class="toggle-metrics" (click)="toggleMetrics($event)">
-        <i class="pi" [class]="showMetrics ? 'pi-eye' : 'pi-eye-slash'"></i>
+        <i class="pi" [class]="showMetrics() ? 'pi-eye' : 'pi-eye-slash'"></i>
       </button>
     </div>
-    @if (overviewAccount) {
+    @if (overviewAccount()) {
       <div class="metrics px-6 py-6">
         <div class="metric-row">
           <div class="metric">
-            @if (showMetrics) {
-              <span class="value font-bold">{{ overviewAccount.balance + totalMV | currency:
-              overviewAccount.ccy }}</span>
+            @if (showMetrics()) {
+              <span class="value font-bold">{{ overviewAccount()!.balance + totalMV() | currency:
+              overviewAccount()!.ccy }}</span>
             }
-            @if (!showMetrics) {
+            @if (!showMetrics()) {
               <span class="value text-sm">••••••</span>
             }
           </div>
         </div>
         <div class="metric-row">
           <div class="metric">
-            <span class="label text-sm">{{overviewAccount.name}}</span>
-            @if (showMetrics) {
-              <span class="value text-sm">{{ overviewAccount.balance | currency:
-              overviewAccount.ccy }}</span>
+            <span class="label text-sm">{{overviewAccount()!.name}}</span>
+            @if (showMetrics()) {
+              <span class="value text-sm">{{ overviewAccount()!.balance | currency:
+              overviewAccount()!.ccy }}</span>
             }
-            @if (!showMetrics) {
+            @if (!showMetrics()) {
               <span class="value text-sm">••••••</span>
             }
           </div>
           <div class="metric">
             <span class="label text-sm">Market Value</span>
-            @if (showMetrics) {
-              <span class="value text-sm">{{ totalMV | currency:
-              overviewAccount.ccy }}</span>
+            @if (showMetrics()) {
+              <span class="value text-sm">{{ totalMV() | currency:
+              overviewAccount()!.ccy }}</span>
             }
-            @if (!showMetrics) {
+            @if (!showMetrics()) {
               <span class="value text-sm">••••••</span>
             }
           </div>
         </div>
-        @if (totalPL && totalTodayPL) {
+        @if (totalPL() && totalTodayPL()) {
           <div class="metric-row">
             <div class="metric">
               <span class="label text-sm">Current P/L</span>
-              @if (showMetrics) {
-                <span class="value text-sm" [class.positive]="totalPL>0"
-                  [class.negative]="totalPL<0">{{totalPL | currency: overviewAccount.ccy }}</span>
+              @if (showMetrics()) {
+                <span class="value text-sm" [class.positive]="totalPL()! > 0"
+                  [class.negative]="totalPL()! < 0">{{totalPL()! | currency: overviewAccount()!.ccy }}</span>
                 }
-                @if (!showMetrics) {
+                @if (!showMetrics()) {
                   <span class="value text-sm">••••••</span>
                 }
               </div>
               <div class="metric">
                 <span class="label text-sm">Today's P/L</span>
-                @if (showMetrics) {
-                  <span class="value text-sm" [class.positive]="totalTodayPL>0"
-                    [class.negative]="totalTodayPL<0">{{totalTodayPL | currency: overviewAccount.ccy}}</span>
+                @if (showMetrics()) {
+                  <span class="value text-sm" [class.positive]="totalTodayPL()! > 0"
+                    [class.negative]="totalTodayPL()! < 0">{{totalTodayPL()! | currency: overviewAccount()!.ccy}}</span>
                   }
-                  @if (!showMetrics) {
+                  @if (!showMetrics()) {
                     <span class="value text-sm">••••••</span>
                   }
                 </div>
@@ -83,7 +83,7 @@
         }
       </div>
 
-      @for(group of groupPositions | keyvalue; track group.key){
+      @for(group of groupPositions() | keyvalue; track group.key){
         <div class="mt-4">
           <h3 class="text-md font-semibold">
             <span>Positions</span>

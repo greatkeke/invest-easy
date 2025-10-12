@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -65,20 +65,22 @@ export class TradeStocksComponent implements OnInit {
   private location = inject(Location);
 
   today = new Date();
-  marketSnapshot: MarketSnapshot | null = null;
-  loading = true;
-  isWatched = false;
+  
+  // Signal-based state
+  marketSnapshot = signal<MarketSnapshot | null>(null);
+  loading = signal(true);
+  isWatched = signal(false);
   documentStyle!: CSSStyleDeclaration;
 
-  tradeType = 'buy';
-  security_code = '';
+  tradeType = signal('buy');
+  security_code = signal('');
 
-  dialogVisible = false;
+  dialogVisible = signal(false);
   options: any = {};
-  instrument: any = {};
+  instrument = signal<any>({});
 
   platformId = inject(PLATFORM_ID);
-  displayPreview = false;
+  displayPreview = signal(false);
   // Trading info is now dynamically loaded from market snapshot
 
   // Form data
@@ -86,37 +88,37 @@ export class TradeStocksComponent implements OnInit {
     { label: 'Limit price', value: 'limit' },
     { label: 'Market price', value: 'market' }
   ];
-  accounts: AccountBalance[] = [];
-  orderForm = {
+  accounts = signal<AccountBalance[]>([]);
+  orderForm = signal({
     type: this.orderTypes[0],
     price: 0,
     quantity: 100,
     goodUntil: new Date(),
-    payFrom: this.accounts.length > 0 ? this.accounts[0] : { id: '', name: '', balance: 0.0, ccy: "HKD", flag: 'hk' }
-  };
+    payFrom: { id: '', name: '', balance: 0.0, ccy: "HKD", flag: 'hk' } as AccountBalance
+  });
 
   async ngOnInit() {
     this.initChart();
     let params = this.route.snapshot?.queryParams;
     if (params['trade'] === 'sell') {
-      this.tradeType = 'sell';
+      this.tradeType.set('sell');
     }
-    this.security_code = params["code"];
-    if (!!!this.security_code) {
+    this.security_code.set(params["code"] || '');
+    if (!this.security_code()) {
       this.showSecurityDialog();
-    } else if (this.security_code) {
-      this.loadMarketData(this.security_code);
-      this.loadRTData(this.security_code);
+    } else if (this.security_code()) {
+      this.loadMarketData(this.security_code());
+      this.loadRTData(this.security_code());
       this.checkIfWatched();
     }
     await this.loadAccounts();
-    this.marketService.getInstrumentByCode(this.security_code).subscribe({
+    this.marketService.getInstrumentByCode(this.security_code()).subscribe({
       next: (data: any[]) => {
-        this.instrument = data;
-        let ccy = this.instrument.ccy;
-        let matched = this.accounts.filter(x => x.ccy === ccy);
-        if (!!matched) {
-          this.orderForm.payFrom = matched[0];
+        this.instrument.set(data);
+        let ccy = this.instrument().ccy;
+        let matched = this.accounts().filter(x => x.ccy === ccy);
+        if (!!matched && matched.length > 0) {
+          this.orderForm.update(form => ({ ...form, payFrom: matched[0] }));
         }
       }
     })
@@ -169,17 +171,17 @@ export class TradeStocksComponent implements OnInit {
 
 
   showSecurityDialog() {
-    this.dialogVisible = true;
+    this.dialogVisible.set(true);
   }
 
   onSecuritySelected(code: string) {
-    const params = new HttpParams().appendAll({ code: code, trade: this.tradeType });
+    const params = new HttpParams().appendAll({ code: code, trade: this.tradeType() });
     this.location.replaceState(location.pathname, params.toString());
 
-    this.security_code = code;
-    this.dialogVisible = false;
-    this.loadMarketData(this.security_code);
-    this.loadRTData(this.security_code);
+    this.security_code.set(code);
+    this.dialogVisible.set(false);
+    this.loadMarketData(code);
+    this.loadRTData(code);
   }
 
   closeQuery() {
@@ -190,8 +192,8 @@ export class TradeStocksComponent implements OnInit {
     try {
       const accounts = await this.accountsService.fetchAccountBalances();
       if (accounts && accounts.length > 0) {
-        this.accounts = accounts;
-        this.orderForm.payFrom = accounts[0];
+        this.accounts.set(accounts);
+        this.orderForm.update(form => ({ ...form, payFrom: accounts[0] }));
       }
     } catch (error) {
       this.messageService.add({
@@ -203,13 +205,14 @@ export class TradeStocksComponent implements OnInit {
   }
 
   loadMarketData(code: string) {
-    this.loading = true;
+    this.loading.set(true);
     this.marketService.getMarketSnapshot([code]).subscribe({
       next: (snapshots) => {
         if (snapshots && snapshots.length > 0) {
-          this.marketSnapshot = snapshots[0];
-          this.orderForm.price = this.marketSnapshot.last_price;
+          this.marketSnapshot.set(snapshots[0]);
+          this.orderForm.update(form => ({ ...form, price: snapshots[0].last_price }));
         }
+        this.loading.set(false);
       },
       error: (error) => {
         this.messageService.add({
@@ -217,7 +220,7 @@ export class TradeStocksComponent implements OnInit {
           summary: 'Error',
           detail: 'Failed to load market data'
         });
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
@@ -238,7 +241,7 @@ export class TradeStocksComponent implements OnInit {
             ]
           };
         }
-        this.loading = false;
+        this.loading.set(false);
       },
       error: (error: any) => {
         this.messageService.add({
@@ -246,7 +249,7 @@ export class TradeStocksComponent implements OnInit {
           summary: 'Error',
           detail: 'Failed to load real-time data'
         });
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
@@ -266,7 +269,7 @@ export class TradeStocksComponent implements OnInit {
 
   // Calculate estimated total
   get estimatedTotal(): number {
-    return this.orderForm.price * this.orderForm.quantity;
+    return this.orderForm().price * this.orderForm().quantity;
   }
 
   goBack() {
@@ -279,11 +282,11 @@ export class TradeStocksComponent implements OnInit {
   }
 
   showPreview() {
-    this.displayPreview = true;
+    this.displayPreview.set(true);
   }
 
   async confirmOrder() {
-    if (!!!this.security_code) {
+    if (!this.security_code()) {
       this.messageService.add({
         severity: 'error',
         summary: 'Order Failed',
@@ -294,13 +297,13 @@ export class TradeStocksComponent implements OnInit {
 
     try {
       const request = {
-        account_id: this.orderForm.payFrom.id,
-        code: this.security_code,
-        price: this.orderForm.price,
-        quantity: this.orderForm.quantity
+        account_id: this.orderForm().payFrom.id,
+        code: this.security_code(),
+        price: this.orderForm().price,
+        quantity: this.orderForm().quantity
       };
 
-      if (this.tradeType === 'buy') {
+      if (this.tradeType() === 'buy') {
         await this.tradeService.tradeStock(request);
         this.messageService.add({
           severity: 'success',
@@ -315,7 +318,7 @@ export class TradeStocksComponent implements OnInit {
           detail: 'Your sell order has been placed successfully'
         });
       }
-      this.displayPreview = false;
+      this.displayPreview.set(false);
     } catch (error) {
       this.messageService.add({
         severity: 'error',
@@ -326,22 +329,22 @@ export class TradeStocksComponent implements OnInit {
   }
 
   cancelPreview() {
-    this.displayPreview = false;
+    this.displayPreview.set(false);
   }
 
   addToWatchlist() {
-    if (!this.security_code || !this.marketSnapshot) {
+    if (!this.security_code() || !this.marketSnapshot()) {
       return;
     }
 
-    if (this.isWatched) {
-      this.watchlistService.removeFromWatchlist(this.security_code).subscribe({
+    if (this.isWatched()) {
+      this.watchlistService.removeFromWatchlist(this.security_code()).subscribe({
         next: () => {
-          this.isWatched = false;
+          this.isWatched.set(false);
           this.messageService.add({
             severity: 'success',
             summary: 'Removed from Watchlist',
-            detail: `${this.marketSnapshot?.name} has been removed from your watchlist`
+            detail: `${this.marketSnapshot()?.name} has been removed from your watchlist`
           });
         },
         error: () => {
@@ -353,13 +356,13 @@ export class TradeStocksComponent implements OnInit {
         }
       });
     } else {
-      this.watchlistService.addToWatchlist(this.security_code).subscribe({
+      this.watchlistService.addToWatchlist(this.security_code()).subscribe({
         next: () => {
-          this.isWatched = true;
+          this.isWatched.set(true);
           this.messageService.add({
             severity: 'success',
             summary: 'Added to Watchlist',
-            detail: `${this.marketSnapshot?.name} has been added to your watchlist`
+            detail: `${this.marketSnapshot()?.name} has been added to your watchlist`
           });
         },
         error: () => {
@@ -374,9 +377,9 @@ export class TradeStocksComponent implements OnInit {
   }
 
   checkIfWatched() {
-    this.watchlistService.isWatched(this.security_code).subscribe({
+    this.watchlistService.isWatched(this.security_code()).subscribe({
       next: (watched) => {
-        this.isWatched = watched;
+        this.isWatched.set(watched);
       },
       error: (error) => {
         console.error('Failed to check watchlist status', error);

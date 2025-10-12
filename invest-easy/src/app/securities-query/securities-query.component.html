@@ -6,16 +6,16 @@
         [pAutoFocus]="autofocus()" (focus)="onFocus()" (blur)="onBlur()" [placeholder]="!!!placeholder() ? 'Search securites' : placeholder()"
         i18n-placeholder />
       </p-iconfield>
-      @if (searchResults.length > 0) {
+      @if (searchResults().length > 0) {
         <p-button icon="pi pi-times" (click)="clearSearch()" variant="outlined"
           severity="secondary" styleClass="h-full" />
       }
     </div>
 
-    @if (searchResults.length > 0) {
+    @if (searchResults().length > 0) {
       <div>
         <small>Search Results</small>
-        <p-listbox [options]="searchResults"  class="search-results"
+        <p-listbox [options]="searchResults()"  class="search-results"
           (onClick)="selectResult($event.option.code)" [listStyle]="{'max-height':'15rem'}">
           <ng-template let-result pTemplate="item">
             <div class="result-item">
@@ -26,10 +26,10 @@
       </div>
     }
 
-    @if (showLatestInstruments && instruments.length > 0) {
+    @if (showLatestInstruments() && instruments().length > 0) {
       <div>
         <small>Recent Securities</small>
-        <p-listbox [options]="instruments" class="search-results" (onClick)="selectResult($event.option.code)"
+        <p-listbox [options]="instruments()" class="search-results" (onClick)="selectResult($event.option.code)"
           [listStyle]="{'max-height':'15rem'}">
           <ng-template let-instrument pTemplate="item">
             <div class="result-item">

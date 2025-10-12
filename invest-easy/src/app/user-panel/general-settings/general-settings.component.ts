@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -42,24 +42,26 @@ export class GeneralSettingsComponent implements OnInit {
 
   @Input() items: DefinedItem[] = [];
   form: FormGroup;
-  groupName: string = "";
-  isLoading = false;
-  error: string | null = null;
+  
+  // Signal-based state
+  groupName = signal("");
+  isLoading = signal(false);
+  error = signal<string | null>(null);
 
   constructor() {
     this.form = this.fb.group({});
   }
 
   ngOnInit() {
-    this.groupName = this.route.snapshot.queryParamMap.get('group') || '';
-    this.isLoading = true;
-    this.settingsService.getDefinedItems(this.groupName)
+    this.groupName.set(this.route.snapshot.queryParamMap.get('group') || '');
+    this.isLoading.set(true);
+    this.settingsService.getDefinedItems(this.groupName())
       .pipe(
         catchError(err => {
-          this.error = 'Failed to load settings';
+          this.error.set('Failed to load settings');
           return of([]);
         }),
-        finalize(() => this.isLoading = false)
+        finalize(() => this.isLoading.set(false))
       )
       .subscribe(items => {
         this.items = items;
@@ -130,14 +132,14 @@ export class GeneralSettingsComponent implements OnInit {
   onSave() {
     if (this.form.invalid) return;
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     const settings = this.form.getRawValue();
     Object.keys(settings).forEach(key => {
       if (typeof (settings[key]) != 'string') {
         settings[key] = JSON.stringify(settings[key]);
       }
     });
-    this.settingsService.updateSettings(this.groupName, settings)
+    this.settingsService.updateSettings(this.groupName(), settings)
       .pipe(
         catchError(err => {
           this.messageService.add({
@@ -148,7 +150,7 @@ export class GeneralSettingsComponent implements OnInit {
           });
           return of(false);
         }),
-        finalize(() => this.isLoading = false)
+        finalize(() => this.isLoading.set(false))
       )
       .subscribe((success: boolean) => {
         if (success) {

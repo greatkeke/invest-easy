@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { HistoryComponent } from '../history/history.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -46,65 +46,65 @@ export class TransferComponent implements OnInit {
   private location = inject(Location);
   private accountsService = inject(AccountsService);
 
-  accounts: Account[] = [];
+  // Signal-based state
+  accounts = signal<Account[]>([]);
 
-  inForm = {
+  inForm = signal({
     toAccount: null as Account | null,
     amount: null as number | null
-  };
+  });
 
-  outForm = {
+  outForm = signal({
     fromAccount: null as Account | null,
     balance: 0, // Mock balance
     amount: null as number | null,
     password: ''
-  };
+  });
 
-  showSuccessDialog = false;
-  transferredAmount = 0;
-  activeTabIndex = 0;
-  isLoading = false;
-  RecordChangesAt = new Date();
+  showSuccessDialog = signal(false);
+  transferredAmount = signal(0);
+  activeTabIndex = signal(0);
+  isLoading = signal(false);
+  RecordChangesAt = signal(new Date());
 
   ngOnInit() {
     const tab = this.route.snapshot.queryParamMap.get('tab');
     if (tab === 'out') {
-      this.activeTabIndex = 1;
+      this.activeTabIndex.set(1);
     } else if (tab === 'record') {
-      this.activeTabIndex = 2;
+      this.activeTabIndex.set(2);
     } else {
-      this.activeTabIndex = 0;
+      this.activeTabIndex.set(0);
     }
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.accountsService.fetchAccounts().then(accounts => {
-      this.accounts = accounts;
-      if (this.accounts.length > 0) {
-        this.inForm.toAccount = this.accounts[0];
-        this.outForm.fromAccount = this.accounts[0];
+      this.accounts.set(accounts);
+      if (this.accounts().length > 0) {
+        this.inForm.update(form => ({ ...form, toAccount: this.accounts()[0] }));
+        this.outForm.update(form => ({ ...form, fromAccount: this.accounts()[0] }));
       }
-      this.isLoading = false;
+      this.isLoading.set(false);
     }).catch(() => {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
         detail: 'Failed to load accounts'
       });
-      this.isLoading = false;
+      this.isLoading.set(false);
     });
   }
 
-
   onTabChange(event: any) {
-    this.activeTabIndex = event;
-    if (this.activeTabIndex == 2) {
-      this.RecordChangesAt = new Date();
+    this.activeTabIndex.set(event);
+    if (this.activeTabIndex() === 2) {
+      this.RecordChangesAt.set(new Date());
     }
 
     let tabParam = '';
-    if (this.activeTabIndex === 1) {
+    if (this.activeTabIndex() === 1) {
       tabParam = 'out';
-    } else if (this.activeTabIndex === 2) {
+    } else if (this.activeTabIndex() === 2) {
       tabParam = 'record';
     }
 
@@ -113,7 +113,7 @@ export class TransferComponent implements OnInit {
   }
 
   async submitIn() {
-    if (!this.inForm.toAccount || !this.inForm.amount) {
+    if (!this.inForm().toAccount || !this.inForm().amount) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -122,18 +122,18 @@ export class TransferComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       await lastValueFrom(this.http.post('/balance/transfer/in', {
-        account_id: this.inForm.toAccount?.id,
-        amount: this.inForm.amount,
+        account_id: this.inForm().toAccount?.id,
+        amount: this.inForm().amount,
         transfer_in: true
       }));
-      this.transferredAmount = this.inForm.amount;
-      this.RecordChangesAt = new Date();
-      this.showSuccessDialog = true;
+      this.transferredAmount.set(this.inForm().amount || 0);
+      this.RecordChangesAt.set(new Date());
+      this.showSuccessDialog.set(true);
     } catch (error) {
-      let accountName = this.accounts.filter(x => x.id === this.inForm.toAccount?.id)?.pop()?.name;
+      let accountName = this.accounts().filter(x => x.id === this.inForm().toAccount?.id)?.pop()?.name;
       this.messageService.add({
         severity: 'error',
         summary: 'Failed',
@@ -141,12 +141,12 @@ export class TransferComponent implements OnInit {
       });
     }
     finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
   async submitOut() {
-    if (!this.outForm.fromAccount || !this.outForm.amount || !this.outForm.password) {
+    if (!this.outForm().fromAccount || !this.outForm().amount || !this.outForm().password) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -155,18 +155,18 @@ export class TransferComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       await lastValueFrom(this.http.post('/balance/transfer/out', {
-        account_id: this.outForm.fromAccount?.id,
-        amount: this.outForm.amount,
-        password: this.outForm.password
+        account_id: this.outForm().fromAccount?.id,
+        amount: this.outForm().amount,
+        password: this.outForm().password
       }));
-      this.transferredAmount = this.outForm.amount;
-      this.RecordChangesAt = new Date();
-      this.showSuccessDialog = true;
+      this.transferredAmount.set(this.outForm().amount || 0);
+      this.RecordChangesAt.set(new Date());
+      this.showSuccessDialog.set(true);
     } catch (error) {
-      let accountName = this.accounts.filter(x => x.id === this.outForm.fromAccount?.id)?.pop()?.name;
+      let accountName = this.accounts().filter(x => x.id === this.outForm().fromAccount?.id)?.pop()?.name;
       this.messageService.add({
         severity: 'error',
         summary: 'Failed',
@@ -174,18 +174,18 @@ export class TransferComponent implements OnInit {
       });
     }
     finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
   closeDialog() {
-    this.showSuccessDialog = false;
+    this.showSuccessDialog.set(false);
     this.resetForms();
   }
 
   checkRecord() {
-    this.showSuccessDialog = false;
-    this.activeTabIndex = 2; // Switch to Record tab
+    this.showSuccessDialog.set(false);
+    this.activeTabIndex.set(2); // Switch to Record tab
     this.resetForms();
   }
 
@@ -201,7 +201,7 @@ export class TransferComponent implements OnInit {
   }
 
   private resetForms() {
-    this.inForm = { ...this.inForm, amount: null };
-    this.outForm = { ...this.outForm, amount: null, password: '' };
+    this.inForm.update(form => ({ ...form, amount: null }));
+    this.outForm.update(form => ({ ...form, amount: null, password: '' }));
   }
 }

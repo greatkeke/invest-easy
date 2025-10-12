@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
@@ -20,8 +20,9 @@ export class UserPanelComponent {
   private location = inject(Location);
   private http = inject(HttpClient);
 
-  now: Date = new Date();
-  username: string = '';
+  // Signal-based state
+  now = signal(new Date());
+  username = signal('');
   menuItems = [
     { label: 'General' },
     { label: 'Security' },
@@ -45,10 +46,10 @@ export class UserPanelComponent {
       const response = await lastValueFrom(
         this.http.get<{ username: string }>('/authenticated-user/name')
       );
-      this.username = response.username;
+      this.username.set(response.username);
     } catch (error) {
       console.error('Failed to fetch username:', error);
-      this.username = 'User';
+      this.username.set('User');
     }
   }
 

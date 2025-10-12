@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
@@ -13,20 +13,20 @@ export class TopNavigationComponent {
   private location = inject(Location);
 
   readonly title = input('');
-  isLoading = false;
+  
+  // Signal-based state
+  isLoading = signal(false);
   readonly back = output<void>();
   readonly refresh = output<void>();
 
   refreshData() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     // Simulate API call
     setTimeout(() => {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }, 1000);
-    // TODO: The 'emit' function requires a mandatory void argument
     this.refresh.emit();
   }
-
 
   goBack() {
     this.location.back();

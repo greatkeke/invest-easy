@@ -57,6 +57,6 @@ export class HomeComponent implements OnInit {
   }
 
   checkSecurity(code: string) {
-    this.router.navigate(['/report', { code }]);
+    this.router.navigate(['/report'], { queryParams: { "code": code } });
   }
 }

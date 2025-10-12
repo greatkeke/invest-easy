@@ -1,13 +1,11 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewChecked, inject, viewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, inject, viewChild, signal, effect, AfterViewChecked, AfterViewInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { RouterModule, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpEventType } from '@angular/common/http';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
-import { Subscription } from 'rxjs';
 import { marked } from 'marked';
 import { SseClient } from 'ngx-sse-client';
 
@@ -23,46 +21,39 @@ import { SseClient } from 'ngx-sse-client';
     TableModule,
     RouterModule,
     TopNavigationComponent
-]
+  ]
 })
-export class ReportComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class ReportComponent implements OnInit, AfterViewInit {
   private route = inject(ActivatedRoute);
-  private http = inject(HttpClient);
   private sseClient = inject(SseClient);
 
-  reportContent: string = '';
-  renderedContent: string = '';
-  verboseContent: string = '';
-  loading = false;
-  code: string | null = null;
-  isVerboseExpanded = false;
-  private subscription: Subscription | null = null;
-  private verboseContentChanged = false;
-
+  // Signal-based state
+  reportContent = signal('');
+  renderedContent = signal('');
+  verboseContent = signal('');
+  loading = signal(false);
+  code = signal<string | null>(null);
+  isVerboseExpanded = signal(false);
+  private verboseContentChanged = signal(false);
   readonly verboseContentElement = viewChild.required<ElementRef>('verboseContentDiv');
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const codeParam = params.get('code');
+    this.route.queryParams.subscribe(params => {
+      const codeParam = params['code'];
       if (codeParam) {
-        this.code = codeParam;
+        this.code.set(codeParam);
         this.generateReport();
       }
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.verboseContentChanged && this.verboseContentElement()) {
-      this.scrollToBottom();
-      this.verboseContentChanged = false;
-    }
-  }
+  // ngAfterViewInit(): void {
+  //   effect(() => {
+  //     if (this.verboseContentChanged() && this.verboseContentElement()) {
+  //       this.scrollToBottom();
+  //     }
+  //   })
+  // }
 
   private scrollToBottom(): void {
     try {
@@ -74,53 +65,51 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async generateReport(): Promise<void> {
-    if (!this.code) {
+    if (!this.code()) {
       console.error('No report code provided');
       return;
     }
 
-    this.loading = true;
-    this.reportContent = '';
-    this.renderedContent = '';
-    this.verboseContent = '';
+    this.loading.update(x => true);
+    this.reportContent.update(x => '');
+    this.renderedContent.update(x => '');
+    this.verboseContent.update(x => '');
     let finalContent = false;
 
-
-    this.sseClient.stream(`reports/generate/${this.code}`, { keepAlive: false, reconnectionDelay: 1_000, responseType: 'event' }, {}, 'GET').subscribe(async (event) => {
+    this.sseClient.stream(`reports/generate/${this.code()}`, { keepAlive: false, reconnectionDelay: 1_000, responseType: 'event' }, {}, 'GET').subscribe(async (event) => {
       if (event.type === 'error') {
         const errorEvent = event as ErrorEvent;
         console.error(errorEvent.error, errorEvent.message);
-        this.loading = false;
-        this.reportContent = '报告生成失败，请稍后重试。';
-        this.renderedContent = await this.renderMarkdown('报告生成失败，请稍后重试。');
+        this.loading.update(x => false);
+        const errorMsg = '报告生成失败，请稍后重试。';
+        this.reportContent.update(x => errorMsg);
+        this.renderedContent.update(x => errorMsg);
       } else {
         const messageEvent = event as MessageEvent<string>;
         if (messageEvent.data.trim() == ('[[Final Answer Start]]')) {
-          this.reportContent = "";
+          this.reportContent.update(x => "");
           finalContent = true;
         } else if (messageEvent.data.trim() == ('[[Final Answer End]]')) {
-          this.renderedContent = await this.renderMarkdown(this.reportContent);
+          const renderResult = await this.renderMarkdown(this.reportContent());
+          this.renderedContent.update(x => renderResult);
           finalContent = false;
         } else if (messageEvent.data.trimStart().startsWith("[工具调用]")) {
-          this.verboseContent += "\n";
-          this.verboseContent += messageEvent.data;
-          this.verboseContent += "\n";
-          this.verboseContentChanged = true;
+          this.verboseContent.update(content => content + "\n" + messageEvent.data + "\n");
+          this.verboseContentChanged.update(x => true);
         } else {
           if (messageEvent.data.trim() == "") {
-            this.verboseContent += "\n\n";
-            this.verboseContentChanged = true;
+            this.verboseContent.update(content => content + "\n\n");
+            this.verboseContentChanged.update(x => true);
           } else {
             if (finalContent) {
-              this.reportContent += messageEvent.data;
-              this.reportContent += "\n\n";
+              this.reportContent.update(content => content + messageEvent.data + "\n\n");
             } else {
-              this.verboseContent += messageEvent.data;
-              this.verboseContentChanged = true;
+              this.verboseContent.update(content => content + messageEvent.data);
+              this.verboseContentChanged.update(x => true);
             }
           }
         }
-        this.loading = false;
+        this.loading.update(x => false);
       }
     });
   }
