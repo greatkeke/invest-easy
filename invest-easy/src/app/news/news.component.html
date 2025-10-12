@@ -2,7 +2,7 @@
 
 <div class="news-section" (scroll)="scrolling($event)">
   <div class="news-list">
-    @for (article of marketNews; track article) {
+    @for (article of marketNews(); track article) {
       <div class="news-card">
         <div class="news-header">
           <span class="news-source">{{article.source}}</span>
@@ -19,7 +19,7 @@
       </div>
     }
 
-    @if (isLoading) {
+    @if (isLoading()) {
       <div>
         <div class="card">
           <div class="flex flex-wrap">
@@ -39,7 +39,7 @@
         </div>
       </div>
     }
-    @if (!hasMore) {
+    @if (!hasMore()) {
       <div class="no-more">
         <p>No more news to load</p>
       </div>

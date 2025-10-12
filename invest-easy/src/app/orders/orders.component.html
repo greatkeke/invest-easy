@@ -1,5 +1,5 @@
 <div class="orders-container">
-  <p-table [value]="orders" [scrollable]="true" scrollHeight="flex" [rows]="10"
+  <p-table [value]="orders()" [scrollable]="true" scrollHeight="flex" [rows]="10"
     dataKey="id" styleClass="p-datatable-striped" stripedRows>
     <ng-template #header>
       <tr>
@@ -41,22 +41,22 @@
     <ng-template #footer>
       <tr>
         <td colspan="4">
-          <small>In total there are {{ orders ? orders.length : 0 }} orders. </small>
+          <small>In total there are {{ orders() ? orders().length : 0 }} orders. </small>
         </td>
       </tr>
     </ng-template>
   </p-table>
 
   <div class="load-more-container">
-    @if (!allLoaded) {
+    @if (!allLoaded()) {
       <div class="load-more" (click)="loadOrders()">
-        @if (loading) {
+        @if (loading()) {
           <i class="pi pi-spinner pi-spin text-red-500 mr-2"></i>
         }
         <small class="text-stone-500">Load more orders</small>
       </div>
     }
-    @if (allLoaded && !loading) {
+    @if (allLoaded() && !loading()) {
       <div class="all-loaded">
         All orders loaded
       </div>

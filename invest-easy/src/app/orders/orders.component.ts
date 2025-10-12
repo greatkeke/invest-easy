@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -16,10 +16,10 @@ export class OrdersComponent {
   private ordersService = inject(OrdersService);
   private router = inject(Router);
 
-  orders: any[] = [];
-  loading = false;
-  allLoaded = false;
-  currentPage = 1;
+  orders = signal<any[]>([]);
+  loading = signal(false);
+  allLoaded = signal(false);
+  currentPage = signal(1);
 
   ngOnInit() {
     this.loadOrders();
@@ -30,18 +30,18 @@ export class OrdersComponent {
   }
 
   loadOrders() {
-    this.loading = true;
-    this.ordersService.getOrders(this.currentPage, 5).subscribe({
+    this.loading.set(true);
+    this.ordersService.getOrders(this.currentPage(), 5).subscribe({
       next: (orders) => {
-        this.orders = [...this.orders, ...orders];
-        this.loading = false;
-        this.allLoaded = orders.length < 5; // Default page size is 5
-        if (!this.allLoaded) {
-          this.currentPage++;
+        this.orders.update(currentOrders => [...currentOrders, ...orders]);
+        this.loading.set(false);
+        this.allLoaded.set(orders.length < 5); // Default page size is 5
+        if (!this.allLoaded()) {
+          this.currentPage.update(page => page + 1);
         }
       },
       error: () => {
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }

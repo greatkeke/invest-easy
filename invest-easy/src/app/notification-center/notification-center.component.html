@@ -1,5 +1,5 @@
 <div class="overflow-y-auto h-full">
-  @for (notification of notifications; track notification) {
+  @for (notification of notifications(); track notification) {
     <div class="p-4 border-b cursor-pointer hover:bg-gray-100"
       (click)="markAsRead(notification)">
       <div class="flex items-start">
@@ -12,7 +12,7 @@
             [class.max-h-full]="notification.expanded" [innerHTML]="notification.content">
           </div>
           <div class="text-xs text-gray-400 mt-1">{{ notification.date | date:'short' }}</div>
-          <div class="text-xs text-red-500 mt-1 cursor-pointer" (click)="toggleExpand(notification);">
+          <div class="text-xs text-red-500 mt-1 cursor-pointer" (click)="toggleExpand(notification); $event.stopPropagation()">
             {{ notification.expanded ? 'Show less' : 'Show more' }}
           </div>
         </div>

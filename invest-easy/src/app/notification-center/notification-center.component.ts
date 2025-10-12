@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -11,8 +11,8 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './notification-center.component.scss'
 })
 export class NotificationCenterComponent {
-  visible = false;
-  notifications = [
+  visible = signal(false);
+  notifications = signal([
     { 
       id: 1, 
       title: 'Market Update', 
@@ -30,18 +30,29 @@ export class NotificationCenterComponent {
       expanded: false
     },
     // Add more sample notifications
-  ];
+  ]);
+
+  // Computed signal for unread notifications count
+  unreadCount = computed(() => 
+    this.notifications().filter(notification => !notification.read).length
+  );
 
   showDialog() {
-    this.visible = true;
+    this.visible.set(true);
   }
 
   markAsRead(notification: any) {
-    notification.read = true;
+    const updatedNotifications = this.notifications().map(n => 
+      n.id === notification.id ? { ...n, read: true } : n
+    );
+    this.notifications.set(updatedNotifications);
   }
 
   toggleExpand(notification: any) {
-    notification.expanded = !notification.expanded;
+    const updatedNotifications = this.notifications().map(n => 
+      n.id === notification.id ? { ...n, expanded: !n.expanded } : n
+    );
+    this.notifications.set(updatedNotifications);
   }
 
   onNotificationClick(notification: any) {
