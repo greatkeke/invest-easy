@@ -47,13 +47,13 @@ export class ReportComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
   //   effect(() => {
   //     if (this.verboseContentChanged() && this.verboseContentElement()) {
   //       this.scrollToBottom();
   //     }
   //   })
-  // }
+  }
 
   private scrollToBottom(): void {
     try {
