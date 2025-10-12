@@ -1,4 +1,5 @@
 import { ApplicationConfig, isDevMode, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { ConfigService } from './shared/config.service';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { HttpClient, HttpHeaders, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -9,8 +10,8 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideServiceWorker } from '@angular/service-worker';
 
 import { providePrimeNG } from 'primeng/config';
-import Material from '@primeng/themes/material';
-import { definePreset } from '@primeng/themes';
+import Material from '@primeuix/themes/material';
+import { definePreset } from '@primeuix/themes';
 import { catchError, firstValueFrom, tap } from 'rxjs';
 
 const appPreset = definePreset(Material, {
@@ -74,6 +75,7 @@ export const appConfig: ApplicationConfig = {
           )
       );
     }),
+    provideAnimations(),
     provideZonelessChangeDetection(),
     provideRouter(routes, withInMemoryScrolling({scrollPositionRestoration:'enabled'})),
     provideClientHydration(withEventReplay()),
