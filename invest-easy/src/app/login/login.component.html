@@ -5,15 +5,15 @@
     </div>
 
     <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="flex flex-col gap-4 relative">
-      @if (loading) {
+      @if (loading()) {
         <div
           class="absolute inset-0 bg-opacity-70 flex items-center justify-center z-50 rounded-lg">
           <p-progressSpinner styleClass="w-12 h-12" strokeWidth="4" animationDuration=".5s" />
         </div>
       }
-      @if (errorMessage) {
+      @if (errorMessage()) {
         <div class="p-4 bg-red-100 text-red-700 rounded">
-          {{ errorMessage }}
+          {{ errorMessage() }}
         </div>
       }
 
@@ -21,7 +21,7 @@
         <p-iftalabel>
           <p-iconfield>
             <p-inputicon class="pi pi-envelope" />
-            <input pInputText id="email" [(ngModel)]="email" type="email" name="email" required #emailField="ngModel"
+            <input pInputText id="email" [ngModel]="email()" (ngModelChange)="email.set($event)" type="email" name="email" required #emailField="ngModel"
               placeholder="Enter your email" />
               @if (emailField.invalid && (emailField.dirty || emailField.touched)) {
                 <small class="text-red-500 block mt-1">
@@ -35,12 +35,12 @@
           </p-iftalabel>
         </div>
 
-        @if (isSignUp) {
+        @if (isSignUp()) {
           <div class="animate-fadeIn">
             <p-iftalabel>
               <p-iconfield>
                 <p-inputicon class="pi pi-user" />
-                <input pInputText id="username" [(ngModel)]="username" name="username" required #usernameField="ngModel"
+                <input pInputText id="username" [ngModel]="username()" (ngModelChange)="username.set($event)" name="username" required #usernameField="ngModel"
                   placeholder="Enter your username" />
                   @if (usernameField.invalid && (usernameField.dirty || usernameField.touched)) {
                     <small class="text-red-500 block mt-1">
@@ -57,7 +57,7 @@
 
           <div>
             <p-iftalabel>
-              <p-password id="password" [(ngModel)]="password" name="password" [toggleMask]="true" [feedback]="isSignUp"
+              <p-password id="password" [ngModel]="password()" (ngModelChange)="password.set($event)" name="password" [toggleMask]="true" [feedback]="isSignUp()"
               required #passwordField="ngModel" placeholder="Enter your password" />
               @if (passwordField.invalid && (passwordField.dirty || passwordField.touched)) {
                 <small class="text-red-500 block mt-1">
@@ -70,10 +70,10 @@
             </p-iftalabel>
           </div>
 
-          @if (isSignUp) {
+          @if (isSignUp()) {
             <div class="animate-fadeIn">
               <p-iftalabel>
-                <p-password id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" [toggleMask]="true"
+                <p-password id="confirmPassword" [ngModel]="confirmPassword()" (ngModelChange)="confirmPassword.set($event)" name="confirmPassword" [toggleMask]="true"
                 required #confirmPasswordField="ngModel" placeholder="Confirm your password" />
                 @if (confirmPasswordField.invalid && (confirmPasswordField.dirty || confirmPasswordField.touched)) {
                   <small class="text-red-500 block mt-1">
@@ -87,18 +87,18 @@
             </div>
           }
 
-          @if (!isSignUp) {
+          @if (!isSignUp()) {
             <div class="flex items-center gap-2">
-              <p-checkbox [(ngModel)]="rememberMe" name="rememberMe" inputId="rememberMe" binary />
+              <p-checkbox [ngModel]="rememberMe()" (ngModelChange)="rememberMe.set($event)" name="rememberMe" inputId="rememberMe" binary />
               <label for="rememberMe" class="text-sm">Remember me</label>
             </div>
           }
 
           <div class="flex flex-col gap-2">
-            <p-button type="submit" [label]="isSignUp ? 'Sign Up' : 'Login'" styleClass="p-button-raised p-button-primary"
-            [disabled]="loading" />
+            <p-button type="submit" [label]="isSignUp() ? 'Sign Up' : 'Login'" styleClass="p-button-raised p-button-primary"
+            [disabled]="loading()" />
 
-            @if (!isSignUp) {
+            @if (!isSignUp()) {
               <p-button type="button" label="Forgot password?" styleClass="p-button-text p-button-plain text-sm"
                />
             }
@@ -106,10 +106,10 @@
 
           <div class="text-center mt-4">
             <span class="text-sm text-gray-600">
-              {{ isSignUp ? 'Already have an account?' : 'Need an account?' }}
+              {{ isSignUp() ? 'Already have an account?' : 'Need an account?' }}
             </span>
             <button type="button" (click)="toggleMode()" class="ml-2 text-sm font-medium text-blue-600 hover:underline">
-              {{ isSignUp ? 'Login' : 'Sign Up' }}
+              {{ isSignUp() ? 'Login' : 'Sign Up' }}
             </button>
           </div>
         </form>

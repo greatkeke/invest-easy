@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -39,27 +39,27 @@ export class LoginComponent {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  username = '';
-  email = '';
-  password = '';
-  confirmPassword = '';
-  rememberMe = false;
-  loading = false;
-  isSignUp = false;
-  errorMessage = '';
+  username = signal('');
+  email = signal('');
+  password = signal('');
+  confirmPassword = signal('');
+  rememberMe = signal(false);
+  loading = signal(false);
+  isSignUp = signal(false);
+  errorMessage = signal('');
 
   toggleMode() {
-    this.isSignUp = !this.isSignUp;
-    this.errorMessage = '';
+    this.isSignUp.set(!this.isSignUp());
+    this.errorMessage.set('');
   }
 
   onSubmit(form: NgForm) {
     if (form.invalid) return;
 
-    this.loading = true;
-    this.errorMessage = '';
+    this.loading.set(true);
+    this.errorMessage.set('');
 
-    if (this.isSignUp) {
+    if (this.isSignUp()) {
       this.signUp(form);
     } else {
       this.login(form);
@@ -68,24 +68,24 @@ export class LoginComponent {
 
 
   signUp(form: NgForm): void {
-    if (this.password !== this.confirmPassword) {
-      this.errorMessage = 'Passwords do not match';
+    if (this.password() !== this.confirmPassword()) {
+      this.errorMessage.set('Passwords do not match');
       return;
     }
     const apiUrl = 'auth/register';
-    const authData = { email: this.email, username: this.username, password: this.password };
+    const authData = { email: this.email(), username: this.username(), password: this.password() };
 
     this.http.post<SignUpResponse>(apiUrl, authData, { observe: 'response' }).subscribe({
       next: (response) => {
-        this.loading = false;
-        this.isSignUp = false;
+        this.loading.set(false);
+        this.isSignUp.set(false);
         if (response.body) {
-          this.username = response.body.email;
+          this.username.set(response.body.email);
         }
       },
       error: (err) => {
-        this.loading = false;
-        this.errorMessage = err.error?.detail || ('Registration failed. Please try again.');
+        this.loading.set(false);
+        this.errorMessage.set(err.error?.detail || ('Registration failed. Please try again.'));
       }
     });
   }
@@ -93,7 +93,7 @@ export class LoginComponent {
   login(form: NgForm): void {
     const apiUrl = 'auth/jwt/login';
 
-    const authData = { username: this.email, password: this.password };
+    const authData = { username: this.email(), password: this.password() };
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -101,15 +101,15 @@ export class LoginComponent {
 
     this.http.post<LoginResponse>(apiUrl, this.toFormData(authData), { observe: 'response', headers: headers }).subscribe({
       next: (response) => {
-        this.loading = false;
+        this.loading.set(false);
         if (response.body) {
           localStorage.setItem(AUTH_TOKEN_KEY, response.body.access_token);
         }
         this.router.navigate(['/home']);
       },
       error: (err) => {
-        this.loading = false;
-        this.errorMessage = err.error?.detail || ('Login failed. Please check your credentials.');
+        this.loading.set(false);
+        this.errorMessage.set(err.error?.detail || ('Login failed. Please check your credentials.'));
       }
     });
   }
