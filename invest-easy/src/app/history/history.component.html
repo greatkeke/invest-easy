@@ -1,10 +1,10 @@
 <div class="space-y-4">
-  @if (isInit) {
+  @if (isInit()) {
     <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'width': '100%'}" />
   }
-  @if (!isInit) {
+  @if (!isInit()) {
     <div>
-      @for (record of records; track record) {
+      @for (record of records(); track record) {
         <div
           class="p-4 my-2 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
           <div class="text-sm text-gray-500 mb-2">
@@ -43,18 +43,18 @@
   }
 
   <div class="p-4 text-center">
-    @if (isLoading) {
+    @if (isLoading()) {
       <div class="flex justify-center py-2">
         <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"></div>
       </div>
     }
-    @if (!isLoading && !allRecordsLoaded) {
+    @if (!isLoading() && !allRecordsLoaded()) {
       <p-button [link]="true" (click)="loadMore()"
         class="text-primary-500 hover:underline cursor-pointer">
         Load more history
       </p-button>
     }
-    @if (allRecordsLoaded) {
+    @if (allRecordsLoaded()) {
       <p class="text-gray-500">All records loaded</p>
     }
   </div>

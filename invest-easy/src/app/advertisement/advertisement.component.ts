@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -16,12 +16,12 @@ export class AdvertisementComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  isLoading: boolean = true;
-  adType: string = '';
+  isLoading = signal(true);
+  adType = signal('');
 
-  adTitle: string = '';
-  adDescription: string = '';
-  adImage: string = '';
+  adTitle = signal('');
+  adDescription = signal('');
+  adImage = signal('');
 
   private adMappings: { [key: string]: { title: string, description: string, image: string } } = {
     'Account opening / upgrade': {
@@ -98,15 +98,15 @@ export class AdvertisementComponent {
 
   ngOnInit() {
     this.route.params.subscribe(pm => {
-      this.adType = pm['adType'] || '';
+      this.adType.set(pm['adType'] || '');
 
-      if (this.adType && this.adMappings[this.adType]) {
+      if (this.adType() && this.adMappings[this.adType()]) {
         setTimeout(() => {
-          const ad = this.adMappings[this.adType];
-          this.adTitle = ad.title;
-          this.adDescription = ad.description;
-          this.adImage = ad.image;
-          this.isLoading = false;
+          const ad = this.adMappings[this.adType()];
+          this.adTitle.set(ad.title);
+          this.adDescription.set(ad.description);
+          this.adImage.set(ad.image);
+          this.isLoading.set(false);
         }, 3000);
       }
     })

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, WritableSignal } from '@angular/core';
 import { MarketIndex, MarketService } from '../shared/api-services/market.service';
 import { WatchlistItem, WatchlistService } from '../shared/api-services/watchlist.service';
 import { MarketTemperatureService } from '../shared/api-services/market-temperature.service';
@@ -37,17 +37,17 @@ export class MarketComponent implements OnInit {
   private marketTempService = inject(MarketTemperatureService);
   private router = inject(Router);
 
-  indices: MarketIndex[] = [];
-  watchlist: WatchlistItem[] = [];
-  marketTemperature: any = null;
-  loading = true;
+  indices: WritableSignal<MarketIndex[]> = signal([]);
+  watchlist: WritableSignal<WatchlistItem[]> = signal([]);
+  marketTemperature = signal<any>(null);
+  loading = signal(true);
 
   ngOnInit(): void {
     this.loadMarketData();
     this.loadWatchlist();
 
     this.marketTempService.getMarketTemperature().subscribe({
-      next: (data) => this.marketTemperature = data,
+      next: (data) => this.marketTemperature.set(data),
       error: (err) => console.error('Failed to load market temperature:', err)
     });
   }
@@ -55,12 +55,12 @@ export class MarketComponent implements OnInit {
   loadMarketData(): void {
     this.marketService.getMarketIndices().subscribe({
       next: (data) => {
-        this.indices = data;
-        this.loading = false;
+        this.indices.set(data);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error('Failed to load market indices:', err);
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
@@ -68,7 +68,7 @@ export class MarketComponent implements OnInit {
   loadWatchlist(): void {
     this.watchlistService.getWatchlist().subscribe({
       next: (data) => {
-        this.watchlist = data;
+        this.watchlist.set(data);
       },
       error: (err) => {
         console.error('Failed to load watchlist:', err);

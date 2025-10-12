@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -37,82 +37,102 @@ export class ExchangeComponent implements OnInit {
   private exchangeSvc = inject(ExchangeService);
   private fxrateSvc = inject(FxrateService);
 
-  accounts: AccountBalance[] = [];
+  accounts = signal<AccountBalance[]>([]);
 
-  fromAccount?: AccountBalance;
-  fromAmount: number = 0.0;
-  toAccount?: AccountBalance;
-  toCcy: string = "";
-  toAmount: number = 0.0;
+  fromAccount = model<AccountBalance | undefined>(undefined);
+  fromAmount = model<number>(0.0);
+  toAccount = model<AccountBalance | undefined>(undefined);
+  toAmount = model<number>(0.0);
 
-  showDialog = false;
-  dialogSuccess = false;
-  dialogMessage = '';
-  completedDate = new Date();
+  showDialog = signal(false);
+  dialogSuccess = signal(false);
+  dialogMessage = signal('');
+  completedDate = signal(new Date());
+
+  // Computed values
+  exchangeRate = computed(() => {
+    const fromCcy = this.fromAccount()?.ccy;
+    const toCcy = this.toAccount()?.ccy;
+    return this.fxrateSvc.getExchangeRate(fromCcy, toCcy);
+  });
+
+  canSubmit = computed(() => {
+    return !!this.fromAccount() && !!this.toAccount() && this.fromAmount() > 0 && this.toAmount() > 0;
+  });
 
   async ngOnInit(): Promise<void> {
-    this.accounts = await this.accountSvc.fetchAccountBalances();
+    const accountBalances = await this.accountSvc.fetchAccountBalances();
+    this.accounts.set(accountBalances);
 
-    let hkdAccount = this.accounts.filter(x => x.ccy == 'HKD')[0];
+    const hkdAccount = accountBalances.find(x => x.ccy === 'HKD');
     if (hkdAccount) {
-      this.fromAccount = hkdAccount;
+      this.fromAccount.set(hkdAccount);
     }
-    let usdAccount = this.accounts.filter(x => x.ccy == "USD")[0];
+    const usdAccount = accountBalances.find(x => x.ccy === 'USD');
     if (usdAccount) {
-      this.toAccount = usdAccount;
+      this.toAccount.set(usdAccount);
     }
   }
 
-  getExchangeRate(fromCcy?: string, toCcy?: string) {
-    return this.fxrateSvc.getExchangeRate(fromCcy, toCcy);
-  }
-
-
-  calculateAmount(event:any, isFrom = true) {
-    let a: number = event.value;
-    let rate = this.getExchangeRate(this.fromAccount?.ccy, this.toAccount?.ccy)
-    if (isFrom) {
-      this.toAmount = a * rate;
-    } else {
-      this.fromAmount = a / rate;
+  calculateAmount(amount: string | number | null, isFrom = true) {
+    const rate = this.exchangeRate();
+    
+    // Convert amount to number, handling null and string cases
+    const numericAmount = amount === null ? 0 : Number(amount);
+    
+    // Only perform calculation if we have a valid number
+    if (!isNaN(numericAmount)) {
+      if (isFrom) {
+        this.toAmount.set(numericAmount * rate);
+      } else {
+        this.fromAmount.set(numericAmount / rate);
+      }
     }
   }
 
   exchangeFlag() {
-    const tmp = this.fromAccount;
-    this.fromAccount = this.toAccount;
-    this.toAccount = tmp;
+    const tmpFromAccount = this.fromAccount();
+    const tmpToAccount = this.toAccount();
+    
+    this.fromAccount.set(tmpToAccount);
+    this.toAccount.set(tmpFromAccount);
 
-    const amount = this.fromAmount;
-    this.fromAmount = this.toAmount;
-    this.toAmount = amount;
+    const tmpFromAmount = this.fromAmount();
+    const tmpToAmount = this.toAmount();
+    
+    this.fromAmount.set(tmpToAmount);
+    this.toAmount.set(tmpFromAmount);
   }
 
   onSelectChange(prevAccount: any, isFrom = false) {
-    if (this.fromAccount?.id == this.toAccount?.id) {
+    if (this.fromAccount()?.id === this.toAccount()?.id) {
       if (isFrom) {
-        this.toAccount = prevAccount;
+        this.toAccount.set(prevAccount);
       } else {
-        this.fromAccount = prevAccount;
+        this.fromAccount.set(prevAccount);
       }
     }
   }
 
   async submitExchange() {
-    if (!this.fromAccount || !this.toAccount) {
-      this.dialogSuccess = false;
-      this.dialogMessage = 'Please enter valid amounts for both currencies';
-      this.showDialog = true;
+    const fromAccount = this.fromAccount();
+    const toAccount = this.toAccount();
+    const fromAmount = this.fromAmount();
+
+    if (!fromAccount || !toAccount || fromAmount <= 0) {
+      this.dialogSuccess.set(false);
+      this.dialogMessage.set('Please enter valid amounts for both currencies');
+      this.showDialog.set(true);
       return;
     }
 
-    const ok = await this.exchangeSvc.exchange(this.fromAccount.id, this.toAccount.id, this.fromAmount);
+    const ok = await this.exchangeSvc.exchange(fromAccount.id, toAccount.id, fromAmount);
 
     if (ok) {
-      this.completedDate = new Date();
-      this.dialogSuccess = true;
-      this.dialogMessage = 'Your exchange request has been processed successfully.';
-      this.showDialog = true;
+      this.completedDate.set(new Date());
+      this.dialogSuccess.set(true);
+      this.dialogMessage.set('Your exchange request has been processed successfully.');
+      this.showDialog.set(true);
     }
   }
 }
