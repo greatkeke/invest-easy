@@ -10,8 +10,8 @@ import { provideServiceWorker } from '@angular/service-worker';
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import Material from '@primeng/themes/material';
-import { definePreset } from '@primeng/themes';
+import Material from '@primeuix/themes/material';
+import { definePreset } from '@primeuix/themes';
 import { catchError, firstValueFrom, tap } from 'rxjs';
 
 const appPreset = definePreset(Material, {

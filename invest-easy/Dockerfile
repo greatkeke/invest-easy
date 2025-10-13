@@ -17,7 +17,7 @@ RUN npm run build && \
     rm -rf node_modules
 
 # Stage 2: Serve the application
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
