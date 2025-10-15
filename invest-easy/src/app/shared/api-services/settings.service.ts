@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -17,7 +17,8 @@ export interface DefinedItem {
   providedIn: 'root'
 })
 export class SettingsService {
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+
 
   getDefinedItems(groupName: string): Observable<DefinedItem[]> {
     return this.http.get<DefinedItem[]>(`/settings/defined-items/${groupName}`);

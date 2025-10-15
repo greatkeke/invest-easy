@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -17,13 +17,11 @@ import { SkeletonModule } from 'primeng/skeleton';
   styleUrl: './asset-detail.component.scss'
 })
 export class AssetDetailComponent {
-  isLoading = false;
-  accountBalances: AccountBalance[] = [];
-  expand_id: string = "";
+  private accountsService = inject(AccountsService);
 
-  constructor(
-    private accountsService: AccountsService
-  ) { }
+  isLoading = signal(false);
+  accountBalances: WritableSignal<AccountBalance[]> = signal([]);
+  expand_id = signal("");
 
   goBack() {
 
@@ -32,17 +30,21 @@ export class AssetDetailComponent {
 
   async ngOnInit(): Promise<void> {
     await this.loadAccountBalances();
-    this.expand_id = this.accountBalances[0].id;
+    const balances = this.accountBalances();
+    if (balances.length > 0) {
+      this.expand_id.set(balances[0].id);
+    }
   }
 
   async loadAccountBalances(): Promise<void> {
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
-      this.accountBalances = await this.accountsService.fetchAccountBalances();
+      const balances = await this.accountsService.fetchAccountBalances();
+      this.accountBalances.set(balances);
     } catch (error) {
       console.error('Failed to load account balances:', error);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 

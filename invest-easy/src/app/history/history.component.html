@@ -1,42 +1,61 @@
 <div class="space-y-4">
-    <p-progressBar *ngIf="isInit" mode="indeterminate" [style]="{'height': '6px', 'width': '100%'}"></p-progressBar>
-    <div *ngIf="!isInit">
-        <div *ngFor="let record of records"
-            class="p-4 my-2 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-            <div class="text-sm text-gray-500 mb-2">
-                <div class="flex items-center justify-center">
-                    <div class="mr-2"><span>{{ record.created_at | date:'long' }}</span></div>
-                    <div class="grow border-t border-gray-300"></div>
-                </div>
+  @if (isInit()) {
+    <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'width': '100%'}" />
+  }
+  @if (!isInit()) {
+    <div>
+      @for (record of records(); track record) {
+        <div
+          class="p-4 my-2 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div class="text-sm text-gray-500 mb-2">
+            <div class="flex items-center justify-center">
+              <div class="mr-2"><span>{{ record.created_at | date:'long' }}</span></div>
+              <div class="grow border-t border-gray-300"></div>
             </div>
-
-            <div class="flex justify-between items-center">
-                <div>
-                    <span class="text-md font-medium">{{ record.account_name }}</span>
-                </div>
-                <span class="font-medium">
-                    <ng-container [ngSwitch]="record.type">
-                        <span *ngSwitchCase="BalanceType.TRANSFER_IN">Transfer to Payees/FPS</span>
-                        <span *ngSwitchCase="BalanceType.TRANSFER_OUT">Transfer to HSBC account</span>
-                        <span *ngSwitchCase="BalanceType.TRADE_BUY">Trade Purchase</span>
-                        <span *ngSwitchCase="BalanceType.TRADE_SELL">Trade Sale</span>
-                    </ng-container>
-                </span>
+          </div>
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="text-md font-medium">{{ record.account_name }}</span>
             </div>
-            <div class="flex justify-end">
-                <span class="font-semibold">{{ record.amount | currency: record.ccy }} </span>
-            </div>
+            <span class="font-medium">
+              @switch (record.type) {
+                @case (BalanceType.TRANSFER_IN) {
+                  <span>Transfer to Payees/FPS</span>
+                }
+                @case (BalanceType.TRANSFER_OUT) {
+                  <span>Transfer to HSBC account</span>
+                }
+                @case (BalanceType.TRADE_BUY) {
+                  <span>Trade Purchase</span>
+                }
+                @case (BalanceType.TRADE_SELL) {
+                  <span>Trade Sale</span>
+                }
+              }
+            </span>
+          </div>
+          <div class="flex justify-end">
+            <span class="font-semibold">{{ record.amount | currency: record.ccy }} </span>
+          </div>
         </div>
+      }
     </div>
+  }
 
-    <div class="p-4 text-center">
-        <div *ngIf="isLoading" class="flex justify-center py-2">
-            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"></div>
-        </div>
-        <p-button *ngIf="!isLoading && !allRecordsLoaded" [link]="true" (click)="loadMore()"
-            class="text-primary-500 hover:underline cursor-pointer">
-            Load more history
-        </p-button>
-        <p *ngIf="allRecordsLoaded" class="text-gray-500">All records loaded</p>
-    </div>
+  <div class="p-4 text-center">
+    @if (isLoading()) {
+      <div class="flex justify-center py-2">
+        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"></div>
+      </div>
+    }
+    @if (!isLoading() && !allRecordsLoaded()) {
+      <p-button [link]="true" (click)="loadMore()"
+        class="text-primary-500 hover:underline cursor-pointer">
+        Load more history
+      </p-button>
+    }
+    @if (allRecordsLoaded()) {
+      <p class="text-gray-500">All records loaded</p>
+    }
+  </div>
 </div>

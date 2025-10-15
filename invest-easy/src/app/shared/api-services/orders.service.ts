@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -52,9 +52,9 @@ export interface OrderDetail {
   providedIn: 'root'
 })
 export class OrdersService {
-  private apiUrl = '/orders/';
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
+  private apiUrl = '/orders/';
 
   getOrders(page: number = 1, pageSize: number = 5): Observable<any[]> {
     return this.http.get<OrderResponse[]>(this.apiUrl, {

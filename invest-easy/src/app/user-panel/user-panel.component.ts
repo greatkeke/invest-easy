@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { Component, inject, output, signal } from '@angular/core';
+import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -12,13 +12,17 @@ import { AUTH_TOKEN_KEY } from '../shared/api-interceptor';
   styleUrl: './user-panel.component.scss',
   standalone: true,
   imports: [
-    CommonModule,
     ButtonModule
-  ]
+]
 })
 export class UserPanelComponent {
-  now: Date = new Date();
-  username: string = '';
+  private router = inject(Router);
+  private location = inject(Location);
+  private http = inject(HttpClient);
+
+  // Signal-based state
+  now = signal(new Date());
+  username = signal('');
   menuItems = [
     { label: 'General' },
     { label: 'Security' },
@@ -31,13 +35,7 @@ export class UserPanelComponent {
     { label: 'Activity log' }
   ];
 
-  @Output() panelClosed = new EventEmitter<void>();
-
-  constructor(
-    private router: Router,
-    private location: Location,
-    private http: HttpClient,
-  ) { }
+  readonly panelClosed = output<void>();
 
   async ngOnInit(): Promise<void> {
     await this.fetchUsername();
@@ -48,14 +46,15 @@ export class UserPanelComponent {
       const response = await lastValueFrom(
         this.http.get<{ username: string }>('/authenticated-user/name')
       );
-      this.username = response.username;
+      this.username.set(response.username);
     } catch (error) {
       console.error('Failed to fetch username:', error);
-      this.username = 'User';
+      this.username.set('User');
     }
   }
 
   closePanel() {
+    // TODO: The 'emit' function requires a mandatory void argument
     this.panelClosed.emit();
     this.location.back();
   }

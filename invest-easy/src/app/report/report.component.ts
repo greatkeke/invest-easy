@@ -1,13 +1,11 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ElementRef, inject, viewChild, signal, effect } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { RouterModule, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpEventType } from '@angular/common/http';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
-import { Subscription } from 'rxjs';
 import { marked } from 'marked';
 import { SseClient } from 'ngx-sse-client';
 
@@ -17,7 +15,6 @@ import { SseClient } from 'ngx-sse-client';
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss'],
   imports: [
-    CommonModule,
     FormsModule,
     CardModule,
     ButtonModule,
@@ -26,104 +23,95 @@ import { SseClient } from 'ngx-sse-client';
     TopNavigationComponent
   ]
 })
-export class ReportComponent implements OnInit, OnDestroy, AfterViewChecked {
-  reportContent: string = '';
-  renderedContent: string = '';
-  verboseContent: string = '';
-  loading = false;
-  code: string | null = null;
-  isVerboseExpanded = false;
-  private subscription: Subscription | null = null;
-  private verboseContentChanged = false;
+export class ReportComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private sseClient = inject(SseClient);
 
-  @ViewChild('verboseContentDiv') verboseContentElement!: ElementRef;
-
-  constructor(
-    private route: ActivatedRoute,
-    private http: HttpClient,
-    private sseClient: SseClient
-  ) { }
+  // Signal-based state
+  reportContent = signal('');
+  renderedContent = signal('');
+  verboseContent = signal('');
+  loading = signal(false);
+  code = signal<string | null>(null);
+  isVerboseExpanded = signal(false);
+  private verboseContentChanged = signal(0);
+  readonly verboseContentElement = viewChild<ElementRef<HTMLDivElement>>('verboseContentDiv');
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const codeParam = params.get('code');
+    this.route.queryParams.subscribe(params => {
+      const codeParam = params['code'];
       if (codeParam) {
-        this.code = codeParam;
+        this.code.set(codeParam);
         this.generateReport();
       }
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.verboseContentChanged && this.verboseContentElement) {
-      this.scrollToBottom();
-      this.verboseContentChanged = false;
-    }
+  constructor() {
+    effect(() => {
+      if (this.verboseContentChanged() > 0) {
+        this.scrollToBottom();
+      }
+    })
   }
 
   private scrollToBottom(): void {
     try {
-      const element = this.verboseContentElement.nativeElement;
-      element.scrollTop = element.scrollHeight;
+      if (this.verboseContentElement()) {
+        const element = this.verboseContentElement()!.nativeElement;
+        element.scrollTop = element.scrollHeight;
+      }
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
   }
 
   async generateReport(): Promise<void> {
-    if (!this.code) {
+    if (!this.code()) {
       console.error('No report code provided');
       return;
     }
 
-    this.loading = true;
-    this.reportContent = '';
-    this.renderedContent = '';
-    this.verboseContent = '';
+    this.loading.update(x => true);
+    this.reportContent.update(x => '');
+    this.renderedContent.update(x => '');
+    this.verboseContent.update(x => '');
     let finalContent = false;
 
-
-    this.sseClient.stream(`reports/generate/${this.code}`, { keepAlive: false, reconnectionDelay: 1_000, responseType: 'event' }, {}, 'GET').subscribe(async (event) => {
+    this.sseClient.stream(`reports/generate/${this.code()}`, { keepAlive: false, reconnectionDelay: 1_000, responseType: 'event' }, {}, 'GET').subscribe(async (event) => {
       if (event.type === 'error') {
         const errorEvent = event as ErrorEvent;
         console.error(errorEvent.error, errorEvent.message);
-        this.loading = false;
-        this.reportContent = '报告生成失败，请稍后重试。';
-        this.renderedContent = await this.renderMarkdown('报告生成失败，请稍后重试。');
+        this.loading.update(x => false);
+        const errorMsg = '报告生成失败，请稍后重试。';
+        this.reportContent.update(x => errorMsg);
+        this.renderedContent.update(x => errorMsg);
       } else {
         const messageEvent = event as MessageEvent<string>;
         if (messageEvent.data.trim() == ('[[Final Answer Start]]')) {
-          this.reportContent = "";
+          this.reportContent.update(x => "");
           finalContent = true;
         } else if (messageEvent.data.trim() == ('[[Final Answer End]]')) {
-          this.renderedContent = await this.renderMarkdown(this.reportContent);
+          const renderResult = await this.renderMarkdown(this.reportContent());
+          this.renderedContent.update(x => renderResult);
           finalContent = false;
         } else if (messageEvent.data.trimStart().startsWith("[工具调用]")) {
-          this.verboseContent += "\n";
-          this.verboseContent += messageEvent.data;
-          this.verboseContent += "\n";
-          this.verboseContentChanged = true;
+          this.verboseContent.update(content => content + "\n" + messageEvent.data + "\n");
+          this.verboseContentChanged.update(x => ++x);
         } else {
           if (messageEvent.data.trim() == "") {
-            this.verboseContent += "\n\n";
-            this.verboseContentChanged = true;
+            this.verboseContent.update(content => content + "\n\n");
+            this.verboseContentChanged.update(x => ++x);
           } else {
             if (finalContent) {
-              this.reportContent += messageEvent.data;
-              this.reportContent += "\n\n";
+              this.reportContent.update(content => content + messageEvent.data + "\n\n");
             } else {
-              this.verboseContent += messageEvent.data;
-              this.verboseContentChanged = true;
+              this.verboseContent.update(content => content + messageEvent.data);
+              this.verboseContentChanged.update(x => ++x);
             }
           }
         }
-        this.loading = false;
+        this.loading.update(x => false);
       }
     });
   }

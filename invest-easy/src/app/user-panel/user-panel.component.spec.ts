@@ -8,15 +8,10 @@ describe('UserPanelComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [UserPanelComponent],
-      imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatListModule,
-        MatSidenavModule,
-        MatToolbarModule,
-      ]
-    });
+    imports: [
+        UserPanelComponent,
+    ]
+});
   }));
 
   beforeEach(() => {

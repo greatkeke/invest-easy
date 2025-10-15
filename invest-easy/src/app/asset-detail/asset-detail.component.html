@@ -1,24 +1,25 @@
 <div class="min-h-screen">
-  <app-top-navigation title="My Assets" (back)="goBack()" (refresh)="refreshData()">
-  </app-top-navigation>
+  <app-top-navigation title="My Assets" (back)="goBack()" (refresh)="refreshData()" />
 
-  <div *ngIf="isLoading">
-    <div class="card">
-      <div class="flex flex-wrap">
-        <div class="w-full xl:w-6/12 p-4">
-          <p-skeleton styleClass="mb-2" />
-          <p-skeleton width="10rem" styleClass="mb-2" />
-          <p-skeleton width="5rem" styleClass="mb-2" />
-          <p-skeleton height="2rem" styleClass="mb-2" />
-          <p-skeleton width="10rem" height="4rem" styleClass="mb-2" />
-          <p-skeleton styleClass="mb-2" />
-          <p-skeleton width="10rem" styleClass="mb-2" />
-          <p-skeleton width="5rem" styleClass="mb-2" />
-          <p-skeleton height="2rem" styleClass="mb-2" />
+  @if (isLoading()) {
+    <div>
+      <div class="card">
+        <div class="flex flex-wrap">
+          <div class="w-full xl:w-6/12 p-4">
+            <p-skeleton styleClass="mb-2" />
+            <p-skeleton width="10rem" styleClass="mb-2" />
+            <p-skeleton width="5rem" styleClass="mb-2" />
+            <p-skeleton height="2rem" styleClass="mb-2" />
+            <p-skeleton width="10rem" height="4rem" styleClass="mb-2" />
+            <p-skeleton styleClass="mb-2" />
+            <p-skeleton width="10rem" styleClass="mb-2" />
+            <p-skeleton width="5rem" styleClass="mb-2" />
+            <p-skeleton height="2rem" styleClass="mb-2" />
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 
   <!-- Account Balances Accordion -->
   <div class="p-4">
@@ -26,21 +27,23 @@
       <h2 class="text-md font-medium mb-4">Account Balances</h2>
       <p-accordion [multiple]="true" [(value)]="expand_id" class=""
         styleClass="rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-        <p-accordion-panel *ngFor="let account of accountBalances" [value]="account.id">
-          <p-accordion-header>
-            <div>
-              <i [ngClass]="'fi fi-' + account.flag" class="mr-2"></i>{{account.name}}
-            </div>
-          </p-accordion-header>
-          <p-accordion-content>
-            <div class="grid grid-cols-2 gap-4 p-3">
-              <div class="text-gray-600">Balance:</div>
-              <div class="text-right">
-                {{account.balance | currency : account.ccy : 'symbol': '1.2-2'}}
+        @for (account of accountBalances(); track account) {
+          <p-accordion-panel [value]="account.id">
+            <p-accordion-header>
+              <div>
+                <i [ngClass]="'fi fi-' + account.flag" class="mr-2"></i>{{account.name}}
               </div>
-            </div>
-          </p-accordion-content>
-        </p-accordion-panel>
+            </p-accordion-header>
+            <p-accordion-content>
+              <div class="grid grid-cols-2 gap-4 p-3">
+                <div class="text-gray-600">Balance:</div>
+                <div class="text-right">
+                  {{account.balance | currency : account.ccy : 'symbol': '1.2-2'}}
+                </div>
+              </div>
+            </p-accordion-content>
+          </p-accordion-panel>
+        }
       </p-accordion>
     </div>
     <div class="pt-4">
@@ -64,7 +67,7 @@
     <div class="">
       <h2 class="text-md font-medium mb-4">Record History</h2>
       <div class="space-y-4">
-        <app-history></app-history>
+        <app-history />
       </div>
     </div>
   </div>

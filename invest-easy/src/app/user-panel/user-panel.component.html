@@ -2,14 +2,14 @@
   <div class="bg-[url('/240325-our-values-and-purpose-370x208.jpg')] bg-cover bg-center pb-2">
     <div class="flex items-center p-2 justify-end">
       <p-button (click)="closePanel()" [rounded]="true" severity="danger" [outlined]="true" icon="pi pi-times"
-        iconPos="right" class="bg-white rounded-full" size="small"></p-button>
+        iconPos="right" class="bg-white rounded-full" size="small" />
     </div>
     <div
       class="px-4 py-2 font-bold border-solid shadow-sm mx-4 mb-2 rounded-md flex justify-between bg-red-100 dark:bg-red-50"
       (click)="navigateTo('Contact details')">
       <div class="">
-        <h5>Welcome, {{username}}</h5>
-        <small class="font-normal text-wrap">Last successful logon: {{now}}</small>
+        <h5>Welcome, {{username()}}</h5>
+        <small class="font-normal text-wrap">Last successful logon: {{now()}}</small>
       </div>
       <div class="flex flex-col justify-center">
         <i class="pi pi-chevron-right" style="font-size: 2rem"></i>
@@ -91,6 +91,6 @@
     </li>
   </ul>
   <div class="flex justify-center absolute bottom-0 right-0 left-0 p-6">
-    <p-button icon="pi pi-sign-out" variant="outlined" label="Log off" (click)="LogOff()"></p-button>
+    <p-button icon="pi pi-sign-out" variant="outlined" label="Log off" (click)="LogOff()" />
   </div>
 </div>

@@ -1,27 +1,31 @@
-<app-header title="Home"></app-header>
+<app-header title="Home" />
 
-<div *ngIf="showPromotions" class="promotion-carousel">
-  <div class="carousel-container">
-    <ng-container *ngFor="let promo of promotions; let i = index">
-      <p-card *ngIf="promo.visible" class="promo-card">
-        <button pButton icon="pi pi-times" class="p-button-rounded p-button-text close-btn"
-          (click)="closePromotion(i)"></button>
-        <div class="card-header">
-          <h3>{{promo.title}}</h3>
-        </div>
-        <div class="card-content">
-          {{promo.description}}
-          <div class="flex justify-end">
-            <small class="text-red-500" (click)="navigateToAd('Account opening / upgrade')">Get started</small>
-          </div>
-        </div>
-      </p-card>
-    </ng-container>
+@if (showPromotions()) {
+  <div class="promotion-carousel">
+    <div class="carousel-container">
+      @for (promo of promotions(); track promo; let i = $index) {
+        @if (promo.visible) {
+          <p-card class="promo-card">
+            <button pButton icon="pi pi-times" class="p-button-rounded p-button-text close-btn"
+            (click)="closePromotion(i)"></button>
+            <div class="card-header">
+              <h3>{{promo.title}}</h3>
+            </div>
+            <div class="card-content">
+              {{promo.description}}
+              <div class="flex justify-end">
+                <small class="text-red-500" (click)="navigateToAd('Account opening / upgrade')">Get started</small>
+              </div>
+            </div>
+          </p-card>
+        }
+      }
+    </div>
   </div>
-</div>
+}
 
 <div class="px-4">
-  <app-securities-query [placeholder]="'Select a security to check by AI'" (resultSelected)="checkSecurity($event)"></app-securities-query>
+  <app-securities-query [placeholder]="'Select a security to check by AI'" (resultSelected)="checkSecurity($event)" />
 </div>
 
 <div class="quicksteps-section">
@@ -47,24 +51,30 @@
 <div class="accounts-section">
   <div class="accounts-header">
     <h5 i18n class="font-semibold">Your Account</h5>
-    <button pButton icon="{{showBalance ? 'pi pi-eye' : 'pi pi-eye-slash'}}"
-      class="p-button-rounded p-button-text balance-toggle" (click)="toggleBalanceVisibility()"></button>
+    <button pButton icon="{{showBalance() ? 'pi pi-eye' : 'pi pi-eye-slash'}}"
+    class="p-button-rounded p-button-text balance-toggle" (click)="toggleBalanceVisibility()"></button>
   </div>
-  <div class="accounts-grid" *ngIf="account">
-    <p-card (click)="navigateTo('asset-detail')">
-      <div class="card-header">
-        <h3 class="text-sm">{{account.name}}</h3>
-      </div>
-      <div class="card-content">
-        <div class="balance text-lg font-semibold text-right" *ngIf="showBalance">
-          {{account.balance | currency:account.ccy}}
+  @if (account()) {
+    <div class="accounts-grid">
+      <p-card (click)="navigateTo('asset-detail')">
+        <div class="card-header">
+          <h3 class="text-sm">{{account()?.name}}</h3>
         </div>
-        <div class="balance-hidden text-right" *ngIf="!showBalance">
-          ••••••
+        <div class="card-content">
+          @if (showBalance()) {
+            <div class="balance text-lg font-semibold text-right">
+              {{account()?.balance | currency:account()?.ccy}}
+            </div>
+          }
+          @if (!showBalance()) {
+            <div class="balance-hidden text-right">
+              ••••••
+            </div>
+          }
         </div>
-      </div>
-    </p-card>
-  </div>
+      </p-card>
+    </div>
+  }
 </div>
 
 <div class="explore-section">

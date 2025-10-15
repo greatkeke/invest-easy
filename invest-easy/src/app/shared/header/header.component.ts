@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, inject, input, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, Location, NgStyle } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,31 +14,31 @@ import { HttpParams } from '@angular/common/http';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  @Input() title = 'Invest-Easy'; // Default value
-  @Input() bg_img = 'financial-regulation-header.jpg';
-  displayUserPanel = false;
-  displayNotificationCenter = false;
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private location = inject(Location);
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private location: Location
-  ) { }
+  readonly title = input('Invest-Easy'); // Default value
+  readonly bg_img = input('financial-regulation-header.jpg');
+  
+  // Signal-based state
+  displayUserPanel = signal(false);
+  displayNotificationCenter = signal(false);
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       const ntf = params['notification'];
       if (!!ntf && ntf == "on") {
-        this.displayNotificationCenter = true;
+        this.displayNotificationCenter.set(true);
       }
       else {
-        this.displayNotificationCenter = false;
+        this.displayNotificationCenter.set(false);
       }
     })
   }
 
   goToNotifications() {
-    this.displayNotificationCenter = true;
+    this.displayNotificationCenter.set(true);
     this.router.navigate([], { queryParams: { notification: "on" } });
   }
 
@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleUserPanel() {
-    this.displayUserPanel = !this.displayUserPanel;
+    this.displayUserPanel.update(display => !display);
   }
 
   navigateTo(target: string) {

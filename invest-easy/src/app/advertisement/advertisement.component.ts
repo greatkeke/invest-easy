@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { CommonModule } from '@angular/common';
+
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { SkeletonModule } from 'primeng/skeleton';
 
@@ -10,15 +10,18 @@ import { SkeletonModule } from 'primeng/skeleton';
   selector: 'app-advertisement',
   templateUrl: './advertisement.component.html',
   styleUrls: ['./advertisement.component.scss'],
-  imports: [TopNavigationComponent, ProgressBarModule, ProgressSpinnerModule, CommonModule, SkeletonModule]
+  imports: [TopNavigationComponent, ProgressBarModule, ProgressSpinnerModule, SkeletonModule]
 })
 export class AdvertisementComponent {
-  isLoading: boolean = true;
-  adType: string = '';
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
-  adTitle: string = '';
-  adDescription: string = '';
-  adImage: string = '';
+  isLoading = signal(true);
+  adType = signal('');
+
+  adTitle = signal('');
+  adDescription = signal('');
+  adImage = signal('');
 
   private adMappings: { [key: string]: { title: string, description: string, image: string } } = {
     'Account opening / upgrade': {
@@ -93,19 +96,17 @@ export class AdvertisementComponent {
     }
   };
 
-  constructor(private router: Router, private route: ActivatedRoute) { }
-
   ngOnInit() {
     this.route.params.subscribe(pm => {
-      this.adType = pm['adType'] || '';
+      this.adType.set(pm['adType'] || '');
 
-      if (this.adType && this.adMappings[this.adType]) {
+      if (this.adType() && this.adMappings[this.adType()]) {
         setTimeout(() => {
-          const ad = this.adMappings[this.adType];
-          this.adTitle = ad.title;
-          this.adDescription = ad.description;
-          this.adImage = ad.image;
-          this.isLoading = false;
+          const ad = this.adMappings[this.adType()];
+          this.adTitle.set(ad.title);
+          this.adDescription.set(ad.description);
+          this.adImage.set(ad.image);
+          this.isLoading.set(false);
         }, 3000);
       }
     })

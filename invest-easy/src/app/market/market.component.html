@@ -1,10 +1,10 @@
-<app-header title="Market" bg_img="global-markets-banner.jpg"></app-header>
+<app-header title="Market" bg_img="global-markets-banner.jpg" />
 
 <div class="p-4 pb-0">
-  <app-securities-query (resultSelected)="navigateToResult($event)"></app-securities-query>
+  <app-securities-query (resultSelected)="navigateToResult($event)" />
 </div>
 
-<div class="temperature-section" *ngIf="marketTemperature">
+<div class="temperature-section" *ngIf="marketTemperature()">
   <p-card class="temperature-card">
     <ng-template pTemplate="header">
       <div class="card-header">
@@ -12,22 +12,22 @@
       </div>
     </ng-template>
     <div class="card-content">
-      <div class="card-title">{{marketTemperature.temperature}}°C</div>
-      <div class="card-subtitle">{{marketTemperature.description}}</div>
-      <div class="trend-indicator" [class.up]="marketTemperature.trend === 'up'"
-        [class.down]="marketTemperature.trend === 'down'">
-        <i class="pi" [class.pi-arrow-up]="marketTemperature.trend === 'up'"
-          [class.pi-arrow-down]="marketTemperature.trend === 'down'"
-          [class.pi-minus]="marketTemperature.trend !== 'up' && marketTemperature.trend !== 'down'"></i>
+      <div class="card-title">{{marketTemperature().temperature}}°C</div>
+      <div class="card-subtitle">{{marketTemperature().description}}</div>
+      <div class="trend-indicator" [class.up]="marketTemperature().trend === 'up'"
+        [class.down]="marketTemperature().trend === 'down'">
+        <i class="pi" [class.pi-arrow-up]="marketTemperature().trend === 'up'"
+          [class.pi-arrow-down]="marketTemperature().trend === 'down'"
+          [class.pi-minus]="marketTemperature().trend !== 'up' && marketTemperature().trend !== 'down'"></i>
       </div>
       <div class="update-time" i18n>
-        LastUpdatedTime: {{marketTemperature.updatedAt | date:'yyyy-MM-dd HH:mm'}}
+        LastUpdatedTime: {{marketTemperature().updatedAt | date:'yyyy-MM-dd HH:mm'}}
       </div>
     </div>
   </p-card>
 </div>
 
-<div *ngIf="loading">
+<div *ngIf="loading()">
   <div class="card">
     <div class="flex flex-wrap">
       <div class="w-full xl:w-6/12 p-4">
@@ -46,7 +46,7 @@
   </div>
 </div>
 
-<div class="market-container mb-4" *ngIf="!loading">
+<div class="market-container mb-4" *ngIf="!loading()">
   <h5 i18n class="font-semibold">Market Trend</h5>
   <p-tabs [value]="0">
     <p-tablist>
@@ -55,7 +55,7 @@
     </p-tablist>
     <p-tabpanel [value]="0">
       <div class="cards-container">
-        @for (index of indices; track index.code) {
+        @for (index of indices(); track index.code) {
         <p-card styleClass="p-0" (click)="navigateToResult(index.code)">
           <ng-template #title>{{index.name}}</ng-template>
           <ng-template #subtitle>{{index.code}}</ng-template>
@@ -71,7 +71,7 @@
     </p-tabpanel>
     <p-tabpanel [value]="1">
       <div class="cards-container">
-        @for (stock of watchlist; track stock.code) {
+        @for (stock of watchlist(); track stock.code) {
         <p-card styleClass="p-2" (click)="navigateToResult(stock.code)">
           <ng-template #title>{{stock.name}}</ng-template>
           <ng-template #subtitle>{{stock.code}}</ng-template>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -18,10 +18,9 @@ export interface WatchlistItem {
   providedIn: 'root'
 })
 export class WatchlistService {
-  constructor(
-    private http: HttpClient,
-    private marketService: MarketService
-  ) { }
+  private http = inject(HttpClient);
+  private marketService = inject(MarketService);
+
 
   /**
    * Fetches and enriches watchlist items with current market data

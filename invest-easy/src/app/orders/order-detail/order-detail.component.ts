@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrdersService, OrderDetail } from '../../shared/api-services/orders.service';
 import { TopNavigationComponent } from '../../shared/top-navigation/top-navigation.component';
@@ -24,29 +24,27 @@ import { SkeletonModule } from 'primeng/skeleton';
   styleUrl: './order-detail.component.scss'
 })
 export class OrderDetailComponent implements OnInit {
-  orderDetail?: OrderDetail;
-  loading = false;
+  private route = inject(ActivatedRoute);
+  private ordersService = inject(OrdersService);
 
-  constructor(
-    private route: ActivatedRoute,
-    private ordersService: OrdersService
-  ) { }
+  orderDetail = signal<OrderDetail | undefined>(undefined);
+  loading = signal(false);
 
   ngOnInit(): void {
     this.getOrderDetail();
   }
 
   getOrderDetail(): void {
-    this.loading = true;
+    this.loading.set(true);
     const id = this.route.snapshot.queryParamMap.get('id');
     if (id) {
       this.ordersService.getOrderDetailById(id).subscribe({
         next: (response) => {
-          this.orderDetail = response;
-          this.loading = false;
+          this.orderDetail.set(response);
+          this.loading.set(false);
         },
         error: () => {
-          this.loading = false;
+          this.loading.set(false);
         }
       });
     }

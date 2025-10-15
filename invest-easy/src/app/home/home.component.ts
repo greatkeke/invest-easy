@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, Signal, WritableSignal, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
@@ -15,37 +15,37 @@ import { SecuritiesQueryComponent } from '../securities-query/securities-query.c
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  showPromotions = true;
-  promotions = [
+  private router = inject(Router);
+  private accountSvc = inject(AccountsService);
+
+  showPromotions = signal(true);
+  promotions = signal([
     {
       title: 'Welcome Bonus',
       description: 'Receive ¥100 investment credit upon signup',
       visible: true
     }
-  ];
+  ]);
 
-  showBalance = true;
-  account: AccountBalance | undefined;
+  showBalance = signal(true);
+  account: WritableSignal<AccountBalance | undefined> = signal(undefined);
 
   toggleBalanceVisibility() {
-    this.showBalance = !this.showBalance;
+    this.showBalance.set(!this.showBalance());
   }
-
-  constructor(
-    private router: Router,
-    private accountSvc: AccountsService
-  ) { }
 
   async ngOnInit() {
     await this.fetchOverviewAccount();
   }
 
   async fetchOverviewAccount() {
-    this.account = await this.accountSvc.fetchOverviewAccountBalances();
+    this.account.set(await this.accountSvc.fetchOverviewAccountBalances());
   }
 
   closePromotion(index: number) {
-    this.promotions[index].visible = false;
+    this.promotions.update(x => x.map((v, i) =>
+      i === index ? { ...v, visible: !v.visible } : v
+    ))
   }
 
   navigateTo(route: string, queryParams?: Record<string, any>) {
@@ -57,6 +57,6 @@ export class HomeComponent implements OnInit {
   }
 
   checkSecurity(code: string) {
-    this.router.navigate(['/report', { code }]);
+    this.router.navigate(['/report'], { queryParams: { "code": code } });
   }
 }

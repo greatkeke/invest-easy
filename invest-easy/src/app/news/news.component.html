@@ -1,40 +1,48 @@
-<app-header title="News" bg_img="euromoney-awards-trade-digital-banner.jpg"></app-header>
+<app-header title="News" bg_img="euromoney-awards-trade-digital-banner.jpg" />
 
 <div class="news-section" (scroll)="scrolling($event)">
   <div class="news-list">
-    <div *ngFor="let article of marketNews" class="news-card">
-      <div class="news-header">
-        <span class="news-source">{{article.source}}</span>
-        <span class="news-date">{{article.published_at | date:'mediumDate'}}</span>
+    @for (article of marketNews(); track article) {
+      <div class="news-card">
+        <div class="news-header">
+          <span class="news-source">{{article.source}}</span>
+          <span class="news-date">{{article.published_at | date:'mediumDate'}}</span>
+        </div>
+        <h3 class="news-title">{{article.title}}</h3>
+        @if (article.image_url) {
+          <div class="">
+            <img [src]="article.image_url" class="w-full md:w-1/4">
+          </div>
+        }
+        <p class="news-description">{{article.description}}</p>
+        <a [href]="article.url" target="_blank" class="read-more">Read more</a>
       </div>
-      <h3 class="news-title">{{article.title}}</h3>
-      <div *ngIf="article.image_url" class="">
-        <img [src]="article.image_url" class="w-full md:w-1/4">
-      </div>
-      <p class="news-description">{{article.description}}</p>
-      <a [href]="article.url" target="_blank" class="read-more">Read more</a>
-    </div>
+    }
 
-    <div *ngIf="isLoading">
-      <div class="card">
-        <div class="flex flex-wrap">
-          <div class="w-full xl:w-6/12 p-4">
-            <p-skeleton styleClass="mb-2" />
-            <p-skeleton width="10rem" styleClass="mb-2" />
-            <p-skeleton width="5rem" styleClass="mb-2" />
-            <p-skeleton height="2rem" styleClass="mb-2" />
-            <p-skeleton width="10rem" height="4rem" styleClass="mb-2" />
-            <p-skeleton styleClass="mb-2" />
-            <p-skeleton width="10rem" styleClass="mb-2" />
-            <p-skeleton width="5rem" styleClass="mb-2" />
-            <p-skeleton height="2rem" styleClass="mb-2" />
-            <p-skeleton width="10rem" height="4rem" />
+    @if (isLoading()) {
+      <div>
+        <div class="card">
+          <div class="flex flex-wrap">
+            <div class="w-full xl:w-6/12 p-4">
+              <p-skeleton styleClass="mb-2" />
+              <p-skeleton width="10rem" styleClass="mb-2" />
+              <p-skeleton width="5rem" styleClass="mb-2" />
+              <p-skeleton height="2rem" styleClass="mb-2" />
+              <p-skeleton width="10rem" height="4rem" styleClass="mb-2" />
+              <p-skeleton styleClass="mb-2" />
+              <p-skeleton width="10rem" styleClass="mb-2" />
+              <p-skeleton width="5rem" styleClass="mb-2" />
+              <p-skeleton height="2rem" styleClass="mb-2" />
+              <p-skeleton width="10rem" height="4rem" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div *ngIf="!hasMore" class="no-more">
-      <p>No more news to load</p>
-    </div>
+    }
+    @if (!hasMore()) {
+      <div class="no-more">
+        <p>No more news to load</p>
+      </div>
+    }
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, Observable, of } from 'rxjs';
 
@@ -16,8 +16,8 @@ export interface NewsItem {
   providedIn: 'root'
 })
 export class NewsService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   getMarketNews(page: number = 1, pageSize: number = 10): Promise<NewsItem[]> {
     return lastValueFrom(this.http.get<NewsItem[]>("news/", { params: { page: page, page_size: pageSize } }))

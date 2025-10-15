@@ -1,38 +1,44 @@
 <div class="ad-container">
-    <app-top-navigation [title]="adType"></app-top-navigation>
+  <app-top-navigation [title]="adType()" />
 
-    <div class="ad-content p-4">
-        <p-progressBar *ngIf="isLoading" mode="indeterminate"
-            [style]="{'height': '6px', 'width': '100%'}"></p-progressBar>
-        <div *ngIf="isLoading">
-            <div class="card">
-                <div class="flex flex-wrap">
-                    <div class="w-full xl:w-6/12 p-4">
-                        <p-skeleton styleClass="mb-2" />
-                        <p-skeleton width="10rem" styleClass="mb-2" />
-                        <p-skeleton width="5rem" styleClass="mb-2" />
-                        <p-skeleton height="2rem" styleClass="mb-2" />
-                        <p-skeleton width="10rem" height="4rem" styleClass="mb-2" />
-                        <p-skeleton styleClass="mb-2" />
-                        <p-skeleton width="10rem" styleClass="mb-2" />
-                        <p-skeleton width="5rem" styleClass="mb-2" />
-                        <p-skeleton height="2rem" styleClass="mb-2" />
-                    </div>
-                </div>
+  <div class="ad-content p-4">
+    @if (isLoading()) {
+      <p-progressBar mode="indeterminate"
+      [style]="{'height': '6px', 'width': '100%'}" />
+    }
+    @if (isLoading()) {
+      <div>
+        <div class="card">
+          <div class="flex flex-wrap">
+            <div class="w-full xl:w-6/12 p-4">
+              <p-skeleton styleClass="mb-2" />
+              <p-skeleton width="10rem" styleClass="mb-2" />
+              <p-skeleton width="5rem" styleClass="mb-2" />
+              <p-skeleton height="2rem" styleClass="mb-2" />
+              <p-skeleton width="10rem" height="4rem" styleClass="mb-2" />
+              <p-skeleton styleClass="mb-2" />
+              <p-skeleton width="10rem" styleClass="mb-2" />
+              <p-skeleton width="5rem" styleClass="mb-2" />
+              <p-skeleton height="2rem" styleClass="mb-2" />
             </div>
+          </div>
         </div>
+      </div>
+    }
 
-        <div *ngIf="!isLoading" class="flex flex-col md:flex-row gap-4">
-            <div class="w-full md:w-1/2">
-                <img [src]="adImage" [alt]="adTitle" class="rounded-lg shadow-md w-full">
-            </div>
-            <div class="w-full md:w-1/2 flex flex-col justify-center">
-                <h2 class="text-2xl font-bold mb-4">{{adTitle}}</h2>
-                <p class="text-gray-700 mb-6">{{adDescription}}</p>
-                <a href="https://hsbc.com.hk/" target="_blank" rel="noopener noreferrer" class="text-red-500">
-                    Learn More
-                </a>
-            </div>
+    @if (!isLoading()) {
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="w-full md:w-1/2">
+          <img [src]="adImage()" [alt]="adTitle()" class="rounded-lg shadow-md w-full">
         </div>
-    </div>
+        <div class="w-full md:w-1/2 flex flex-col justify-center">
+          <h2 class="text-2xl font-bold mb-4">{{adTitle()}}</h2>
+          <p class="text-gray-700 mb-6">{{adDescription()}}</p>
+          <a href="https://hsbc.com.hk/" target="_blank" rel="noopener noreferrer" class="text-red-500">
+            Learn More
+          </a>
+        </div>
+      </div>
+    }
+  </div>
 </div>

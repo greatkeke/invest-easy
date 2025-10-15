@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 
@@ -7,7 +7,8 @@ import { lastValueFrom } from 'rxjs';
     providedIn: 'root'
 })
 export class ExchangeService {
-    constructor(private http: HttpClient) { }
+    private http = inject(HttpClient);
+
 
     async exchange(fromAccountId: string, toAccountId: string, amount: number): Promise<Boolean> {
         try {

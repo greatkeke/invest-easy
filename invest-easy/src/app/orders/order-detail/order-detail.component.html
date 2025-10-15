@@ -1,7 +1,7 @@
-<app-top-navigation title="Order Detail"></app-top-navigation>
+<app-top-navigation title="Order Detail" />
 
 <div class="p-4">
-    @if (loading) {
+    @if (loading()) {
     <div class="card">
         <div class="flex flex-wrap">
             <div class="w-full xl:w-6/12 p-4">
@@ -24,32 +24,32 @@
         </div>
     </div>
     }
-    @if (orderDetail) {
+    @if (orderDetail()) {
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Order Details -->
         <p-fieldset legend="Order Information" [toggleable]="true">
             <div class="grid grid-cols-2 gap-2">
                 <div>
                     <label class="text-gray-500">Order ID</label>
-                    <p>{{orderDetail.order.id}}</p>
+                    <p>{{orderDetail()!.order.id}}</p>
                 </div>
                 <div>
                     <label class="text-gray-500 mr-2">Status</label>
-                    <p-tag [severity]="orderDetail.order.status === 'FILLED' ? 'success' : 'warn'">
-                        {{orderDetail.order.status}}
+                    <p-tag [severity]="orderDetail()!.order.status === 'FILLED' ? 'success' : 'warn'">
+                        {{orderDetail()!.order.status}}
                     </p-tag>
                 </div>
                 <div>
                     <label class="text-gray-500">Quantity</label>
-                    <p>{{orderDetail.order.quantity}}</p>
+                    <p>{{orderDetail()!.order.quantity}}</p>
                 </div>
                 <div>
                     <label class="text-gray-500">Price</label>
-                    <p>{{orderDetail.order.price | currency: orderDetail.balance.ccy}}</p>
+                    <p>{{orderDetail()!.order.price | currency: orderDetail()!.balance.ccy}}</p>
                 </div>
                 <div>
                     <label class="text-gray-500">Date</label>
-                    <p>{{orderDetail.order.created_at | date: 'long'}}</p>
+                    <p>{{orderDetail()!.order.created_at | date: 'long'}}</p>
                 </div>
             </div>
         </p-fieldset>
@@ -59,11 +59,11 @@
             <div class="grid grid-cols-2 gap-2">
                 <div>
                     <label class="text-gray-500">Code</label>
-                    <p>{{orderDetail.instrument.code}}</p>
+                    <p>{{orderDetail()!.instrument.code}}</p>
                 </div>
                 <div>
                     <label class="text-gray-500">Name</label>
-                    <p>{{orderDetail.instrument.name}}</p>
+                    <p>{{orderDetail()!.instrument.name}}</p>
                 </div>
             </div>
         </p-fieldset>
@@ -73,11 +73,11 @@
             <div class="grid grid-cols-2 gap-2">
                 <div>
                     <label class="text-gray-500">Account Name</label>
-                    <p>{{orderDetail.account.name}}</p>
+                    <p>{{orderDetail()!.account.name}}</p>
                 </div>
                 <div>
                     <label class="text-gray-500">Currency</label>
-                    <p>{{orderDetail.account.ccy}}</p>
+                    <p>{{orderDetail()!.account.ccy}}</p>
                 </div>
             </div>
         </p-fieldset>
@@ -87,7 +87,7 @@
             <div class="grid grid-cols-2 gap-2">
                 <div>
                     <label class="text-gray-500">Available Balance</label>
-                    <p>{{orderDetail.balance.balance | currency:orderDetail.balance.ccy}}</p>
+                    <p>{{orderDetail()!.balance.balance | currency:orderDetail()!.balance.ccy}}</p>
                 </div>
             </div>
         </p-fieldset>

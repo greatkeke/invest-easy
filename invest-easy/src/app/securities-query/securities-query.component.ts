@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ElementRef, inject, input, output, viewChild, signal, model } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +15,6 @@ import { MessageService } from 'primeng/api';
   selector: 'app-securities-query',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     InputTextModule,
     ButtonModule,
@@ -24,54 +23,53 @@ import { MessageService } from 'primeng/api';
     InputIconModule,
     AutoFocusModule,
     ToastModule
-  ],
+],
   providers: [MessageService],
   templateUrl: './securities-query.component.html',
   styleUrls: ['./securities-query.component.scss']
 })
 export class SecuritiesQueryComponent implements OnInit {
-  @Input() autofocus = false;
-  @Input() placeholder = '';
-  @ViewChild('searchInput') searchInput!: ElementRef;
+  private marketService = inject(MarketService);
+  private messageService = inject(MessageService);
 
-  searchQuery = '';
-  searchResults: any[] = [];
-  instruments: any[] = [];
-  loading = false;
-  showLatestInstruments = false;
+  readonly autofocus = input(false);
+  readonly placeholder = input('');
+  readonly searchInput = viewChild.required<ElementRef>('searchInput');
 
-  @Output() resultSelected = new EventEmitter<string>();
+  // Signal-based state
+  searchQuery = model('');
+  searchResults = signal<any[]>([]);
+  instruments = signal<any[]>([]);
+  loading = signal(false);
+  showLatestInstruments = signal(false);
 
-  constructor(
-    private marketService: MarketService,
-    private messageService: MessageService
-  ) { }
+  readonly resultSelected = output<string>();
 
   onSearch(): void {
-    if (!this.searchQuery.trim()) {
-      this.searchResults = [];
+    if (!this.searchQuery().trim()) {
+      this.searchResults.set([]);
       return;
     }
-    this.loading = true;
-    this.marketService.searchSecurities(this.searchQuery.trim()).subscribe({
+    this.loading.set(true);
+    this.marketService.searchSecurities(this.searchQuery().trim()).subscribe({
       next: (response: { code: string, name: string }[]) => {
-        this.showLatestInstruments = false;
-        this.searchResults = response.map((item: any) => ({
+        this.showLatestInstruments.set(false);
+        this.searchResults.set(response.map((item: any) => ({
           code: item.code,
           name: item.name
-        }));
-        this.loading = false;
+        })));
+        this.loading.set(false);
       },
       error: () => {
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
 
   clearSearch(): void {
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.showLatestInstruments = this.autofocus ? true : false;
+    this.searchQuery.set('');
+    this.searchResults.set([]);
+    this.showLatestInstruments.set(this.autofocus() ? true : false);
   }
 
   selectResult(code: string): void {
@@ -85,9 +83,9 @@ export class SecuritiesQueryComponent implements OnInit {
   private ShowLatestInstruments() {
     this.marketService.getInstrumentsByUser().subscribe({
       next: (instruments) => {
-        this.instruments = instruments;
-        if (this.autofocus) {
-          this.showLatestInstruments = true;
+        this.instruments.set(instruments);
+        if (this.autofocus()) {
+          this.showLatestInstruments.set(true);
         }
       },
       error: (err) => {
@@ -97,12 +95,12 @@ export class SecuritiesQueryComponent implements OnInit {
   }
 
   onFocus(): void {
-    this.showLatestInstruments = true;
+    this.showLatestInstruments.set(true);
   }
 
   onBlur(): void {
-    if (!this.autofocus) {
-      this.showLatestInstruments = false;
+    if (!this.autofocus()) {
+      this.showLatestInstruments.set(false);
     }
   }
 }

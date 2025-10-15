@@ -1,4 +1,4 @@
-import { Component, effect, inject, Signal, viewChild } from '@angular/core';
+import { Component, effect, inject, Signal, viewChild, signal } from '@angular/core';
 import { CommonModule, KeyValuePipe, ViewportScroller } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -20,20 +20,24 @@ import { FxrateService } from '../shared/api-services/fxrate.service';
   styleUrls: ['./trade.component.scss']
 })
 export class TradeComponent {
-  overviewAccount: AccountBalance | undefined;
-  totalPL?: number;
-  totalTodayPL?: number;
-  totalMV: number = 0.0;
+  private router = inject(Router);
+  private accountSvc = inject(AccountsService);
+  private positionSvc = inject(PositionService);
+  private fxrateSvc = inject(FxrateService);
+
+  // Signal-based state
+  overviewAccount = signal<AccountBalance | undefined>(undefined);
+  totalPL = signal<number | undefined>(undefined);
+  totalTodayPL = signal<number | undefined>(undefined);
+  totalMV = signal(0.0);
+  showMetrics = signal(true);
+  positions = signal<Position[]>([]);
+  groupPositions = signal(new Map<string, Position[]>());
 
   viewportScroller = inject(ViewportScroller);
   scrollingRef = viewChild<HTMLElement>('scrolling');
 
-  constructor(
-    private router: Router,
-    private accountSvc: AccountsService,
-    private positionSvc: PositionService,
-    private fxrateSvc: FxrateService
-  ) {
+  constructor() {
     const scrollingPosition: Signal<[number, number] | undefined> = toSignal(
       inject(Router).events.pipe(
         filter((event): event is Scroll => event instanceof Scroll),
@@ -46,27 +50,37 @@ export class TradeComponent {
         this.viewportScroller.scrollToPosition(scrollingPosition()!);
       }
     });
-
   }
 
   async ngOnInit() {
     try {
-      this.overviewAccount = await this.accountSvc.fetchOverviewAccountBalances();
-      this.positions = await this.positionSvc.getPositions();
-      this.totalPL = 0;
-      this.totalTodayPL = 0;
-      for (let index = 0; index < this.positions.length; index++) {
-        const element = this.positions[index];
-        let fxrate = this.fxrateSvc.getExchangeRate(element.ccy, this.overviewAccount.ccy);
-        this.totalPL += element.pl * fxrate;
-        this.totalTodayPL += element.todayPL * fxrate;
-        this.totalMV += element.marketValue * fxrate;
-        if (this.groupPositions.has(element.ccy)) {
-          this.groupPositions.get(element.ccy)?.push(element);
+      const account = await this.accountSvc.fetchOverviewAccountBalances();
+      this.overviewAccount.set(account);
+      const positions = await this.positionSvc.getPositions();
+      this.positions.set(positions);
+      
+      let totalPL = 0;
+      let totalTodayPL = 0;
+      let totalMV = 0;
+      const groupPositions = new Map<string, Position[]>();
+      
+      for (let index = 0; index < positions.length; index++) {
+        const element = positions[index];
+        let fxrate = this.fxrateSvc.getExchangeRate(element.ccy, account.ccy);
+        totalPL += element.pl * fxrate;
+        totalTodayPL += element.todayPL * fxrate;
+        totalMV += element.marketValue * fxrate;
+        if (groupPositions.has(element.ccy)) {
+          groupPositions.get(element.ccy)?.push(element);
         } else {
-          this.groupPositions.set(element.ccy, [element]);
+          groupPositions.set(element.ccy, [element]);
         }
       }
+      
+      this.totalPL.set(totalPL);
+      this.totalTodayPL.set(totalTodayPL);
+      this.totalMV.set(totalMV);
+      this.groupPositions.set(groupPositions);
     } catch (error) {
       console.error('Failed to load data', error);
     }
@@ -80,15 +94,10 @@ export class TradeComponent {
     return new Flag(ccy).flag;
   }
 
-  showMetrics = true;
-
   toggleMetrics(event: Event) {
     event.stopPropagation();
-    this.showMetrics = !this.showMetrics;
+    this.showMetrics.update(show => !show);
   }
-
-  positions: Position[] = [];
-  groupPositions: Map<string, Position[]> = new Map<string, Position[]>();
 
   sumPL(positions: Position[]) {
     if (!!!positions) 

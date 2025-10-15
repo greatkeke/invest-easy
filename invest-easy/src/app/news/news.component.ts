@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../shared/header/header.component';
 import { NewsItem, NewsService } from '../shared/api-services/news.service';
@@ -12,12 +12,12 @@ import { SkeletonModule } from 'primeng/skeleton';
   styleUrls: ['./news.component.scss']
 })
 export class NewsComponent implements OnInit {
-  marketNews: NewsItem[] = [];
-  currentPage = 1;
-  isLoading = false;
-  hasMore = true;
+  private newsService = inject(NewsService);
 
-  constructor(private newsService: NewsService) { }
+  marketNews = signal<NewsItem[]>([]);
+  currentPage = signal(1);
+  isLoading = signal(false);
+  hasMore = signal(true);
 
   async ngOnInit() {
     window.addEventListener('scroll', this.scrolling, true)
@@ -25,19 +25,19 @@ export class NewsComponent implements OnInit {
   }
 
   async loadNews() {
-    if (this.isLoading || !this.hasMore) return;
+    if (this.isLoading() || !this.hasMore()) return;
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
-      const newNews = await this.newsService.getMarketNews(this.currentPage);
+      const newNews = await this.newsService.getMarketNews(this.currentPage());
       if (newNews.length === 0) {
-        this.hasMore = false;
+        this.hasMore.set(false);
       } else {
-        this.marketNews = [...this.marketNews, ...newNews];
-        this.currentPage++;
+        this.marketNews.update(currentNews => [...currentNews, ...newNews]);
+        this.currentPage.update(page => page + 1);
       }
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 

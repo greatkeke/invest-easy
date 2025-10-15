@@ -1,4 +1,5 @@
-import { ApplicationConfig, provideZoneChangeDetection, isDevMode, inject, provideAppInitializer } from '@angular/core';
+import { ApplicationConfig, isDevMode, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { ConfigService } from './shared/config.service';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { HttpClient, HttpHeaders, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -8,7 +9,6 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideServiceWorker } from '@angular/service-worker';
 
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Material from '@primeuix/themes/material';
 import { definePreset } from '@primeuix/themes';
@@ -75,7 +75,8 @@ export const appConfig: ApplicationConfig = {
           )
       );
     }),
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideAnimations(),
+    provideZonelessChangeDetection(),
     provideRouter(routes, withInMemoryScrolling({scrollPositionRestoration:'enabled'})),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch(), withInterceptors([apiInterceptor])),
@@ -83,7 +84,6 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    provideAnimationsAsync(),
     providePrimeNG({
       theme: {
         preset: appPreset

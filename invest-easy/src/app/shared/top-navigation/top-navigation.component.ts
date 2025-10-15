@@ -1,31 +1,32 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { Component, inject, input, output, signal } from '@angular/core';
+import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
 
 @Component({
   selector: 'app-top-navigation',
   templateUrl: './top-navigation.component.html',
-  imports: [CommonModule, ButtonModule],
+  imports: [ButtonModule],
   styles: []
 })
 export class TopNavigationComponent {
-  @Input() title = '';
-  isLoading = false;
-  @Output() back = new EventEmitter<void>();
-  @Output() refresh = new EventEmitter<void>();
+  private location = inject(Location);
 
-  constructor(private location: Location) { }
+  readonly title = input('');
+  
+  // Signal-based state
+  isLoading = signal(false);
+  readonly back = output<void>();
+  readonly refresh = output<void>();
 
   refreshData() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     // Simulate API call
     setTimeout(() => {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }, 1000);
     this.refresh.emit();
   }
-
 
   goBack() {
     this.location.back();

@@ -10,7 +10,7 @@ export interface AccountBalance extends Account {
   balance: number;
 }
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { Flag } from '../flag';
@@ -19,7 +19,8 @@ import { Flag } from '../flag';
   providedIn: 'root'
 })
 export class AccountsService {
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+
 
   async fetchAccounts(): Promise<Account[]> {
     try {

@@ -1,99 +1,106 @@
 <div class="min-h-screen">
-  <app-top-navigation title="Trade Stocks" (refresh)="refreshData()">
-  </app-top-navigation>
+  <app-top-navigation title="Trade Stocks" (refresh)="refreshData()" />
 
-  <p-dialog header="Select Security" [(visible)]="dialogVisible" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  <p-dialog header="Select Security" [visible]="dialogVisible()" (visibleChange)="dialogVisible.set($event)" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
     [style]="{width: '50vw'}" [modal]="true" (visibleChange)="closeQuery()" [focusOnShow]="true">
-    <app-securities-query (resultSelected)="onSecuritySelected($event)" [autofocus]="true"></app-securities-query>
+    <app-securities-query (resultSelected)="onSecuritySelected($event)" [autofocus]="true" />
   </p-dialog>
 
   <div class="p-4 space-y-4">
     <!-- Loading indicator -->
-    <div *ngIf="loading" class="rounded-lg shadow p-6 text-center">
-      <p>Loading market data...</p>
-    </div>
+    @if (loading()) {
+      <div class="rounded-lg shadow p-6 text-center">
+        <p>Loading market data...</p>
+      </div>
+    }
 
     <!-- Price Card -->
-    <div *ngIf="!loading && marketSnapshot" class="rounded-lg shadow p-6">
-      <div class="flex flex-col justify-between items-start mb-4">
-        <div class="w-full flex items-center gap-2 justify-between">
-          <h2 class="text-md font-bold mb-2">{{marketSnapshot.name || 'N/A'}}</h2>
-          <p-button [icon]="isWatched ? 'pi pi-heart-fill' : 'pi pi-heart'"
-            [styleClass]="isWatched ? 'p-button-rounded p-button-text p-button-sm p-button-danger' : 'p-button-rounded p-button-text p-button-sm'"
-            (click)="addToWatchlist()" [disabled]="!marketSnapshot"></p-button>
-        </div>
-        <div class="flex w-full justify-between">
-          <span class="text-md">{{marketSnapshot.last_price | number:'1.2-2'}}</span>
-          <span *ngIf="marketSnapshot.prev_close_price" class="text-md" [ngClass]="{
-                  'text-red-500': marketSnapshot.last_price >= marketSnapshot.prev_close_price,
-                  'text-green-500': marketSnapshot.last_price < marketSnapshot.prev_close_price
+    @if (!loading() && marketSnapshot()) {
+      <div class="rounded-lg shadow p-6">
+        <div class="flex flex-col justify-between items-start mb-4">
+          <div class="w-full flex items-center gap-2 justify-between">
+            <h2 class="text-md font-bold mb-2">{{marketSnapshot()!.name || 'N/A'}}</h2>
+            <p-button [icon]="isWatched() ? 'pi pi-heart-fill' : 'pi pi-heart'"
+              [styleClass]="isWatched() ? 'p-button-rounded p-button-text p-button-sm p-button-danger' : 'p-button-rounded p-button-text p-button-sm'"
+            (click)="addToWatchlist()" [disabled]="!marketSnapshot()" />
+          </div>
+          <div class="flex w-full justify-between">
+            <span class="text-md">{{marketSnapshot()!.last_price | number:'1.2-2'}}</span>
+            @if (marketSnapshot()!.prev_close_price) {
+<span class="text-md" [ngClass]="{
+                  'text-red-500': marketSnapshot()!.last_price >= marketSnapshot()!.prev_close_price,
+                  'text-green-500': marketSnapshot()!.last_price < marketSnapshot()!.prev_close_price
                 }">
-            {{ (marketSnapshot.last_price - marketSnapshot.prev_close_price) >= 0 ? '+' : '' }}
-            {{ (marketSnapshot.last_price - marketSnapshot.prev_close_price) | number:'1.2-2' }}
-            ({{ ((marketSnapshot.last_price - marketSnapshot.prev_close_price) / marketSnapshot.prev_close_price * 100)
-            | number:'1.2-2' }}%)
-          </span>
+                {{ (marketSnapshot()!.last_price - marketSnapshot()!.prev_close_price) >= 0 ? '+' : '' }}
+                {{ (marketSnapshot()!.last_price - marketSnapshot()!.prev_close_price) | number:'1.2-2' }}
+                ({{ ((marketSnapshot()!.last_price - marketSnapshot()!.prev_close_price) / marketSnapshot()!.prev_close_price * 100)
+                | number:'1.2-2' }}%)
+              </span>
+            }
+          </div>
+        </div>
+        <div class="min-h-10">
+          <p-chart type="line" [data]="chartData()" [options]="options()" />
         </div>
       </div>
-      <div class="min-h-10">
-        <p-chart type="line" [data]="chartData" [options]="options"></p-chart>
-      </div>
-    </div>
+    }
 
     <!-- Trading Info Card -->
-    <div *ngIf="!loading && marketSnapshot" class="rounded-lg shadow p-6">
-      <h2 class="text-sm text-gray-900 mb-4">Trading Information</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">Open</span>
-          <span class="text-xs">{{marketSnapshot.open_price | number:'1.2-2'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">Prev. close</span>
-          <span class="text-xs">{{marketSnapshot.prev_close_price | number:'1.2-2'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">Day low</span>
-          <span class="text-xs">{{marketSnapshot.low_price | number:'1.2-2'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">Day high</span>
-          <span class="text-xs">{{marketSnapshot.high_price | number:'1.2-2'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">52 wk low</span>
-          <span class="text-xs">{{marketSnapshot.lowest52weeks_price | number:'1.2-2'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">52 wk high</span>
-          <span class="text-xs">{{marketSnapshot.highest52weeks_price | number:'1.2-2'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">Turnover</span>
-          <span class="text-xs">{{marketSnapshot.turnover | number:'1.0-0'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">Volume</span>
-          <span class="text-xs">{{marketSnapshot.volume | number:'1.0-0'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">P/E ratio</span>
-          <span class="text-xs">{{marketSnapshot.pe_ratio | number:'1.2-2'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">Market cap</span>
-          <span class="text-xs">{{marketSnapshot.total_market_val / 1000000 | number:'1.0-0'}}M</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">Lot size</span>
-          <span class="text-xs">{{marketSnapshot.lot_size | number:'1.0-0'}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-700">Spread</span>
-          <span class="text-xs">{{marketSnapshot.price_spread | number:'1.2-2'}}</span>
+    @if (!loading() && marketSnapshot()) {
+      <div class="rounded-lg shadow p-6">
+        <h2 class="text-sm text-gray-900 mb-4">Trading Information</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">Open</span>
+            <span class="text-xs">{{marketSnapshot()!.open_price | number:'1.2-2'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">Prev. close</span>
+            <span class="text-xs">{{marketSnapshot()!.prev_close_price | number:'1.2-2'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">Day low</span>
+            <span class="text-xs">{{marketSnapshot()!.low_price | number:'1.2-2'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">Day high</span>
+            <span class="text-xs">{{marketSnapshot()!.high_price | number:'1.2-2'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">52 wk low</span>
+            <span class="text-xs">{{marketSnapshot()!.lowest52weeks_price | number:'1.2-2'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">52 wk high</span>
+            <span class="text-xs">{{marketSnapshot()!.highest52weeks_price | number:'1.2-2'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">Turnover</span>
+            <span class="text-xs">{{marketSnapshot()!.turnover | number:'1.0-0'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">Volume</span>
+            <span class="text-xs">{{marketSnapshot()!.volume | number:'1.0-0'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">P/E ratio</span>
+            <span class="text-xs">{{marketSnapshot()!.pe_ratio | number:'1.2-2'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">Market cap</span>
+            <span class="text-xs">{{marketSnapshot()!.total_market_val / 1000000 | number:'1.0-0'}}M</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">Lot size</span>
+            <span class="text-xs">{{marketSnapshot()!.lot_size | number:'1.0-0'}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-700">Spread</span>
+            <span class="text-xs">{{marketSnapshot()!.price_spread | number:'1.2-2'}}</span>
+          </div>
         </div>
       </div>
-    </div>
+    }
 
     <!-- Order Form -->
     <div class="rounded-lg shadow p-6">
@@ -103,50 +110,50 @@
           <label class="block text-xs text-gray-700 mb-2">Trade type</label>
           <div class="flex gap-4 mb-4">
             <div class="flex items-center">
-              <p-radioButton name="tradeType" value="buy" [(ngModel)]="tradeType" inputId="buy"></p-radioButton>
+              <p-radioButton name="tradeType" value="buy" [ngModel]="tradeType()" (ngModelChange)="tradeType.set($event)" inputId="buy" />
               <label for="buy" class="ml-2">Buy</label>
             </div>
             <div class="flex items-center">
-              <p-radioButton name="tradeType" value="sell" [(ngModel)]="tradeType" inputId="sell"></p-radioButton>
+              <p-radioButton name="tradeType" value="sell" [ngModel]="tradeType()" (ngModelChange)="tradeType.set($event)" inputId="sell" />
               <label for="sell" class="ml-2">Sell</label>
             </div>
           </div>
         </div>
         <div>
           <label class="block text-xs text-gray-700 mb-2">Order Type</label>
-          <p-select [options]="orderTypes" [(ngModel)]="orderForm.type" name="type" optionLabel="label"
-            [showClear]="false" placeholder="Select order type" size="small"></p-select>
+          <p-select [options]="orderTypes" [(ngModel)]="orderForm().type" name="type" optionLabel="label"
+          [showClear]="false" placeholder="Select order type" size="small" />
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Price</label>
-          <p-inputNumber [(ngModel)]="orderForm.price" name="price" mode="currency" [currency]="orderForm.payFrom.ccy"
+          <p-inputNumber [(ngModel)]="orderForm().price" name="price" mode="currency" [currency]="orderForm().payFrom.ccy"
             [min]="0" [max]="1000000" [step]="0.001" [showButtons]="true" size="small" [minFractionDigits]="2"
-            [maxFractionDigits]="3"></p-inputNumber>
+          [maxFractionDigits]="3" />
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Quantity</label>
-          <p-inputNumber [(ngModel)]="orderForm.quantity" name="quantity" [min]="100" [max]="1000000"
+          <p-inputNumber [(ngModel)]="orderForm().quantity" name="quantity" [min]="100" [max]="1000000"
             [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
-            decrementButtonIcon="pi pi-minus" size="small" inputStyleClass="max-w-20" [step]="100"></p-inputNumber>
+          decrementButtonIcon="pi pi-minus" size="small" inputStyleClass="max-w-20" [step]="100" />
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Good until</label>
-          <p-datepicker [(ngModel)]="orderForm.goodUntil" name="goodUntil" [showIcon]="true" dateFormat="yy-mm-dd"
-            [minDate]="today" size="small" appendTo="body" readonlyInput></p-datepicker>
+          <p-datepicker [(ngModel)]="orderForm().goodUntil" name="goodUntil" [showIcon]="true" dateFormat="yy-mm-dd"
+          [minDate]="today" size="small" appendTo="body" readonlyInput />
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Pay from</label>
-          <app-account-selector [options]="accounts" [(value)]="orderForm.payFrom"
-            name="payFrom"></app-account-selector>
+          <app-account-selector [options]="accounts()" [(value)]="orderForm().payFrom"
+          name="payFrom" />
         </div>
 
         <div>
           <label class="block text-xs text-gray-700 mb-2">Account buying power</label>
-          <span class="text-sm font-bold">{{orderForm.payFrom.balance | currency: orderForm.payFrom.ccy}}</span>
+          <span class="text-sm font-bold">{{orderForm().payFrom.balance | currency: orderForm().payFrom.ccy}}</span>
         </div>
       </form>
     </div>
@@ -158,49 +165,55 @@
         <span class="text-sm font-bold">${{estimatedTotal | number:'1.2-2'}}</span>
       </div>
       <p-button label="Preview order" styleClass="w-full" variant="outlined" size="small"
-        (onClick)="showPreview()"></p-button>
+      (onClick)="showPreview()" />
     </div>
   </div>
 
   <!-- Preview Dialog -->
-  <p-dialog header="Order Preview" [(visible)]="displayPreview" [modal]="true" [style]="{width: '50vw'}"
+  <p-dialog header="Order Preview" [visible]="displayPreview()" (visibleChange)="displayPreview.set($event)" [modal]="true" [style]="{width: '50vw'}"
     [breakpoints]="{'960px': '75vw', '768px': '90vw'}" [draggable]="false" [resizable]="false">
     <div class="space-y-4">
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm text-gray-700">Order Type</label>
-          <p class="font-medium">{{orderForm.type.label}}</p>
+          <p class="font-medium">{{orderForm().type.label}}</p>
         </div>
-        <div *ngIf="orderForm.type.value === 'limit'">
-          <label class="block text-sm text-gray-700">Price</label>
-          <p class="font-medium">{{orderForm.price | currency: orderForm.payFrom.ccy}}</p>
-        </div>
+        @if (orderForm().type.value === 'limit') {
+          <div>
+            <label class="block text-sm text-gray-700">Price</label>
+            <p class="font-medium">{{orderForm().price | currency: orderForm().payFrom.ccy}}</p>
+          </div>
+        }
         <div>
           <label class="block text-sm text-gray-700">Quantity</label>
-          <p class="font-medium">{{orderForm.quantity}}</p>
+          <p class="font-medium">{{orderForm().quantity}}</p>
         </div>
         <div>
           <label class="block text-sm text-gray-700">Good Until</label>
-          <p class="font-medium">{{orderForm.goodUntil | date:'yyyy-MM-dd'}}</p>
+          <p class="font-medium">{{orderForm().goodUntil | date:'yyyy-MM-dd'}}</p>
         </div>
         <div>
           <label class="block text-sm text-gray-700">Pay From</label>
-          <p class="font-medium"><i [ngClass]="'fi fi-' + orderForm.payFrom.flag"
-              class="mr-2"></i>{{orderForm.payFrom.name}}</p>
+          <p class="font-medium"><i [ngClass]="'fi fi-' + orderForm().payFrom.flag"
+          class="mr-2"></i>{{orderForm().payFrom.name}}</p>
         </div>
         <div>
           <label class="block text-sm text-gray-700">Estimated Total</label>
-          <p class="font-medium">{{estimatedTotal | currency: orderForm.payFrom.ccy }}</p>
+          <p class="font-medium">{{estimatedTotal | currency: orderForm().payFrom.ccy }}</p>
         </div>
       </div>
     </div>
     <ng-template pTemplate="footer">
       <p-button label="Cancel" variant="outlined" severity="secondary" icon="pi pi-times"
-        (onClick)="cancelPreview()"></p-button>
-      <p-button *ngIf="tradeType === 'buy'" label="Buy" severity="danger" icon="pi pi-cart-plus"
-        (onClick)="confirmOrder()"></p-button>
-      <p-button *ngIf="tradeType === 'sell'" label="Sell" severity="danger" icon="pi pi-shopping-bag"
-        (onClick)="confirmOrder()"></p-button>
+      (onClick)="cancelPreview()" />
+      @if (tradeType() === 'buy') {
+        <p-button label="Buy" severity="danger" icon="pi pi-cart-plus"
+        (onClick)="confirmOrder()" />
+      }
+      @if (tradeType() === 'sell') {
+        <p-button label="Sell" severity="danger" icon="pi pi-shopping-bag"
+        (onClick)="confirmOrder()" />
+      }
     </ng-template>
   </p-dialog>
 
