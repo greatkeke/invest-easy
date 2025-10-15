@@ -65,7 +65,7 @@ export class TradeStocksComponent implements OnInit {
   private location = inject(Location);
 
   today = new Date();
-  
+
   // Signal-based state
   marketSnapshot = signal<MarketSnapshot | null>(null);
   loading = signal(true);
@@ -76,7 +76,7 @@ export class TradeStocksComponent implements OnInit {
   security_code = signal('');
 
   dialogVisible = signal(false);
-  options: any = {};
+  options = signal({});
   instrument = signal<any>({});
 
   platformId = inject(PLATFORM_ID);
@@ -131,7 +131,7 @@ export class TradeStocksComponent implements OnInit {
       const textColorSecondary = this.documentStyle.getPropertyValue('--p-text-muted-color');
       const surfaceBorder = this.documentStyle.getPropertyValue('--p-content-border-color');
 
-      this.options = {
+      this.options.set({
         responsive: true,
         maintainAspectRatio: false,
         aspectRatio: 1.4,
@@ -165,7 +165,7 @@ export class TradeStocksComponent implements OnInit {
             }
           }
         }
-      };
+      });
     }
   }
 
@@ -229,7 +229,7 @@ export class TradeStocksComponent implements OnInit {
     this.marketService.getRTData(code).subscribe({
       next: (data: RTData[]) => {
         if (data && data.length > 0) {
-          this.chartData = {
+          this.chartData.update(x => x = {
             labels: data.map((item: RTData) => item.time.split(' ')[1].substring(0, 5)), // Extract time part
             datasets: [
               {
@@ -239,7 +239,7 @@ export class TradeStocksComponent implements OnInit {
                 tension: 0.4
               }
             ]
-          };
+          });
         }
         this.loading.set(false);
       },
@@ -255,7 +255,7 @@ export class TradeStocksComponent implements OnInit {
   }
 
   // Chart data
-  chartData: ChartData = {
+  chartData = signal<ChartData>({
     labels: [],
     datasets: [
       {
@@ -265,7 +265,7 @@ export class TradeStocksComponent implements OnInit {
         tension: 0.4
       }
     ]
-  };
+  });
 
   // Calculate estimated total
   get estimatedTotal(): number {
