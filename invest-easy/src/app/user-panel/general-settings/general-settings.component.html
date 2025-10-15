@@ -1,7 +1,7 @@
 <app-top-navigation [title]="groupName()" />
 <div class="p-4 max-w-3xl mx-auto">
   <form [formGroup]="form" class="flex flex-col space-y-2">
-    @for (item of items; track item) {
+    @for (item of items(); track item) {
       <p-card [header]="item.name">
         <p>
           <small>{{item.note}}</small>

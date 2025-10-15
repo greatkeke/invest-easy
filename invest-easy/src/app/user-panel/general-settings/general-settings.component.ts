@@ -40,7 +40,7 @@ export class GeneralSettingsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private messageService = inject(MessageService);
 
-  @Input() items: DefinedItem[] = [];
+  items = signal<DefinedItem[]>([]);
   form: FormGroup;
   
   // Signal-based state
@@ -64,20 +64,20 @@ export class GeneralSettingsComponent implements OnInit {
         finalize(() => this.isLoading.set(false))
       )
       .subscribe(items => {
-        this.items = items;
+        this.items.set(items);
         this.createForm();
       });
   }
 
   createForm() {
-    if (!this.items?.length) {
+    if (!this.items()?.length) {
       this.form = this.fb.group({});
       return;
     }
 
     const formGroup: Record<string, FormGroup | [any, Validators[]]> = {};
     
-    this.items.forEach(item => {
+    this.items().forEach(item => {
       const value = item.user_defined_value ?? item.item_value;
       const isEditable = !item.editable;
 
