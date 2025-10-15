@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, inject, viewChild, signal, effect, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, inject, viewChild, signal, effect } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
@@ -23,7 +23,7 @@ import { SseClient } from 'ngx-sse-client';
     TopNavigationComponent
   ]
 })
-export class ReportComponent implements OnInit, AfterViewInit {
+export class ReportComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private sseClient = inject(SseClient);
 
@@ -34,8 +34,8 @@ export class ReportComponent implements OnInit, AfterViewInit {
   loading = signal(false);
   code = signal<string | null>(null);
   isVerboseExpanded = signal(false);
-  private verboseContentChanged = signal(false);
-  readonly verboseContentElement = viewChild.required<ElementRef>('verboseContentDiv');
+  private verboseContentChanged = signal(0);
+  readonly verboseContentElement = viewChild<ElementRef<HTMLDivElement>>('verboseContentDiv');
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -47,18 +47,20 @@ export class ReportComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-  //   effect(() => {
-  //     if (this.verboseContentChanged() && this.verboseContentElement()) {
-  //       this.scrollToBottom();
-  //     }
-  //   })
+  constructor() {
+    effect(() => {
+      if (this.verboseContentChanged() > 0) {
+        this.scrollToBottom();
+      }
+    })
   }
 
   private scrollToBottom(): void {
     try {
-      const element = this.verboseContentElement().nativeElement;
-      element.scrollTop = element.scrollHeight;
+      if (this.verboseContentElement()) {
+        const element = this.verboseContentElement()!.nativeElement;
+        element.scrollTop = element.scrollHeight;
+      }
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
@@ -95,17 +97,17 @@ export class ReportComponent implements OnInit, AfterViewInit {
           finalContent = false;
         } else if (messageEvent.data.trimStart().startsWith("[工具调用]")) {
           this.verboseContent.update(content => content + "\n" + messageEvent.data + "\n");
-          this.verboseContentChanged.update(x => true);
+          this.verboseContentChanged.update(x => ++x);
         } else {
           if (messageEvent.data.trim() == "") {
             this.verboseContent.update(content => content + "\n\n");
-            this.verboseContentChanged.update(x => true);
+            this.verboseContentChanged.update(x => ++x);
           } else {
             if (finalContent) {
               this.reportContent.update(content => content + messageEvent.data + "\n\n");
             } else {
               this.verboseContent.update(content => content + messageEvent.data);
-              this.verboseContentChanged.update(x => true);
+              this.verboseContentChanged.update(x => ++x);
             }
           }
         }
