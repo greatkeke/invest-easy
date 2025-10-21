@@ -1,73 +1,161 @@
-<app-top-navigation title="AI估值报告" />
+<app-top-navigation title="AI Report" />
 
 <div class="report-container">
   <div class="content-section">
     <div class="header-actions">
-      <h2>报告生成</h2>
+      <h2>Report Generation</h2>
       @if (!loading()) {
-        <p-button label="重新生成"
-          icon="pi pi-refresh"
-          (onClick)="generateReport()"
-          styleClass="p-button-primary" />
+      <p-button label="Regenerate" icon="pi pi-refresh" (onClick)="generateReport()" styleClass="p-button-primary" />
       }
     </div>
+    <div class="flex flex-col lg:flex-row gap-4">
+      <!-- Financial Report Card -->
+      @if(financialReport()){
+      <div class="w-full lg:w-1/3">
+        <p-card header="Final Report" class="h-full">
+          <div class="space-y-4">
+            <!-- Watch Status -->
+            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <div class="flex items-center space-x-2">
+                <i class="pi pi-eye text-blue-600"></i>
+                <span class="font-medium text-blue-800">Worth to watch</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                @if(financialReport()?.watch){
+                  <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Yes</span>
+                } @else {
+                  <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">Not</span>
+                }
+              </div>
+            </div>
 
-    <p-card>
-      <div class="report-content-section">
-        @if (loading()) {
+            <!-- Current Price -->
+            <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-2">
+                  <i class="pi pi-chart-line text-gray-600"></i>
+                  <span class="font-medium text-gray-800">Current Price</span>
+                </div>
+                <span class="text-2xl font-bold text-gray-900">
+                  {{financialReport()?.current_price | number:'1.3-3'}}
+                </span>
+              </div>
+            </div>
+
+            <!-- Price Range -->
+            <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
+              <div class="flex items-center space-x-2 mb-2">
+                <i class="pi pi-chart-bar text-purple-600"></i>
+                <span class="font-medium text-purple-800">Price Range</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="text-center">
+                  <div class="text-sm text-purple-600">Low</div>
+                  <div class="text-lg font-semibold text-purple-800">
+                    {{financialReport()?.price_range?.[0] | number:'1.3-3'}}
+                  </div>
+                </div>
+                <div class="text-center">
+                  <div class="text-sm text-purple-600">High</div>
+                  <div class="text-lg font-semibold text-purple-800">
+                    {{financialReport()?.price_range?.[1] | number:'1.3-3'}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Max Price -->
+            <div class="p-3 bg-orange-50 rounded-lg border border-orange-200">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <i class="pi pi-arrow-up-right text-orange-600"></i>
+                  <span class="font-medium text-orange-800">Target Price</span>
+                </div>
+                <span class="text-xl font-bold text-orange-700">
+                  ¥{{financialReport()?.max_price | number:'1.3-3'}}
+                </span>
+              </div>
+            </div>
+
+            <!-- Advantages -->
+            <div class="p-3 bg-green-50 rounded-lg border border-green-200">
+              <div class="flex items-center space-x-2 mb-2">
+                <i class="pi pi-thumbs-up text-green-600"></i>
+                <span class="font-medium text-green-800">Advantages</span>
+              </div>
+              <p class="text-sm text-green-700 leading-relaxed">
+                {{financialReport()?.advantage}}
+              </p>
+            </div>
+
+            <!-- Risks -->
+            <div class="p-3 bg-red-50 rounded-lg border border-red-200">
+              <div class="flex items-center space-x-2 mb-2">
+                <i class="pi pi-exclamation-triangle text-red-600"></i>
+                <span class="font-medium text-red-800">Risks</span>
+              </div>
+              <p class="text-sm text-red-700 leading-relaxed">
+                {{financialReport()?.risk}}
+              </p>
+            </div>
+          </div>
+        </p-card>
+      </div>
+      }
+      <!-- Main Report Content Card -->
+      <div class="w-full lg:w-2/3">
+        <p-card>
+          <div class="report-content-section">
+          @if (loading()) {
           <div class="loading-indicator">
             <div class="loading-spinner">
               <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-              <p>正在生成报告，请稍候...</p>
+              <p>Checking...Please wait for a moment</p>
             </div>
           </div>
-        }
+          }
 
-        <div class="report-output">
-          <!-- Verbose Content Section -->
-          @if (verboseContent()) {
+          <div class="report-output">
+            <!-- Verbose Content Section -->
+            @if (verboseContent()) {
             <div class="verbose-section">
               <div class="verbose-header">
-                <h4>详细过程</h4>
-                <button
-                  class="toggle-button"
-                  (click)="isVerboseExpanded.set(!isVerboseExpanded())"
+                <h4>Verbose</h4>
+                <button class="toggle-button" (click)="isVerboseExpanded.set(!isVerboseExpanded())"
                   [attr.aria-expanded]="isVerboseExpanded()">
-                  {{ isVerboseExpanded() ? '收起' : '展开' }}
+                  {{ isVerboseExpanded() ? 'Collapse' : 'Expand' }}
                 </button>
               </div>
-              <div
-                #verboseContentDiv
-                class="verbose-content"
-                [class.expanded]="isVerboseExpanded()"
+              <div #verboseContentDiv class="verbose-content" [class.expanded]="isVerboseExpanded()"
                 [class.collapsed]="!isVerboseExpanded()">
                 <pre>{{ verboseContent() }}</pre>
               </div>
             </div>
-          }
+            }
 
-          <div class="report-header">
-            <h3>报告内容</h3>
-            <small>报告代码: {{ code() }}</small>
-          </div>
-          @if (reportContent()) {
+            <div class="report-header">
+              <h3>Report Content</h3>
+              <small>Stock Code: {{ code() }}</small>
+            </div>
+            @if (reportContent()) {
             <div class="report-text">
               <div class="markdown-content" [innerHTML]="renderedContent()"></div>
             </div>
-          }
-        </div>
+            }
+          </div>
 
-        @if (!loading() && !reportContent()) {
+          @if (!loading() && !reportContent()) {
           <div class="empty-state">
             <i class="pi pi-file" style="font-size: 3rem; color: #ccc;"></i>
-            <p>等待生成报告...</p>
-            <p-button label="开始生成"
-              icon="pi pi-play"
-              (onClick)="generateReport()"
-              styleClass="p-button-primary" />
+            <p>Generating report...</p>
+            <p-button label="Start Generating" icon="pi pi-play" (onClick)="generateReport()" styleClass="p-button-primary" />
           </div>
-        }
+          }
+          </div>
+        </p-card>
       </div>
-    </p-card>
+      
+    </div>
+
   </div>
 </div>

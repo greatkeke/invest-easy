@@ -10,7 +10,9 @@ from ..domain.users import User
 from ..infrastructure.db import get_async_session
 from langchain.chat_models import init_chat_model
 from langchain.agents import create_tool_calling_agent, AgentExecutor
-from langchain.prompts import ChatPromptTemplate
+from langchain.prompts import ChatPromptTemplate, PromptTemplate
+from langchain.output_parsers import ResponseSchema, StructuredOutputParser
+from langchain_core.runnables import RunnableLambda
 from ..infrastructure.akshare_tools import (
     QueryStockFinacialReport,
     QueryStockHistoricalData,
@@ -78,7 +80,8 @@ class ReportService:
 2. 市净率 PB，适合重资产行业，例如银行，低于1时结合资产结构进行判断。
 
 ### 总结
-最后评估该股票是否值得关注，主要亮点和风险是什么？
+最后评估该股票是否值得长期投资，主要亮点和风险是什么？以及当前价格是多少？
+建议的投资价格区间是多少？预期的价格支撑点(阻力位)是多少？
                  """,
                 ),
                 ("human", "{input}"),
@@ -100,32 +103,55 @@ class ReportService:
 
         agent = create_tool_calling_agent(llm=self.model, tools=tools, prompt=prompt)
 
+        schemas = [
+            ResponseSchema(name="watch", description="是否值得长期投资", type="bool"),
+            ResponseSchema(name="advantage", description="亮点"),
+            ResponseSchema(name="risk", description="风险"),
+            ResponseSchema(name="current_price", description="当前价格", type="float"),
+            ResponseSchema(
+                name="price_range", description="价格区间", type="List(float)"
+            ),
+            ResponseSchema(
+                name="max_price", description="价格支撑点(阻力位)", type="float"
+            ),
+        ]
+        parser = StructuredOutputParser.from_response_schemas(schemas)
+        summary_prompt = PromptTemplate.from_template("请从报告中提取关键信息，并返回json格式。\n\n资产分析报告：{result}\n\n{format_instructions}")
+        summary_agent = summary_prompt.partial(format_instructions=parser.get_format_instructions()) | self.model | parser
+
         executer = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-        async for event in executer.astream_events(
-            {"input": "请分析股票" + report_code + "的四要素，并总结是否值得关注。"},
-            version="v2",
+        def map_output_to_result(agent_output):
+            return {"result": agent_output["output"]}
+
+        final_chain = executer | RunnableLambda(map_output_to_result) | summary_agent
+        final_output = None
+        async for event in final_chain.astream_events(
+            {"input": "请分析股票" + report_code + "的四要素，并总结。"},
+            version="v2"
         ):
             event_type = event["event"]
             if event_type == "on_chat_model_stream":
-                chunk =  event["data"]["chunk"] # type: ignore
+                chunk = event["data"]["chunk"]  # type: ignore
                 yield chunk.content
-            if event_type == "on_chat_model_end":
+            elif event_type == "on_chat_model_end":
                 yield "\n\n\n"
             elif event["event"] == "on_tool_start":
-                yield f"\n\n[工具调用] {event['name']} with {event["data"]["input"]}\n\n" # type: ignore
-            # elif event_type == "on_tool_end":
-            #     tool_output = event["data"].get("output")
-            #     yield f"✅ 工具调用结束, 结果: {tool_output}"
+                yield f"\n\n[工具调用] {event['name']} with {event["data"]["input"]}\n\n"  # type: ignore
             # elif event_type == "on_chat_model_end":
             #     # 这通常是 AgentExecutor 的最终输出
             #     final_output = event["data"].get("output")
             #     yield f"最终回答: {final_output.content}"
             elif event_type == "on_chain_end":
-                output = event['data'].get('output')
+                output = event["data"].get("output")
                 if isinstance(output, AgentFinish):
                     returns_value = output.return_values
-                    if returns_value and 'output' in returns_value:
+                    if returns_value and "output" in returns_value:
                         yield f"[[Final Answer Start]]"
-                        yield returns_value['output']
+                        yield returns_value["output"]
                         yield f"[[Final Answer End]]"
+                else:
+                    final_output = output
+        yield f"[[final output start]]"
+        yield json.dumps(final_output)
+        yield f"[[final output end]]"

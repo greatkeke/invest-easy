@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, inject, viewChild, signal, effect } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -8,6 +9,7 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { TopNavigationComponent } from '../shared/top-navigation/top-navigation.component';
 import { marked } from 'marked';
 import { SseClient } from 'ngx-sse-client';
+import { FinancialReport } from '../shared/models/financial-report';
 
 @Component({
   selector: 'app-report',
@@ -15,6 +17,7 @@ import { SseClient } from 'ngx-sse-client';
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss'],
   imports: [
+    CommonModule,
     FormsModule,
     CardModule,
     ButtonModule,
@@ -31,6 +34,7 @@ export class ReportComponent implements OnInit {
   reportContent = signal('');
   renderedContent = signal('');
   verboseContent = signal('');
+  financialReport = signal<FinancialReport | null>(null);
   loading = signal(false);
   code = signal<string | null>(null);
   isVerboseExpanded = signal(false);
@@ -77,6 +81,7 @@ export class ReportComponent implements OnInit {
     this.renderedContent.update(x => '');
     this.verboseContent.update(x => '');
     let finalContent = false;
+    let finalOutput = false;
 
     this.sseClient.stream(`reports/generate/${this.code()}`, { keepAlive: false, reconnectionDelay: 1_000, responseType: 'event' }, {}, 'GET').subscribe(async (event) => {
       if (event.type === 'error') {
@@ -95,6 +100,10 @@ export class ReportComponent implements OnInit {
           const renderResult = await this.renderMarkdown(this.reportContent());
           this.renderedContent.update(x => renderResult);
           finalContent = false;
+        } else if (messageEvent.data.trim() == ('[[final output start]]')) {
+          finalOutput = true;
+        } else if (messageEvent.data.trim() == ('[[final output end]]')) {
+          finalOutput = false;
         } else if (messageEvent.data.trimStart().startsWith("[工具调用]")) {
           this.verboseContent.update(content => content + "\n" + messageEvent.data + "\n");
           this.verboseContentChanged.update(x => ++x);
@@ -105,6 +114,8 @@ export class ReportComponent implements OnInit {
           } else {
             if (finalContent) {
               this.reportContent.update(content => content + messageEvent.data + "\n\n");
+            } else if (finalOutput) {
+              this.financialReport.update(x => JSON.parse(messageEvent.data));
             } else {
               this.verboseContent.update(content => content + messageEvent.data);
               this.verboseContentChanged.update(x => ++x);
