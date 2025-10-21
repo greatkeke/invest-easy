@@ -1,5 +1,5 @@
 # Build stage
-FROM python:3.13.2-alpine as builder
+FROM python:3.12.11-alpine as builder
 
 WORKDIR /install
 COPY requirements.txt .
@@ -8,7 +8,7 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
     && apk del .build-deps
 
 # Runtime stage
-FROM python:3.13.2-alpine
+FROM python:3.12.11-alpine
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
