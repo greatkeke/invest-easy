@@ -14,8 +14,8 @@ futu-api
 newsapi-python
 asyncer
 akshare
-langchain
-langchain_deepseek
-langchain-community 
-langchain-experimental
+langchain==0.3.27
+langchain_deepseek==0.1.4
+langchain-community==0.3.31
+langchain-experimental==0.3.4
 sse-starlette
