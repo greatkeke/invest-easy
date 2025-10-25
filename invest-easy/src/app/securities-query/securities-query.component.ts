@@ -23,7 +23,7 @@ import { MessageService } from 'primeng/api';
     InputIconModule,
     AutoFocusModule,
     ToastModule
-],
+  ],
   providers: [MessageService],
   templateUrl: './securities-query.component.html',
   styleUrls: ['./securities-query.component.scss']
@@ -35,6 +35,8 @@ export class SecuritiesQueryComponent implements OnInit {
   readonly autofocus = input(false);
   readonly placeholder = input('');
   readonly searchInput = viewChild.required<ElementRef>('searchInput');
+
+  readonly latestInstrumentListId = "latestInstrumentListId";
 
   // Signal-based state
   searchQuery = model('');
@@ -98,8 +100,14 @@ export class SecuritiesQueryComponent implements OnInit {
     this.showLatestInstruments.set(true);
   }
 
-  onBlur(): void {
+  onBlur(event: any): void {
     if (!this.autofocus()) {
+      if (event.relatedTarget?.id) {
+        const id = event.relatedTarget.id as string;
+        if (id.indexOf(this.latestInstrumentListId) > -1) {
+          return;
+        }
+      }
       this.showLatestInstruments.set(false);
     }
   }
