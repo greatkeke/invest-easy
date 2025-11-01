@@ -1,27 +1,18 @@
-# Build stage
-FROM ghcr.io/astral-sh/uv:python3.12-alpine as builder
-
-WORKDIR /install
-COPY pyproject.toml uv.lock .
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
-    && uv sync --frozen --no-cache \
-    && apk del .build-deps
-
-# Runtime stage
-FROM ghcr.io/astral-sh/uv:python3.12-alpine
+FROM python:3.12.11-alpine
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PATH="/usr/local/bin:$PATH"
 
-WORKDIR /invest-easy-webapi
+# Install uv.
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-# Copy installed packages to Python's standard location
-COPY --from=builder /install /usr/local
+# Copy the application into the container.
+COPY . /app
 
-# Copy application code to working directory
-COPY ./app ./app
-COPY main.py .
+# Install the application dependencies.
+WORKDIR /app
+RUN uv sync --frozen --no-cache
 
 # Create volumes
 VOLUME /invest-easy-webapi/db
@@ -30,4 +21,5 @@ VOLUME /invest-easy-webapi/logs
 
 EXPOSE 10008
 
-CMD ["uv run uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "10008"]
+# Run the application.
+CMD ["/app/.venv/bin/fastapi", "run", "app/app.py", "--port", "10008", "--host", "0.0.0.0"]

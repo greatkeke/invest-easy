@@ -7,4 +7,5 @@
 !main.py
 !uv.lock
 !pyproject.toml
-
+!__init__.py
+!.python-version
