@@ -15,9 +15,9 @@ WORKDIR /app
 RUN uv sync --frozen --no-cache
 
 # Create volumes
-VOLUME /invest-easy-webapi/db
-VOLUME /invest-easy-webapi/env
-VOLUME /invest-easy-webapi/logs
+VOLUME /app/db
+VOLUME /app/env
+VOLUME /app/logs
 
 EXPOSE 10008
 
