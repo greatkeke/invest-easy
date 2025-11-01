@@ -8,7 +8,7 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
     && apk del .build-deps
 
 # Runtime stage
-FROM python:3.12.11-alpine
+FROM ghcr.io/astral-sh/uv:python3.12-alpine
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -29,8 +29,5 @@ VOLUME /invest-easy-webapi/env
 VOLUME /invest-easy-webapi/logs
 
 EXPOSE 10008
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:10008/health || exit 1
 
 CMD ["uv run uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "10008"]
