@@ -5,4 +5,6 @@
 !app/
 !db/
 !main.py
-!requirements.txt
+!uv.lock
+!pyproject.toml
+

@@ -1,10 +1,10 @@
 # Build stage
-FROM python:3.12.11-alpine as builder
+FROM ghcr.io/astral-sh/uv:python3.12-alpine as builder
 
 WORKDIR /install
-COPY requirements.txt .
+COPY pyproject.toml uv.lock .
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
-    && pip install --prefix=/install --no-cache-dir --no-warn-script-location -r requirements.txt \
+    && uv sync --frozen --no-cache \
     && apk del .build-deps
 
 # Runtime stage
@@ -30,4 +30,7 @@ VOLUME /invest-easy-webapi/logs
 
 EXPOSE 10008
 
-CMD ["uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "10008"]
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:10008/health || exit 1
+
+CMD ["uv run uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "10008"]

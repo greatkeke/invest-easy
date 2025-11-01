@@ -1,13 +1,29 @@
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-asyncio_mode = "strict"
-
-[tool.coverage.run]
-source = ["app"]
-
-[build-system]
-requires = ["setuptools>=45", "wheel"]
-build-backend = "setuptools.build_meta"
+[project]
+name = "invest-easy-webapi"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiosqlite>=0.21.0",
+    "akshare>=1.17.80",
+    "asyncer>=0.0.10",
+    "fastapi-users-db-sqlalchemy>=7.0.0",
+    "fastapi-users[sqlalchemy]>=15.0.1",
+    "fastapi[standard]>=0.120.4",
+    "futu-api>=9.4.5408",
+    "langchain==0.3.27",
+    "langchain-community==0.3.31",
+    "langchain-deepseek==0.1.4",
+    "langchain-experimental==0.3.4",
+    "newsapi-python>=0.2.7",
+    "passlib>=1.7.4",
+    "pydantic>=2.12.3",
+    "pydantic-settings>=2.11.0",
+    "python-dotenv>=1.2.1",
+    "python-jose>=3.5.0",
+    "python-multipart>=0.0.20",
+    "sqlalchemy>=2.0.44",
+    "sse-starlette>=3.0.3",
+    "uvicorn[standard]>=0.38.0",
+]

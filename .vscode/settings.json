@@ -5,9 +5,5 @@
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "python.testing.cwd": "${workspaceFolder}/invest-easy-webapi",
-    "python.defaultInterpreterPath": "/opt/homebrew/Caskroom/miniconda/base/envs/easy/bin/python",
     "python.terminal.activateEnvironment": true,
-    "python-envs.defaultEnvManager": "ms-python.python:conda",
-    "python-envs.defaultPackageManager": "ms-python.python:conda",
-    "python-envs.pythonProjects": []
 }
