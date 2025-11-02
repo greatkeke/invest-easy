@@ -8,18 +8,18 @@ ENV PATH="/usr/local/bin:$PATH"
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Copy the application into the container.
-COPY . /app
+COPY . /invest-easy-webapi
 
 # Install the application dependencies.
-WORKDIR /app
+WORKDIR /invest-easy-webapi
 RUN uv sync --frozen --no-cache
 
 # Create volumes
-VOLUME /app/db
-VOLUME /app/env
-VOLUME /app/logs
+VOLUME /invest-easy-webapi/db
+VOLUME /invest-easy-webapi/env
+VOLUME /invest-easy-webapi/logs
 
 EXPOSE 10008
 
 # Run the application.
-CMD ["/app/.venv/bin/fastapi", "run", "app/app.py", "--port", "10008", "--host", "0.0.0.0"]
+CMD ["/invest-easy-webapi/.venv/bin/fastapi", "run", "app/app.py", "--port", "10008", "--host", "0.0.0.0"]
