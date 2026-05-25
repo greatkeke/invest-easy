@@ -34,6 +34,7 @@ class ReportService:
             model_provider="deepseek",
             api_key=settings.deepseek_api_key,
             streaming=True,
+            extra_body={"thinking": {"type": "disabled"}}
         )
 
     async def generate_report(self, user: User, report_code: str):
