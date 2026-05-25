@@ -30,7 +30,7 @@ class ReportService:
     def __init__(self, session: Annotated[AsyncSession, Depends(get_async_session)]):
         self.session = session
         self.model = init_chat_model(
-            model="deepseek-chat",
+            model="deepseek-v4-pro",
             model_provider="deepseek",
             api_key=settings.deepseek_api_key,
             streaming=True,
