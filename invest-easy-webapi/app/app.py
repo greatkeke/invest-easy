@@ -5,6 +5,7 @@ from typing import Annotated
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from logging.handlers import RotatingFileHandler
+from futu import SysConfig
 from .config import settings
 from .domain.users import User
 from .domain.instruments import Instrument
@@ -72,6 +73,18 @@ logging.getLogger("sqlalchemy").addHandler(file_handler)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Initialize FutuOpenD encryption if enabled
+    if settings.enable_proto_encrypt and settings.rsa_file_path:
+        try:
+            SysConfig.enable_proto_encrypt(is_encrypt=True)
+            SysConfig.set_init_rsa_file(settings.rsa_file_path)
+            logging.info(f"FutuOpenD encryption enabled with RSA key: {settings.rsa_file_path}")
+        except Exception as e:
+            logging.error(f"Failed to initialize FutuOpenD encryption: {e}")
+            raise
+    elif settings.enable_proto_encrypt:
+        logging.warning("FutuOpenD encryption enabled but RSA file path not provided")
+    
     # Not needed if you setup a migration system like Alembic
     await create_tables()
 

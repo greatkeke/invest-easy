@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     log_backup_count: int = 5  # Default backup count
     enable_ak_initialization: bool = False  # Default value, will be overridden by .env
     deepseek_api_key: str = ""
+    enable_proto_encrypt: bool = False  # Enable FutuOpenD protocol encryption
+    rsa_file_path: str = ""  # Path to RSA private key file for encryption
 
     model_config = SettingsConfigDict(
         env_file=os.path.abspath(
