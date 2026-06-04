@@ -20,16 +20,26 @@
             ]
         },
         {
-            "name": "Python Debugger: FastAPI",
-            "type": "debugpy",
+            "name": "Python: FastAPI Debug",
+            "type": "python",
             "cwd": "${workspaceFolder}/invest-easy-webapi",
             "request": "launch",
             "module": "uvicorn",
             "args": [
                 "app.app:app",
-                "--reload"
+                "--reload",
+                "--reload-dir",
+                "app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000"
             ],
-            "jinja": true
+            "jinja": true,
+            "justMyCode": false,
+            "env": {
+                "DEBUG": "1"
+            }
         }
     ]
 }
