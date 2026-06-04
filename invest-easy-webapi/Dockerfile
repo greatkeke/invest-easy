@@ -18,6 +18,7 @@ RUN uv sync --frozen --no-cache
 VOLUME /invest-easy-webapi/db
 VOLUME /invest-easy-webapi/env
 VOLUME /invest-easy-webapi/logs
+VOLUME /invest-easy-webapi/certs
 
 EXPOSE 10008
 
